@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timchenko.pro — инженерные системы под ключ в Краснодаре</title>
+<meta name="description" content="Отопление, водоснабжение, канализация, электрика, узлы ввода и проектирование под ключ в Краснодаре и крае. 10 лет опыта, 35 сданных объектов, гарантия 2 года.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1F3864;--navy-deep:#16294A;--gold:#BF9000;--gold-bright:#D9A400;
+    --paper:#ECF0F5;--paper-2:#F6F8FB;--line:rgba(31,56,100,.14);
+    --line-strong:rgba(31,56,100,.28);--ink-soft:#47597A;--white-line:rgba(214,226,244,.55);
+    --ok:#1E7D45;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{font-family:'Space Grotesk',sans-serif;background:var(--paper);color:var(--navy);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:32px 32px;opacity:.5}
+  img,svg{max-width:100%}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  a{color:inherit;text-decoration:none}
+  section{position:relative;z-index:1;padding:76px 0;border-top:1px solid var(--line)}
+  h2.big{font-size:clamp(24px,3.2vw,36px);letter-spacing:-.02em;line-height:1.1;margin-top:12px}
+  .ssub{color:var(--ink-soft);font-size:15.5px;max-width:620px;margin:10px 0 34px}
+  .sheet{position:absolute;top:20px;right:24px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--ink-soft);text-transform:uppercase;border:1px solid var(--line-strong);padding:5px 10px;display:none}
+  @media(min-width:640px){.sheet{display:block}}
+
+  /* NAV */
+  header{position:sticky;top:0;z-index:50;background:rgba(236,240,245,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .logo{font-weight:700;font-size:18px;letter-spacing:-.01em}
+  .logo b{color:var(--gold)}
+  .navlinks{display:flex;gap:22px;align-items:center;font-size:14px}
+  .navlinks a:hover{color:var(--gold)}
+  .navcta{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;border:1px solid var(--gold);background:var(--gold);color:var(--navy-deep);padding:9px 15px}
+  .navcta:hover{background:var(--gold-bright);border-color:var(--gold-bright)}
+  @media(max-width:880px){.navlinks a:not(.navcta){display:none}}
+
+  /* BTNS */
+  .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:14px;padding:14px 22px;cursor:pointer;border:1px solid var(--navy);display:inline-flex;align-items:center;gap:9px;transition:.18s;background:transparent}
+  .btn-primary{background:var(--gold);border-color:var(--gold);color:var(--navy-deep);font-weight:600}
+  .btn-primary:hover{background:var(--gold-bright);border-color:var(--gold-bright)}
+  .btn-ghost:hover{background:var(--navy);color:var(--paper)}
+  .btn-wa{background:var(--ok);border-color:var(--ok);color:#fff;font-weight:600}
+  .btn-wa:hover{filter:brightness(1.08)}
+
+  /* HERO */
+  .hero{padding:52px 0 68px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .hero h1{font-size:clamp(30px,4.4vw,50px);line-height:1.06;font-weight:700;letter-spacing:-.02em;margin:16px 0 18px}
+  .hero h1 em{font-style:normal;color:var(--gold)}
+  .hero p{font-size:17px;color:var(--ink-soft);max-width:480px;margin-bottom:26px}
+  .hero-stats{display:flex;gap:32px;margin-top:36px;flex-wrap:wrap}
+  .hero-stats .num{font-size:28px;font-weight:700;letter-spacing:-.02em}
+  .hero-stats .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase}
+  .schematic{background:var(--navy-deep);border:1px solid var(--navy);padding:24px}
+  .schematic .cap{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--white-line);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+  .schematic .cap b{color:var(--gold)}
+  .schematic svg{width:100%;height:auto;display:block}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:32px}}
+
+  /* CALC */
+  .calc-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:30px}
+  .calc-head p{color:var(--ink-soft);font-size:15px;max-width:360px}
+  .calc{display:grid;grid-template-columns:1.3fr 1fr;border:1px solid var(--line-strong);background:var(--paper-2)}
+  .calc-left{padding:30px;border-right:1px solid var(--line-strong)}
+  .calc-label{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px}
+  .field{margin-bottom:24px}
+  .cseg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#E3E9F1;border:1px solid var(--line-strong);border-radius:2px;padding:4px;max-width:280px}
+  .cseg button{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;padding:9px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer}
+  .cseg button.on{background:var(--navy);color:#fff}
+  .area-row{display:flex;align-items:center;gap:12px}
+  .area-row input[type=number]{font-family:'IBM Plex Mono',monospace;font-size:21px;font-weight:600;color:var(--navy);background:transparent;border:none;border-bottom:2px solid var(--navy);width:110px;padding:4px 2px}
+  .area-row input:focus{outline:none;border-color:var(--gold)}
+  .area-row .unit{font-family:'IBM Plex Mono',monospace;color:var(--ink-soft)}
+  .systems{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .sys{font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:10px 12px;border:1px solid var(--line-strong);cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px;transition:.14s;color:var(--ink-soft)}
+  .sys .box{width:14px;height:14px;border:1.5px solid var(--ink-soft);flex-shrink:0}
+  .sys.on{border-color:var(--navy);color:var(--navy);background:#fff}
+  .sys.on .box{background:var(--gold);border-color:var(--gold)}
+  .sys .flat{margin-left:auto;font-size:10.5px;color:var(--ink-soft)}
+  .calc-right{padding:30px;display:flex;flex-direction:column}
+  .result-lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .result-val{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:6px 0 2px;line-height:1.15}
+  .result-per{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink-soft)}
+  .bridge{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-soft);line-height:1.55}
+  .bridge b{color:var(--navy)}
+  .calc-right .btn{margin-top:16px;justify-content:center;font-size:13.5px;padding:13px 16px;width:100%}
+  @media(max-width:820px){.calc{grid-template-columns:1fr}.calc-left{border-right:none;border-bottom:1px solid var(--line-strong)}}
+
+  /* CARDS (why / services) */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .cards.n3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.cards{grid-template-columns:1fr}}
+  .ccard{border:1px solid var(--line-strong);background:var(--paper-2);padding:22px;transition:.18s}
+  .ccard:hover{border-color:var(--gold)}
+  .ccard .cico{width:38px;height:38px;border-radius:9px;background:rgba(31,56,100,.08);color:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .ccard h3,.ccard h4{font-size:16px;margin-bottom:6px;letter-spacing:-.01em}
+  .ccard p{color:var(--ink-soft);font-size:13.5px;line-height:1.5}
+
+  /* STEPS */
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;counter-reset:s}
+  @media(max-width:980px){.steps{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:620px){.steps{grid-template-columns:1fr 1fr}}
+  @media(max-width:420px){.steps{grid-template-columns:1fr}}
+  .step{border-top:2px solid var(--gold);padding-top:16px}
+  .step .n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:.1em}
+  .step h4{font-size:15.5px;margin:10px 0 6px}
+  .step p{color:var(--ink-soft);font-size:13px;line-height:1.5}
+
+  /* PARTNERS */
+  .partners{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+  .pcard{border:1px solid var(--line-strong);padding:28px;transition:.18s;background:var(--paper-2)}
+  .pcard:hover{border-color:var(--gold)}
+  .pcard h3{font-size:20px;margin-bottom:9px}
+  .pcard p{color:var(--ink-soft);font-size:14.5px;margin-bottom:16px}
+  .pcard .go{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--navy);font-weight:500;border-bottom:2px solid var(--gold);padding-bottom:2px;cursor:pointer;background:none;border-left:none;border-right:none;border-top:none}
+  @media(max-width:720px){.partners{grid-template-columns:1fr}}
+
+  /* ORDER / CONTACT */
+  .order{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  @media(max-width:880px){.order{grid-template-columns:1fr;gap:28px}}
+  .order-form input,.order-form textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:14px;padding:13px 15px;border:1px solid var(--line-strong);background:var(--paper-2);margin-bottom:12px;color:var(--navy)}
+  .order-form input:focus,.order-form textarea:focus{outline:none;border-color:var(--gold)}
+  .order-form .btn{width:100%;justify-content:center;border:none}
+  .contacts{border:1px solid var(--line-strong);background:var(--paper-2);padding:28px}
+  .contacts h3{font-size:18px;margin-bottom:16px}
+  .clist{list-style:none}
+  .clist li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .clist li:last-child{border-bottom:none}
+  .clist .cico2{width:30px;height:30px;border-radius:8px;background:rgba(31,56,100,.08);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .clist a:hover{color:var(--gold)}
+  .done{display:inline-flex;align-items:center;gap:8px;color:var(--ok);font-weight:600;font-size:13.5px;margin-top:6px}
+
+  /* FOOTER */
+  footer{background:var(--navy-deep);color:#fff;padding:48px 0 32px;position:relative;z-index:1}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:36px;margin-bottom:36px}
+  .foot-logo{font-weight:700;font-size:20px;margin-bottom:10px}
+  .foot-logo b{color:var(--gold)}
+  footer p,footer li{color:var(--white-line);font-size:13.5px}
+  .foot-col h5{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .foot-col ul{list-style:none}
+  .foot-col li{margin-bottom:9px}
+  .foot-col a:hover{color:#fff}
+  .foot-bot{border-top:1px solid rgba(214,226,244,.2);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--white-line)}
+  @media(max-width:720px){.foot-grid{grid-template-columns:1fr;gap:24px}}
+
+  /* WHATSAPP FAB */
+  .fab{position:fixed;right:16px;bottom:16px;z-index:60;width:56px;height:56px;border-radius:16px;background:var(--ok);color:#fff;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 32px -12px rgba(30,125,69,.7);text-decoration:none}
+
+  .rv{opacity:0;transform:translateY(16px);transition:.55s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">TIMCHENKO<b>.PRO</b></div>
+    <nav class="navlinks">
+      <a href="#calc">Расчёт</a>
+      <a href="#why">Почему мы</a>
+      <a href="#services">Услуги</a>
+      <a href="#how">Как работаем</a>
+      <a href="#order" class="navcta">Оставить заявку</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div class="rv in">
+      <div class="eyebrow">Отопление · Водоснабжение · Канализация · Электрика · Узлы ввода · Проектирование</div>
+      <h1>Инженерные системы под ключ — <em>без переделок и на годы</em></h1>
+      <p>Timchenko.pro — монтаж инженерных систем в Краснодаре и крае. Считаем по нормам, а не «на глаз», сдаём объект с гарантией 2 года.</p>
+      <div class="btns">
+        <a href="#calc" class="btn btn-primary">Рассчитать стоимость →</a>
+        <a id="heroWa" href="#" target="_blank" rel="noopener" class="btn btn-ghost">Написать в WhatsApp</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="num">10+</div><div class="lbl">лет опыта</div></div>
+        <div><div class="num">35</div><div class="lbl">сданных объектов</div></div>
+        <div><div class="num">2 года</div><div class="lbl">гарантия</div></div>
+      </div>
+    </div>
+    <div class="schematic rv in">
+      <div class="cap"><span>УЗЕЛ ВВОДА ВОДЫ</span><b>СХ-01</b></div>
+      <svg viewBox="0 0 420 260" fill="none" stroke="#BF9000" stroke-width="2">
+        <line x1="10" y1="70" x2="70" y2="70" stroke="#D6E2F4"/>
+        <text x="10" y="58" fill="#8AA0C4" font-family="IBM Plex Mono" font-size="10">ввод Ø32</text>
+        <path d="M70 70 l16 -10 v20 z M102 70 l-16 -10 v20 z" stroke="#D6E2F4"/>
+        <circle cx="86" cy="70" r="4" fill="#BF9000" stroke="none"/>
+        <line x1="102" y1="70" x2="130" y2="70" stroke="#D6E2F4"/>
+        <rect x="130" y="60" width="34" height="20" stroke="#D6E2F4"/>
+        <path d="M130 60 l34 20 M164 60 l-34 20" stroke="#8AA0C4" stroke-width="1"/>
+        <line x1="164" y1="70" x2="192" y2="70" stroke="#D6E2F4"/>
+        <circle cx="208" cy="70" r="16" stroke="#D6E2F4"/>
+        <text x="200" y="74" fill="#BF9000" font-family="IBM Plex Mono" font-size="9">м³</text>
+        <line x1="224" y1="70" x2="252" y2="70" stroke="#D6E2F4"/>
+        <path d="M252 60 h22 l-6 20 h-10 z" stroke="#D6E2F4"/>
+        <circle cx="263" cy="55" r="5" stroke="#BF9000"/>
+        <text x="250" y="100" fill="#8AA0C4" font-family="IBM Plex Mono" font-size="10">редуктор</text>
+        <line x1="274" y1="70" x2="330" y2="70" stroke="#D6E2F4"/>
+        <line x1="330" y1="40" x2="330" y2="200" stroke="#D6E2F4"/>
+        <text x="342" y="44" fill="#8AA0C4" font-family="IBM Plex Mono" font-size="10">коллектор</text>
+        <line x1="330" y1="70" x2="380" y2="70" stroke="#D6E2F4"/><circle cx="384" cy="70" r="3" fill="#BF9000" stroke="none"/>
+        <line x1="330" y1="110" x2="380" y2="110" stroke="#D6E2F4"/><circle cx="384" cy="110" r="3" fill="#BF9000" stroke="none"/>
+        <line x1="330" y1="150" x2="380" y2="150" stroke="#D6E2F4"/><circle cx="384" cy="150" r="3" fill="#BF9000" stroke="none"/>
+        <line x1="330" y1="190" x2="380" y2="190" stroke="#D6E2F4"/><circle cx="384" cy="190" r="3" fill="#BF9000" stroke="none"/>
+        <line x1="10" y1="230" x2="410" y2="230" stroke="#8AA0C4" stroke-width="1"/>
+        <path d="M10 226 l0 8 M410 226 l0 8" stroke="#8AA0C4" stroke-width="1"/>
+        <text x="185" y="224" fill="#8AA0C4" font-family="IBM Plex Mono" font-size="10">L = 1250</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<section id="calc">
+  <div class="sheet">ЛИСТ 01 · РАСЧЁТ</div>
+  <div class="wrap">
+    <div class="calc-head rv">
+      <h2 class="big" style="max-width:600px">Прикиньте бюджет по системам объекта</h2>
+      <p>Это черновая вилка, чтобы сориентироваться. Точную смету по позициям инженер составит после выезда на объект.</p>
+    </div>
+    <div class="calc rv">
+      <div class="calc-left">
+        <div class="field">
+          <div class="calc-label">01 · Тип объекта</div>
+          <div class="cseg" id="typeSeg"><button data-t="Квартира" class="on">Квартира</button><button data-t="Дом">Дом</button></div>
+        </div>
+        <div class="field">
+          <div class="calc-label">02 · Площадь объекта</div>
+          <div class="area-row"><input id="area" type="number" value="80" min="10" max="1000"><span class="unit">м²</span></div>
+        </div>
+        <div class="field">
+          <div class="calc-label">03 · Какие системы нужны</div>
+          <div class="systems" id="systems">
+            <div class="sys on" data-rate="1400"><span class="box"></span>Водоснабжение</div>
+            <div class="sys" data-rate="1100"><span class="box"></span>Канализация</div>
+            <div class="sys on" data-rate="2600"><span class="box"></span>Отопление</div>
+            <div class="sys" data-rate="1900"><span class="box"></span>Тёплый пол</div>
+            <div class="sys on" data-rate="2200"><span class="box"></span>Электрика + щит</div>
+            <div class="sys" data-flat="60000,95000"><span class="box"></span>Узел ввода <span class="flat">от 60к</span></div>
+            <div class="sys" data-flat="40000,75000"><span class="box"></span>Проектирование <span class="flat">от 40к</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="calc-right">
+        <div class="result-lbl">Ориентировочно</div>
+        <div class="result-val" id="total">— ₽</div>
+        <div class="result-per" id="perm">выберите системы и площадь</div>
+        <div class="bridge">Цифра черновая. Точную смету по позициям — с ценами на работу и материалы — инженер составит после выезда на объект.</div>
+        <a id="calcWa" href="#" target="_blank" rel="noopener" class="btn btn-wa">Отправить расчёт в WhatsApp →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="sheet">ЛИСТ 02 · ПОЧЕМУ МЫ</div>
+  <div class="wrap">
+    <div class="eyebrow rv">Почему выбирают нас</div>
+    <h2 class="big rv">Инженерия по нормам, а не «на глаз»</h2>
+    <p class="ssub rv">Каждая система считается по нормам расхода — видно, из чего складывается смета, а не итоговая цифра «под ключ».</p>
+    <div class="cards rv">
+      <div class="ccard"><div class="cico" id="ic-clock"></div><h3>10+ лет опыта</h3><p>Работаем в инженерке систем ВК, отопления и электрики с 2015 года.</p></div>
+      <div class="ccard"><div class="cico" id="ic-check"></div><h3>35 сданных объектов</h3><p>Квартиры, частные дома и коттеджи в Краснодаре и крае.</p></div>
+      <div class="ccard"><div class="cico" id="ic-shield"></div><h3>Гарантия 2 года</h3><p>На монтаж и сборку — фиксируем в договоре перед началом работ.</p></div>
+      <div class="ccard"><div class="cico" id="ic-ruler"></div><h3>Открытая смета</h3><p>Расчёт по позициям и нормам расхода — вы видите, за что платите.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="sheet">ЛИСТ 03 · УСЛУГИ</div>
+  <div class="wrap">
+    <div class="eyebrow rv">Что делаем</div>
+    <h2 class="big rv">Полный цикл инженерных систем</h2>
+    <p class="ssub rv">От проекта до сдачи объекта с гарантией — одной командой, без лишних подрядчиков.</p>
+    <div class="cards rv">
+      <div class="ccard"><div class="cico" id="ic-flame"></div><h4>Отопление</h4><p>Котельные, радиаторы, коллекторная разводка, тёплый пол.</p></div>
+      <div class="ccard"><div class="cico" id="ic-drop"></div><h4>Водоснабжение</h4><p>Разводка ХВС/ГВС, фильтрация, узлы учёта.</p></div>
+      <div class="ccard"><div class="cico" id="ic-wave"></div><h4>Канализация</h4><p>Внутренняя разводка и вывод в общую систему или септик.</p></div>
+      <div class="ccard"><div class="cico" id="ic-bolt"></div><h4>Электрика</h4><p>Электрощиты, разводка, подключение и сдача групп.</p></div>
+      <div class="ccard"><div class="cico" id="ic-plug"></div><h4>Узлы ввода</h4><p>Ввод воды и защита от протечек — как отдельный узел под ключ.</p></div>
+      <div class="ccard"><div class="cico" id="ic-compass"></div><h4>Проектирование</h4><p>Расчёт систем и проект под ваш объект перед монтажом.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="sheet">ЛИСТ 04 · ПРОЦЕСС</div>
+  <div class="wrap">
+    <div class="eyebrow rv">Как работаем</div>
+    <h2 class="big rv">От заявки до сдачи объекта</h2>
+    <p class="ssub rv">Прозрачный процесс — вы видите каждый этап.</p>
+    <div class="steps rv">
+      <div class="step"><div class="n">01</div><h4>Заявка</h4><p>Оставляете заявку или считаете в калькуляторе выше.</p></div>
+      <div class="step"><div class="n">02</div><h4>Выезд инженера</h4><p>Осматриваем объект, уточняем задачи и условия.</p></div>
+      <div class="step"><div class="n">03</div><h4>Смета по нормам</h4><p>Собираем расчёт по позициям — работа и материалы отдельно.</p></div>
+      <div class="step"><div class="n">04</div><h4>Монтаж</h4><p>Работаем своей бригадой по проекту и графику.</p></div>
+      <div class="step"><div class="n">05</div><h4>Сдача с гарантией</h4><p>Проверка систем, подписание акта, гарантия 2 года.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="sheet">ЛИСТ 05 · ПАРТНЁРАМ</div>
+  <div class="wrap">
+    <div class="eyebrow rv">Работаем и с профи</div>
+    <h2 class="big rv">Дизайнерам, прорабам и бригадам</h2>
+    <div class="partners rv">
+      <div class="pcard"><h3>Дизайнерам и архитекторам</h3><p>Берём инженерку на ваших объектах под ключ: вы — за интерьер, мы — за трубы, тепло и щиты.</p><button class="go" onclick="waOpen('Здравствуйте! Хочу обсудить партнёрство (дизайнер/архитектор).')">Обсудить сотрудничество →</button></div>
+      <div class="pcard"><h3>Прорабам и бригадам</h3><p>Инженерный подряд на объекты: сметы по нормам, монтаж со своей бригадой или вашей.</p><button class="go" onclick="waOpen('Здравствуйте! Хочу обсудить партнёрство (прораб/бригада).')">Обсудить объект →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section id="order">
+  <div class="sheet">ЛИСТ 06 · ЗАЯВКА</div>
+  <div class="wrap">
+    <div class="eyebrow rv">Контакты</div>
+    <h2 class="big rv">Оставить заявку</h2>
+    <p class="ssub rv">Оставьте имя и телефон — напишем в WhatsApp с уточнением деталей. Или свяжитесь напрямую.</p>
+    <div class="order rv">
+      <div class="order-form">
+        <input id="oname" placeholder="Имя">
+        <input id="ophone" placeholder="Телефон" inputmode="tel">
+        <textarea id="omsg" placeholder="Что нужно сделать (необязательно)" rows="3"></textarea>
+        <button class="btn btn-wa" id="osend" type="button">Отправить в WhatsApp →</button>
+        <div class="done" id="odone" style="display:none">Открываем WhatsApp с вашей заявкой…</div>
+      </div>
+      <div class="contacts">
+        <h3>Прямая связь</h3>
+        <ul class="clist">
+          <li><span class="cico2" id="ic-phone"></span><a href="tel:+79882829031">+7 988 282-90-31 — звонок, WhatsApp, MAX</a></li>
+          <li><span class="cico2" id="ic-send"></span><a id="waLink" href="#" target="_blank" rel="noopener">Написать в WhatsApp</a></li>
+          <li><span class="cico2" id="ic-tg"></span><a href="https://t.me/Timchenko_pro" target="_blank" rel="noopener">Telegram @Timchenko_pro</a></li>
+          <li><span class="cico2" id="ic-pin"></span>Краснодар и Краснодарский край</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">TIMCHENKO<b>.PRO</b></div>
+        <p>Инженерные системы под ключ в Краснодаре и крае: отопление, водоснабжение, канализация, электрика, узлы ввода, проектирование.</p>
+      </div>
+      <div class="foot-col"><h5>Разделы</h5><ul><li><a href="#calc">Расчёт</a></li><li><a href="#why">Почему мы</a></li><li><a href="#services">Услуги</a></li><li><a href="#how">Как работаем</a></li><li><a href="#partners">Партнёрам</a></li></ul></div>
+      <div class="foot-col"><h5>Контакты</h5><ul><li><a href="tel:+79882829031">+7 988 282-90-31</a></li><li><a href="https://t.me/Timchenko_pro" target="_blank" rel="noopener">Telegram</a></li><li>Краснодар</li></ul></div>
+    </div>
+    <div class="foot-bot"><span>© 2026 TIMCHENKO.PRO</span><span>Инженерные системы под ключ</span></div>
+  </div>
+</footer>
+
+<a class="fab" id="fabWa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"></a>
+
+<script>
+var PHONE='79882829031';
+var IC={
+ check:'<path d="M5 13l4 4L19 7"/>',
+ shield:'<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+ ruler:'<path d="M3 17 17 3l4 4L7 21z"/><line x1="7" y1="9" x2="9" y2="11"/><line x1="11" y1="5" x2="13" y2="7"/>',
+ flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2z"/>',
+ drop:'<path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.4 0z"/>',
+ wave:'<path d="M2 8c2 0 2 3 4 3s2-3 4-3 2 3 4 3 2-3 4-3 2 3 4 3"/><path d="M2 15c2 0 2 3 4 3s2-3 4-3 2 3 4 3 2-3 4-3 2 3 4 3"/>',
+ bolt:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+ plug:'<line x1="6" y1="30" x2="26" y2="30" transform="scale(0.8) translate(-2,-8)"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="4" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="20" y2="12"/>',
+ compass:'<circle cx="12" cy="12" r="9"/><polygon points="14.5 9.5 12 12 9.5 14.5 12 12 14.5 9.5"/>',
+ phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+ send:'<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+ tg:'<path d="M21 3 2 10.5l6 2 2 6 3-4 5 4z"/><path d="M8 12.5 21 3l-4 15-5-4z"/>',
+ pin:'<path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
+ wa:'<path d="M3 21l1.6-4.8A9 9 0 1 1 8.3 19.6z"/><path d="M8 9.5c0 3.5 3 6.5 6.5 6.5"/>'
+};
+function S(n,w,st){w=w||18;st=st||'currentColor';return '<svg width="'+w+'" height="'+w+'" viewBox="0 0 24 24" fill="none" stroke="'+st+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+IC[n]+'</svg>';}
+function set(id,n,w,st){var e=document.getElementById(id);if(e)e.innerHTML=S(n,w,st);}
+set('ic-clock','clock',20,'#1F3864');set('ic-check','check',20,'#1F3864');set('ic-shield','shield',20,'#1F3864');set('ic-ruler','ruler',20,'#1F3864');
+set('ic-flame','flame',20,'#1F3864');set('ic-drop','drop',20,'#1F3864');set('ic-wave','wave',20,'#1F3864');set('ic-bolt','bolt',20,'#1F3864');set('ic-plug','plug',20,'#1F3864');set('ic-compass','compass',20,'#1F3864');
+set('ic-phone','phone',16,'#1F3864');set('ic-send','send',16,'#1F3864');set('ic-tg','tg',16,'#1F3864');set('ic-pin','pin',16,'#1F3864');
+document.getElementById('fabWa').innerHTML=S('wa',26,'#fff');
+
+function waLink(text){return 'https://wa.me/'+PHONE+'?text='+encodeURIComponent(text);}
+function waOpen(text){window.open(waLink(text),'_blank');}
+var baseWa=waLink('Здравствуйте! Хочу узнать стоимость инженерных систем.');
+document.getElementById('heroWa').href=baseWa;
+document.getElementById('fabWa').href=baseWa;
+document.getElementById('waLink').href=baseWa;
+
+// type toggle
+var typeSeg=document.getElementById('typeSeg'),area=document.getElementById('area');
+typeSeg.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  typeSeg.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+  if(b.dataset.t==='Дом'){area.min=40;area.max=1000;area.value=150;}else{area.min=15;area.max=300;area.value=80;}
+  recalc();
+});
+
+// calculator
+var systems=document.getElementById('systems');
+var totalEl=document.getElementById('total'),permEl=document.getElementById('perm');
+function fmt(n){return Math.round(n).toLocaleString('ru-RU');}
+function recalc(){
+  var a=Math.max(0,+area.value||0);
+  var rate=0,flatLow=0,flatHigh=0,names=[];
+  systems.querySelectorAll('.sys.on').forEach(function(s){
+    if(s.dataset.rate){rate+=+s.dataset.rate;names.push(s.textContent.trim());}
+    else if(s.dataset.flat){var f=s.dataset.flat.split(',');flatLow+=+f[0];flatHigh+=+f[1];names.push(s.textContent.trim().replace(/от.*$/,'').trim());}
+  });
+  if(a===0||(rate===0&&flatLow===0)){totalEl.textContent='— ₽';permEl.textContent='выберите системы и площадь';document.getElementById('calcWa').href='#';return;}
+  var low=Math.round(a*rate*0.9/1000)*1000+flatLow;
+  var high=Math.round(a*rate*1.15/1000)*1000+flatHigh;
+  totalEl.textContent=fmt(low)+' – '+fmt(high)+' ₽';
+  permEl.textContent=rate>0?('≈ '+fmt((low+high)/2/a)+' ₽/м² · работа, без материалов'):'фиксированные позиции, без привязки к площади';
+  var msg='Здравствуйте! Хочу рассчитать: '+(typeSeg.querySelector('.on').dataset.t)+', '+a+' м². Системы: '+names.join(', ')+'. Ориентир: '+fmt(low)+'–'+fmt(high)+' ₽.';
+  document.getElementById('calcWa').href=waLink(msg);
+}
+systems.addEventListener('click',function(e){var s=e.target.closest('.sys');if(s){s.classList.toggle('on');recalc();}});
+area.addEventListener('input',recalc);
+recalc();
+
+// order form
+document.getElementById('osend').addEventListener('click',function(){
+  var n=document.getElementById('oname').value.trim();
+  var p=document.getElementById('ophone').value.trim();
+  var m=document.getElementById('omsg').value.trim();
+  if(!n||!p){alert('Укажите имя и телефон');return;}
+  var text='Здравствуйте! Меня зовут '+n+', телефон '+p+'.'+(m?(' '+m):' Хочу оставить заявку.');
+  document.getElementById('odone').style.display='inline-flex';
+  window.open(waLink(text),'_blank');
+});
+
+// reveal on scroll
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+document.querySelectorAll('.rv:not(.in)').forEach(function(el){io.observe(el);});
+</script>
+</body>
+</html>
