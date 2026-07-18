@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  /* Палитра: вариант A «Графитовое бюро · тёплый металл» (design-direction.md §7) */
+  --color-bg: #0e1113;
+  --color-bg2: #14181b;
+  --color-surface: #1b2024;
+  --color-surface2: #21272c;
+  --color-line: #262c31;
+  --color-line-strong: #39424a;
+  --color-ink: #f4f5f4;
+  --color-mute: #a8afb5;
+  --color-dim: #6d757c;
+  --color-copper: #c96f3f;
+  --color-copper-soft: #d98a5c;
+  --color-copper-ink: #101214;
+  --color-ok: #4caf7d;
+  --color-err: #e2574c;
+
+  --font-display: var(--font-unbounded);
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-jbmono);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-copper);
+  color: var(--color-copper-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-copper);
+  outline-offset: 2px;
+}
+
+/* Единая обработка фото-плейсхолдеров: приглушаем случайные цвета стоков,
+   чтобы страница держала одну гамму до замены на фото объектов заказчика */
+.ph {
+  filter: saturate(0.35) contrast(1.06) brightness(0.88);
+}
+
+.hero-enter {
+  animation: hero-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hero-enter-late {
+  animation: hero-enter 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-enter,
+  .hero-enter-late {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
