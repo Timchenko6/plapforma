@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Timchenko.pro token layer (shadcn-compatible HSL variables).
+ * Brand: NAVY #1F3864 = hsl(218 52% 26%), GOLD #BF9000 = hsl(45 100% 37%).
+ */
+@layer base {
+  :root {
+    --background: 214 26% 94%; /* paper #ECF0F5 */
+    --foreground: 218 52% 26%; /* navy */
+    --card: 210 33% 98%; /* paper-2 #F6F8FB */
+    --card-foreground: 218 52% 26%;
+    --primary: 45 100% 37%; /* gold */
+    --primary-foreground: 217 54% 19%; /* navy-deep */
+    --secondary: 218 52% 26%; /* navy */
+    --secondary-foreground: 214 26% 94%;
+    --muted: 216 21% 88%;
+    --muted-foreground: 219 26% 38%; /* ink-soft #47597A */
+    --accent: 45 100% 43%; /* gold-bright */
+    --accent-foreground: 217 54% 19%;
+    --success: 145 62% 31%; /* #1E7D45 */
+    --success-foreground: 0 0% 100%;
+    --border: 218 43% 26% / 0.14;
+    --border-strong: 218 43% 26% / 0.28;
+    --ring: 45 100% 37%;
+    --radius: 0.125rem; /* blueprint style: near-square corners */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  /* Blueprint grid backdrop, matches the landing page */
+  .blueprint-bg {
+    background-image: linear-gradient(hsl(218 43% 26% / 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(218 43% 26% / 0.09) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .blueprint-bg-dark {
+    background-image: linear-gradient(hsl(214 56% 89% / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(214 56% 89% / 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
