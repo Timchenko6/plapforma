@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Unbounded, Manrope, JetBrains_Mono } from "next/font/google";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { LeadProvider } from "@/components/lead/lead-provider";
 import "./globals.css";
 
@@ -39,11 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" className={`${unbounded.variable} ${manrope.variable} ${jbMono.variable}`}>
       <body>
-        <LeadProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </LeadProvider>
+        <LeadProvider>{children}</LeadProvider>
       </body>
     </html>
   );
