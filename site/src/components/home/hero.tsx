@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { site } from "@/data/site";
 import { ph } from "@/lib/utils";
 import { LeadButton } from "@/components/lead/lead-button";
 import { buttonVariants } from "@/components/ui/button";
@@ -11,14 +10,13 @@ export function Hero() {
     <section className="relative border-b border-line">
       <div className="mx-auto grid min-h-[calc(100dvh-68px)] max-w-[1400px] items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-20">
         <div className="hero-enter">
-          <h1 className="font-display text-[2.1rem] leading-[1.1] font-semibold tracking-tight sm:text-5xl lg:text-[3.4rem]">
-            Проектируем.
-            <br />
-            Производим.
-            <br />
-            <span className="text-copper">Монтируем.</span>
+          <h1 className="font-display max-w-[21ch] text-[1.75rem] leading-[1.14] font-semibold tracking-tight sm:text-4xl lg:text-[2.6rem]">
+            Инженерные системы дома под ключ{" "}
+            <span className="text-copper">без переделок и скрытых доплат</span>
           </h1>
-          <p className="mt-6 max-w-[42ch] text-lg text-mute sm:text-xl">{site.sub}</p>
+          <p className="mt-6 max-w-[46ch] text-lg text-mute sm:text-xl">
+            Отопление, котельные, водоснабжение, электрика и вентиляция от одной команды.
+          </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <LeadButton />
             <Link href="/projects/" className={cn(buttonVariants({ variant: "ghost", size: "lg" }))}>
