@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { LeadButton } from "@/components/lead/lead-button";
 import { site } from "@/data/site";
+import { cn } from "@/lib/utils";
 
 const nav = [
   { href: "/services/", label: "Направления" },
@@ -17,10 +18,28 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-bg/85 backdrop-blur-md">
-      <div className="mx-auto flex h-[68px] max-w-[1400px] items-center justify-between gap-6 px-5 sm:px-8">
+    <header
+      className={cn(
+        "sticky top-0 z-30 border-b transition-colors duration-300",
+        scrolled ? "border-line bg-bg/90 backdrop-blur-md" : "border-transparent bg-bg/40 backdrop-blur-sm",
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-5 transition-[height] duration-300 sm:px-10",
+          scrolled ? "h-[60px]" : "h-[76px]",
+        )}
+      >
         <Link href="/" className="font-display text-base font-semibold tracking-tight whitespace-nowrap">
           Тимченко<span className="text-copper">.</span>про
         </Link>
