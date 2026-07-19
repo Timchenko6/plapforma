@@ -115,6 +115,34 @@ body {
   filter: saturate(0.35) contrast(1.06) brightness(0.88);
 }
 
+/* Концепт-редизайн (/lab/concept): токены из brief-redesign §4.
+   Линии - белые с прозрачностью, чертёжная сетка как подпись бренда. */
+.theme-concept {
+  --color-bg: #0e1113;
+  --color-bg2: #14171a;
+  --color-surface: #1b1f24;
+  --color-surface2: #21262c;
+  --color-line: rgba(255, 255, 255, 0.1);
+  --color-line-strong: rgba(255, 255, 255, 0.22);
+  --color-ink: #e8eaed;
+  --color-mute: #9aa0a6;
+  --color-dim: #7a828a;
+  --color-copper: #c96f3f;
+  --color-copper-soft: #d98a5c;
+  --color-copper-ink: #101214;
+  --color-ok: #4caf7d;
+  --color-err: #e2574c;
+}
+.theme-concept .ph {
+  filter: saturate(0.35) contrast(1.06) brightness(0.88);
+}
+/* Чертёжная сетка: только на тёмных поверхностях, 10-20% площади (brief §5) */
+.bp-grid {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
 /* Глассморфизм для /lab/video-hero: блюр + внутренняя кромка,
    с непрозрачным фолбэком для prefers-reduced-transparency */
 .glass {
