@@ -1,80 +1,106 @@
 import Link from "next/link";
-import { Hero } from "@/components/home/hero";
-import { Stats } from "@/components/home/stats";
-import { DirectionsList } from "@/components/home/directions-list";
-import { StepsStrip } from "@/components/home/steps-strip";
-import { ProductionFeature } from "@/components/home/production-feature";
+import { ConceptHero } from "@/components/concept/concept-hero";
+import { Manifesto } from "@/components/concept/manifesto";
+import { DirectionsGrid } from "@/components/concept/directions-grid";
+import { StepsSticky } from "@/components/sections/steps-sticky";
+import { ProductionFeature } from "@/components/sections/production-feature";
+import { OpenEstimate } from "@/components/sections/open-estimate";
+import { Founder } from "@/components/sections/founder";
+import { Professionals } from "@/components/sections/professionals";
+import { Glossary } from "@/components/sections/glossary";
+import { Faq } from "@/components/sections/faq";
 import { CatalogTeaser } from "@/components/home/catalog-teaser";
-import { Engineer } from "@/components/home/engineer";
 import { Brands } from "@/components/home/brands";
 import { CaseCard } from "@/components/cards";
-import { Section, SectionHeading } from "@/components/section";
+import { Reveal } from "@/components/reveal";
 import { LeadSection } from "@/components/lead/lead-section";
 import { projects } from "@/data/projects";
 
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <Stats />
+      <ConceptHero />
+      <Manifesto />
+      <DirectionsGrid />
+      <StepsSticky />
+      <ProductionFeature />
+      <OpenEstimate />
 
-      <Section id="directions">
-        <SectionHeading
-          title="Семь направлений. Один договор"
-          lead="Все инженерные системы дома проектирует и монтирует одна команда, поэтому они не мешают друг другу ни в проекте, ни на стройке."
-        />
-        <DirectionsList />
-      </Section>
-
-      <Section tone="alt">
-        <SectionHeading
-          title="Полный цикл за семь шагов"
-          lead="От первого выезда до сервисного обслуживания вы общаетесь с одним инженером."
-        />
-        <StepsStrip />
-      </Section>
-
-      <div className="theme-dark bg-bg text-ink">
-        <ProductionFeature />
-      </div>
-
-      <Section>
-        <SectionHeading
-          title="Готовые решения в каталоге"
-          lead="Узлы, котельные и автоматика с понятным составом и ориентировочной стоимостью."
-        />
-        <CatalogTeaser />
-      </Section>
-
-      <Section tone="alt">
-        <div className="mb-12 flex flex-wrap items-end justify-between gap-6 md:mb-16">
-          <SectionHeading
-            title="Наши объекты"
-            lead="Дома, в которых инженерия работает незаметно."
-            className="mb-0 md:mb-0"
-          />
-          <Link
-            href="/projects/"
-            className="text-sm font-semibold text-copper-soft underline-offset-4 hover:underline"
-          >
-            Все проекты
-          </Link>
+      {/* Каталог (лид) */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[1440px] px-5 py-24 sm:px-10 md:py-32">
+          <Reveal>
+            <p className="font-mono text-xs tracking-[0.18em] text-dim uppercase">каталог</p>
+            <h2 className="font-display mt-4 max-w-[24ch] text-3xl leading-[1.15] font-medium tracking-tight md:text-4xl lg:text-[2.6rem]">
+              Готовые решения нашего производства
+            </h2>
+          </Reveal>
+          <div className="mt-12">
+            <CatalogTeaser />
+          </div>
         </div>
-        <div className="grid gap-5 md:grid-cols-2">
-          {projects.slice(0, 2).map((p) => (
-            <CaseCard key={p.slug} project={p} large />
-          ))}
+      </section>
+
+      {/* Наши объекты */}
+      <section className="border-b border-line bg-bg2">
+        <div className="mx-auto max-w-[1440px] px-5 py-24 sm:px-10 md:py-32">
+          <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
+            <Reveal>
+              <p className="font-mono text-xs tracking-[0.18em] text-dim uppercase">портфолио</p>
+              <h2 className="font-display mt-4 max-w-[20ch] text-3xl leading-[1.15] font-medium tracking-tight md:text-4xl lg:text-[2.6rem]">
+                Дома, в которых инженерия работает незаметно
+              </h2>
+            </Reveal>
+            <Link
+              href="/projects/"
+              className="font-mono text-sm text-copper-soft underline-offset-4 hover:underline"
+            >
+              все проекты →
+            </Link>
+          </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {projects.slice(0, 3).map((p) => (
+              <CaseCard key={p.slug} project={p} />
+            ))}
+          </div>
         </div>
-      </Section>
+      </section>
 
-      <Section>
-        <Engineer />
-      </Section>
+      <Founder />
+      <Professionals />
+      <Glossary />
 
-      <Section tone="alt" className="border-t border-line">
-        <SectionHeading title="Работаем с оборудованием, которому доверяем" />
-        <Brands />
-      </Section>
+      {/* Партнёры */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-[1440px] px-5 py-24 sm:px-10 md:py-28">
+          <Reveal>
+            <p className="font-mono text-xs tracking-[0.18em] text-dim uppercase">оборудование</p>
+            <h2 className="font-display mt-4 max-w-[26ch] text-3xl leading-[1.15] font-medium tracking-tight md:text-4xl">
+              Работаем с брендами, которым доверяем
+            </h2>
+          </Reveal>
+          <div className="mt-12">
+            <Brands />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="border-b border-line bg-bg2">
+        <div className="mx-auto max-w-[1440px] px-5 py-24 sm:px-10 md:py-32">
+          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <Reveal>
+              <p className="font-mono text-xs tracking-[0.18em] text-dim uppercase">вопросы</p>
+              <h2 className="font-display mt-4 max-w-[16ch] text-3xl leading-[1.15] font-medium tracking-tight md:text-4xl lg:text-[2.6rem]">
+                Что обычно спрашивают владельцы домов
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <Faq />
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
       <LeadSection />
     </>

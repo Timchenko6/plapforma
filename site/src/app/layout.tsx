@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Unbounded, Manrope, JetBrains_Mono } from "next/font/google";
 import { LeadProvider } from "@/components/lead/lead-provider";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -30,13 +31,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f2f2ef",
+  themeColor: "#0e1113",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${unbounded.variable} ${manrope.variable} ${jbMono.variable}`}>
       <body>
+        <SmoothScroll />
         <LeadProvider>{children}</LeadProvider>
       </body>
     </html>

@@ -12,8 +12,8 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={cn(tone === "alt" && "bg-bg2", className)}>
-      <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 md:py-28">{children}</div>
+    <section id={id} className={cn("border-b border-line", tone === "alt" && "bg-bg2", className)}>
+      <div className="mx-auto max-w-[1440px] px-5 py-24 sm:px-10 md:py-28">{children}</div>
     </section>
   );
 }
