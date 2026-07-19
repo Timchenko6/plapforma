@@ -7,7 +7,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     <>
       <Header />
       <main>{children}</main>
-      <Footer />
+      <div className="theme-dark bg-bg text-ink">
+        <Footer />
+      </div>
     </>
   );
 }
