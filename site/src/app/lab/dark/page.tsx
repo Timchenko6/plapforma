@@ -16,19 +16,15 @@ import { LeadSection } from "@/components/lead/lead-section";
 import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {
-  title: "Светлая версия главной (лаборатория) - Тимченко.про",
-  description: "Кандидат светлой темы: галерейный фон с графитовыми якорь-секциями.",
+  title: "Тёмная версия главной (архив) - Тимченко.про",
+  description: "Архив первоначального тёмного варианта A «Графитовое бюро».",
   robots: { index: false },
 };
 
-/**
- * Превью светлой темы: та же главная, но в .theme-light.
- * Производство и футер намеренно остаются графитовыми (один осознанный
- * color-block на страницу + тёмный финал), чтобы бренд не растворялся.
- */
-export default function LightHomeLab() {
+/** Архив варианта A: главная целиком в исходном тёмном графите. */
+export default function DarkHomeArchive() {
   return (
-    <div className="theme-light bg-bg text-ink">
+    <div className="theme-dark bg-bg text-ink">
       <Header />
       <main>
         <Hero />
@@ -50,9 +46,7 @@ export default function LightHomeLab() {
           <StepsStrip />
         </Section>
 
-        <div className="theme-dark bg-bg text-ink">
-          <ProductionFeature />
-        </div>
+        <ProductionFeature />
 
         <Section>
           <SectionHeading
@@ -94,9 +88,7 @@ export default function LightHomeLab() {
 
         <LeadSection />
       </main>
-      <div className="theme-dark bg-bg text-ink">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }

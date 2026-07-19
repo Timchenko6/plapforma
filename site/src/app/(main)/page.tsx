@@ -34,7 +34,9 @@ export default function HomePage() {
         <StepsStrip />
       </Section>
 
-      <ProductionFeature />
+      <div className="theme-dark bg-bg text-ink">
+        <ProductionFeature />
+      </div>
 
       <Section>
         <SectionHeading

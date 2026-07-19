@@ -18,7 +18,7 @@ const STREAM = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
 
 export default function VideoHeroLab() {
   return (
-    <div className="relative min-h-[100dvh] overflow-hidden">
+    <div className="theme-dark relative min-h-[100dvh] overflow-hidden bg-bg text-ink">
       <VideoBackground src={STREAM} poster={ph("timchenko-production-unit", 1300, 900)} />
 
       {/* Скрим: затемнение к низу и к левому краю, чтобы текст держал контраст на любом кадре */}

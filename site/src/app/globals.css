@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Палитра: вариант A «Графитовое бюро · тёплый металл» (design-direction.md §7) */
-  --color-bg: #0e1113;
-  --color-bg2: #14181b;
-  --color-surface: #1b2024;
-  --color-surface2: #21272c;
-  --color-line: #262c31;
-  --color-line-strong: #39424a;
-  --color-ink: #f4f5f4;
-  --color-mute: #a8afb5;
-  --color-dim: #6d757c;
-  --color-copper: #c96f3f;
-  --color-copper-soft: #d98a5c;
-  --color-copper-ink: #101214;
-  --color-ok: #4caf7d;
-  --color-err: #e2574c;
+  /* Палитра по умолчанию: вариант C «Галерея с графитовыми якорями»
+     (design-direction.md). Тёмные якоря получают класс .theme-dark. */
+  --color-bg: #f2f2ef;
+  --color-bg2: #e9eae6;
+  --color-surface: #ffffff;
+  --color-surface2: #f7f7f5;
+  --color-line: #dcded9;
+  --color-line-strong: #b9bdb6;
+  --color-ink: #16191b;
+  --color-mute: #565e66;
+  --color-dim: #646c74;
+  --color-copper: #b3572a;
+  --color-copper-soft: #9c4a1f;
+  --color-copper-ink: #ffffff;
+  --color-ok: #2f7d53;
+  --color-err: #c23f36;
 
   --font-display: var(--font-unbounded);
   --font-sans: var(--font-manrope);
@@ -51,7 +52,7 @@ body {
 /* Единая обработка фото-плейсхолдеров: приглушаем случайные цвета стоков,
    чтобы страница держала одну гамму до замены на фото объектов заказчика */
 .ph {
-  filter: saturate(0.35) contrast(1.06) brightness(0.88);
+  filter: saturate(0.35) contrast(1.03);
 }
 
 .hero-enter {
