@@ -21,6 +21,8 @@
   --font-display: var(--font-unbounded);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-jbmono);
+  --font-heavy: var(--font-golos); /* баннер-стиль: тяжёлые уппер-кейс заголовки */
+  --font-plex: var(--font-plex); /* баннер-стиль: технические подписи */
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -141,6 +143,52 @@ body {
   background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
   background-size: 44px 44px;
+}
+
+/* Баннер-стиль (/lab/banner): токены сняты с фирменного баннера (tz-site §2).
+   Чёрное поле, лайм-акцент, синий для сантехники; глобальный акцент (copper-слот)
+   переопределён на лайм, чтобы кнопки/ссылки стали фирменными без правки компонентов. */
+.theme-banner {
+  --color-bg: #050606;
+  --color-bg2: #0e1113;
+  --color-surface: #0e1113;
+  --color-surface2: #161a1d;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+  --color-ink: #ffffff;
+  --color-mute: #a8b0b4;
+  --color-dim: #6b7176;
+  --color-copper: #78a700; /* глобальный акцент = лайм */
+  --color-copper-soft: #96cf00; /* лайм-bright для мелкого текста (контраст AA) */
+  --color-copper-ink: #050606;
+  --color-ok: #96cf00;
+  --color-err: #ff6a2b;
+  /* фирменные акценты */
+  --lime: #78a700;
+  --lime-bright: #96cf00;
+  --blue: #1b84ea;
+  /* цвет активного направления (переопределяется на секции/странице) */
+  --dir: #78a700;
+}
+.theme-banner .ph {
+  filter: saturate(0.5) contrast(1.08) brightness(0.82);
+}
+/* Рифлёная пластина под фото узлов (баннер §2.4) */
+.rifle {
+  background-color: #0b0d0e;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.025) 0,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+}
+/* Лаймовый хайрлайн-разделитель секций (прямая цитата баннера) */
+.lime-hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
+  opacity: 0.5;
 }
 
 /* Глассморфизм для /lab/video-hero: блюр + внутренняя кромка,
