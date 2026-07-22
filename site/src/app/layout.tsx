@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Unbounded, Manrope, JetBrains_Mono } from "next/font/google";
+import { Unbounded, Manrope, JetBrains_Mono, Golos_Text, IBM_Plex_Mono } from "next/font/google";
 import { LeadProvider } from "@/components/lead/lead-provider";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
@@ -24,6 +24,21 @@ const jbMono = JetBrains_Mono({
   display: "swap",
 });
 
+// Баннер-стиль: тяжёлый геометрический гротеск для заголовков + IBM Plex Mono
+const golos = Golos_Text({
+  subsets: ["latin", "cyrillic"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-golos",
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Тимченко.про - инженерные системы дома под ключ в Краснодарском крае",
   description:
@@ -36,7 +51,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${unbounded.variable} ${manrope.variable} ${jbMono.variable}`}>
+    <html
+      lang="ru"
+      className={`${unbounded.variable} ${manrope.variable} ${jbMono.variable} ${golos.variable} ${plexMono.variable}`}
+    >
       <body>
         <SmoothScroll />
         <LeadProvider>{children}</LeadProvider>
