@@ -1,0 +1,29 @@
+name: Publish client v3
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-client-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Copy current cabinet to fresh v3 path
+        run: |
+          mkdir -p client-v3
+          cp client-v2/index.html client-v3/index.html
+      - name: Commit
+        run: |
+          git config user.name 'timchenko-site-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add client-v3/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Publish Telegram cabinet at client v3 path'
+          git push
