@@ -1,0 +1,42 @@
+name: Patch client portal admin auth
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-client-portal-auth.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Send portal token to admin API
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for name in ['client-v2/index.html','client-v3/index.html']:
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              old="JSON.stringify({action,initData:tg?.initData||'',...p})"
+              new="JSON.stringify({action,initData:tg?.initData||'',portalToken:token,...p})"
+              if old in s:
+                  s=s.replace(old,new)
+              old2="f.append('initData',tg?.initData||'');f.append('file',file);"
+              new2="f.append('initData',tg?.initData||'');f.append('portalToken',token);f.append('file',file);"
+              if old2 in s:
+                  s=s.replace(old2,new2)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'timchenko-site-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add client-v2/index.html client-v3/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Authenticate owner CRM with portal token'
+          git push
