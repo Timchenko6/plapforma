@@ -13,23 +13,43 @@ if [[ ! -x "$PY" ]]; then
   exit 1
 fi
 
+patch_v6() {
+  local file="$1"
+  "$PY" - "$file" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1])
+s = p.read_text(encoding="utf-8")
+s = s.replace(
+    'await set_session(m.from_user.id, flow="registration", step_key="name", user_id=user["id"], answers={}, history=[])',
+    'await set_session(m.chat.id, flow="registration", step_key="name", user_id=user["id"], answers={}, history=[])',
+    1,
+)
+s = s.replace(
+    'await set_session(m.from_user.id, flow=flow, step_key="phone", user_id=user_id, answers={}, history=[])',
+    'await set_session(m.chat.id, flow=flow, step_key="phone", user_id=user_id, answers={}, history=[])',
+    1,
+)
+p.write_text(s, encoding="utf-8")
+PY
+}
+
 mkdir -p "$BOT_DIR" "$DROPIN_DIR"
 TMP="$(mktemp)"
 BACKUP_DIR="$(mktemp -d)"
 trap 'rm -f "$TMP"; rm -rf "$BACKUP_DIR"' EXIT
 
-# Preserve current service override so a failed v6 switch can be rolled back.
 for f in "$DROPIN_DIR"/v4.conf "$DROPIN_DIR"/v5.conf "$DROPIN_DIR"/v6.conf; do
   [[ -f "$f" ]] && cp -a "$f" "$BACKUP_DIR/"
 done
 
 curl -fsSL "$BOT_URL" -o "$TMP"
+patch_v6 "$TMP"
 "$PY" -m py_compile "$TMP"
 
 [[ -f "$BOT_FILE" ]] && cp -f "$BOT_FILE" "${BOT_FILE}.bak"
 install -m 0644 "$TMP" "$BOT_FILE"
 
-# Only one ExecStart override must be active.
 rm -f "$DROPIN_DIR/v4.conf" "$DROPIN_DIR/v5.conf" "$DROPIN_DIR/v6.conf"
 cat > "$DROPIN_DIR/v6.conf" <<CONF
 [Service]
@@ -64,7 +84,29 @@ SERVICE="uzelpro"
 TMP="$(mktemp)"
 trap 'rm -f "$TMP"' EXIT
 
+patch_v6() {
+  local file="$1"
+  "$PY" - "$file" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1])
+s = p.read_text(encoding="utf-8")
+s = s.replace(
+    'await set_session(m.from_user.id, flow="registration", step_key="name", user_id=user["id"], answers={}, history=[])',
+    'await set_session(m.chat.id, flow="registration", step_key="name", user_id=user["id"], answers={}, history=[])',
+    1,
+)
+s = s.replace(
+    'await set_session(m.from_user.id, flow=flow, step_key="phone", user_id=user_id, answers={}, history=[])',
+    'await set_session(m.chat.id, flow=flow, step_key="phone", user_id=user_id, answers={}, history=[])',
+    1,
+)
+p.write_text(s, encoding="utf-8")
+PY
+}
+
 curl -fsSL "$BOT_URL" -o "$TMP"
+patch_v6 "$TMP"
 "$PY" -m py_compile "$TMP"
 if [[ -f "$BOT_FILE" ]] && cmp -s "$TMP" "$BOT_FILE"; then
   exit 0
