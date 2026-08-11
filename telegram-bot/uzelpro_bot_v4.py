@@ -41,10 +41,6 @@ from aiogram.types import (
     WebAppInfo,
 )
 
-# ---------------------------------------------------------------------
-# env without extra dependencies
-# ---------------------------------------------------------------------
-
 ENV_FILE = os.getenv("ENV_FILE", "/opt/TimchenkoBot/.env")
 if os.path.exists(ENV_FILE):
     with open(ENV_FILE, "r", encoding="utf-8") as fh:
@@ -67,24 +63,16 @@ if not BOT_TOKEN:
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise RuntimeError("SUPABASE_URL / SUPABASE_SERVICE_KEY is empty")
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("timchenko_bot_v4")
 
 bot = Bot(BOT_TOKEN)
 dp = Dispatcher()
-
 ORG_ID: Optional[str] = None
 BOT_SETTINGS: dict[str, Any] = {}
-
 HOME = "🏠 Главная"
 BACK = "⬅️ Назад"
 
-# ---------------------------------------------------------------------
-# Supabase REST
-# ---------------------------------------------------------------------
 
 def _headers(prefer: Optional[str] = None) -> dict[str, str]:
     h = {
@@ -97,23 +85,10 @@ def _headers(prefer: Optional[str] = None) -> dict[str, str]:
     return h
 
 
-async def db_request(
-    method: str,
-    table: str,
-    *,
-    params: Optional[dict[str, str]] = None,
-    data: Any = None,
-    prefer: Optional[str] = None,
-) -> Any:
+async def db_request(method: str, table: str, *, params: Optional[dict[str, str]] = None, data: Any = None, prefer: Optional[str] = None) -> Any:
     url = f"{SUPABASE_URL}/rest/v1/{table}"
     async with httpx.AsyncClient(timeout=20) as client:
-        r = await client.request(
-            method,
-            url,
-            headers=_headers(prefer),
-            params=params or {},
-            json=data,
-        )
+        r = await client.request(method, url, headers=_headers(prefer), params=params or {}, json=data)
         if r.status_code >= 400:
             log.error("Supabase %s %s -> %s %s", method, table, r.status_code, r.text[:800])
             r.raise_for_status()
@@ -136,26 +111,10 @@ async def db_patch(table: str, params: dict[str, str], data: dict, return_rows: 
     return await db_request("PATCH", table, params=params, data=data, prefer=prefer) or []
 
 
-async def db_upsert(
-    table: str,
-    data: dict,
-    *,
-    on_conflict: str,
-    return_rows: bool = True,
-) -> list[dict]:
+async def db_upsert(table: str, data: dict, *, on_conflict: str, return_rows: bool = True) -> list[dict]:
     prefer = "resolution=merge-duplicates," + ("return=representation" if return_rows else "return=minimal")
-    return await db_request(
-        "POST",
-        table,
-        params={"on_conflict": on_conflict},
-        data=data,
-        prefer=prefer,
-    ) or []
+    return await db_request("POST", table, params={"on_conflict": on_conflict}, data=data, prefer=prefer) or []
 
-
-# ---------------------------------------------------------------------
-# common helpers
-# ---------------------------------------------------------------------
 
 def inline_nav(back: bool = True, home: bool = True) -> InlineKeyboardMarkup:
     row: list[InlineKeyboardButton] = []
@@ -185,48 +144,29 @@ async def notify_admin(text: str) -> None:
 
 async def load_runtime_config() -> None:
     global ORG_ID, BOT_SETTINGS
-    org = await db_get("organizations", {
-        "slug": f"eq.{ORG_SLUG}",
-        "select": "id,name,slug",
-        "limit": "1",
-    })
+    org = await db_get("organizations", {"slug": f"eq.{ORG_SLUG}", "select": "id,name,slug", "limit": "1"})
     if not org:
         raise RuntimeError(f"Organization {ORG_SLUG!r} not found")
     ORG_ID = org[0]["id"]
-
-    settings = await db_get("bot_settings", {
-        "organization_id": f"eq.{ORG_ID}",
-        "select": "*",
-        "limit": "1",
-    })
+    settings = await db_get("bot_settings", {"organization_id": f"eq.{ORG_ID}", "select": "*", "limit": "1"})
     BOT_SETTINGS = settings[0] if settings else {}
     log.info("runtime config loaded for org=%s", ORG_ID)
 
 
 async def get_user(tg_id: int) -> Optional[dict]:
-    rows = await db_get("app_users", {
-        "telegram_user_id": f"eq.{tg_id}",
-        "select": "*",
-        "limit": "1",
-    })
+    rows = await db_get("app_users", {"telegram_user_id": f"eq.{tg_id}", "select": "*", "limit": "1"})
     return rows[0] if rows else None
 
 
 async def ensure_user_shell(m: Message) -> dict:
     user = await get_user(m.from_user.id)
     if user:
-        await db_patch(
-            "app_users",
-            {"id": f"eq.{user['id']}"},
-            {
-                "telegram_username": m.from_user.username,
-                "last_name": m.from_user.last_name,
-                "last_seen_at": datetime.now(timezone.utc).isoformat(),
-            },
-            return_rows=False,
-        )
+        await db_patch("app_users", {"id": f"eq.{user['id']}"}, {
+            "telegram_username": m.from_user.username,
+            "last_name": m.from_user.last_name,
+            "last_seen_at": datetime.now(timezone.utc).isoformat(),
+        }, return_rows=False)
         return user
-
     created = await db_insert("app_users", {
         "telegram_user_id": m.from_user.id,
         "telegram_username": m.from_user.username,
@@ -241,21 +181,14 @@ async def ensure_user_shell(m: Message) -> dict:
 
 async def link_telegram_user(user: dict, m: Message) -> None:
     existing = await db_get("telegram_links", {
-        "user_id": f"eq.{user['id']}",
-        "organization_id": f"eq.{ORG_ID}",
-        "telegram_user_id": f"eq.{m.from_user.id}",
-        "select": "id",
-        "limit": "1",
+        "user_id": f"eq.{user['id']}", "organization_id": f"eq.{ORG_ID}",
+        "telegram_user_id": f"eq.{m.from_user.id}", "select": "id", "limit": "1",
     })
     payload = {
-        "user_id": user["id"],
-        "organization_id": ORG_ID,
-        "telegram_user_id": m.from_user.id,
-        "telegram_chat_id": m.chat.id,
-        "telegram_username": m.from_user.username,
-        "link_status": "active",
-        "miniapp_enabled": True,
-        "notifications_enabled": True,
+        "user_id": user["id"], "organization_id": ORG_ID,
+        "telegram_user_id": m.from_user.id, "telegram_chat_id": m.chat.id,
+        "telegram_username": m.from_user.username, "link_status": "active",
+        "miniapp_enabled": True, "notifications_enabled": True,
         "last_seen_at": datetime.now(timezone.utc).isoformat(),
     }
     if existing:
@@ -265,35 +198,16 @@ async def link_telegram_user(user: dict, m: Message) -> None:
 
 
 async def get_session(tg_id: int) -> Optional[dict]:
-    rows = await db_get("bot_sessions", {
-        "telegram_user_id": f"eq.{tg_id}",
-        "select": "*",
-        "limit": "1",
-    })
+    rows = await db_get("bot_sessions", {"telegram_user_id": f"eq.{tg_id}", "select": "*", "limit": "1"})
     return rows[0] if rows else None
 
 
-async def set_session(
-    tg_id: int,
-    *,
-    flow: Optional[str],
-    step_key: Optional[str],
-    user_id: Optional[str],
-    answers: Optional[dict] = None,
-    history: Optional[list] = None,
-    current_question_id: Optional[str] = None,
-) -> dict:
+async def set_session(tg_id: int, *, flow: Optional[str], step_key: Optional[str], user_id: Optional[str], answers: Optional[dict] = None, history: Optional[list] = None, current_question_id: Optional[str] = None) -> dict:
     now = datetime.now(timezone.utc)
     payload = {
-        "telegram_user_id": tg_id,
-        "flow": flow,
-        "step_key": step_key,
-        "user_id": user_id,
-        "answers": answers or {},
-        "history": history or [],
-        "current_question_id": current_question_id,
-        "updated_at": now.isoformat(),
-        "expires_at": (now + timedelta(days=7)).isoformat(),
+        "telegram_user_id": tg_id, "flow": flow, "step_key": step_key, "user_id": user_id,
+        "answers": answers or {}, "history": history or [], "current_question_id": current_question_id,
+        "updated_at": now.isoformat(), "expires_at": (now + timedelta(days=7)).isoformat(),
     }
     rows = await db_upsert("bot_sessions", payload, on_conflict="telegram_user_id")
     return rows[0]
@@ -306,61 +220,28 @@ async def update_session(tg_id: int, **fields: Any) -> Optional[dict]:
 
 
 async def clear_session(tg_id: int, user_id: Optional[str] = None) -> None:
-    await set_session(
-        tg_id,
-        flow=None,
-        step_key=None,
-        user_id=user_id,
-        answers={},
-        history=[],
-        current_question_id=None,
-    )
+    await set_session(tg_id, flow=None, step_key=None, user_id=user_id, answers={}, history=[], current_question_id=None)
 
-
-# ---------------------------------------------------------------------
-# registration
-# ---------------------------------------------------------------------
 
 async def start_registration(m: Message, user: dict) -> None:
-    await set_session(
-        m.from_user.id,
-        flow="registration",
-        step_key="name",
-        user_id=user["id"],
-        answers={},
-        history=[],
-    )
-    msg = BOT_SETTINGS.get("registration_message") or (
-        "Чтобы сохранять расчёты, документы и историю объекта, создадим ваш профиль."
-    )
-    await m.answer(
-        f"{msg}\n\n<b>Как к вам обращаться?</b>",
-        parse_mode="HTML",
-        reply_markup=reply_nav(with_phone=False),
-    )
+    await set_session(m.from_user.id, flow="registration", step_key="name", user_id=user["id"], answers={}, history=[])
+    msg = BOT_SETTINGS.get("registration_message") or "Чтобы сохранять расчёты, документы и историю объекта, создадим ваш профиль."
+    await m.answer(f"{msg}\n\n<b>Как к вам обращаться?</b>", parse_mode="HTML", reply_markup=reply_nav())
 
 
 async def ask_phone(m: Message, user_id: str) -> None:
     await update_session(m.from_user.id, flow="registration", step_key="phone", user_id=user_id)
-    await m.answer(
-        "Отлично. Теперь поделитесь номером телефона — он нужен для профиля и заявок.",
-        reply_markup=reply_nav(with_phone=True),
-    )
+    await m.answer("Отлично. Теперь поделитесь номером телефона — он нужен для профиля и заявок.", reply_markup=reply_nav(with_phone=True))
 
 
 async def ask_city(m: Message, user_id: str) -> None:
     await update_session(m.from_user.id, flow="registration", step_key="city", user_id=user_id)
-    await m.answer(
-        "В каком городе находится ваш объект?",
-        reply_markup=reply_nav(with_phone=False),
-    )
+    await m.answer("В каком городе находится ваш объект?", reply_markup=reply_nav())
 
 
 async def finish_registration(m: Message, user_id: str, city: str) -> None:
     rows = await db_patch("app_users", {"id": f"eq.{user_id}"}, {
-        "city": city.strip(),
-        "onboarding_complete": True,
-        "role": "client",
+        "city": city.strip(), "onboarding_complete": True, "role": "client",
         "last_seen_at": datetime.now(timezone.utc).isoformat(),
     })
     user = rows[0]
@@ -370,16 +251,9 @@ async def finish_registration(m: Message, user_id: str, city: str) -> None:
     await show_home(m, user)
 
 
-# ---------------------------------------------------------------------
-# main menu
-# ---------------------------------------------------------------------
-
 async def menu_items() -> list[dict]:
     return await db_get("bot_menu_items", {
-        "organization_id": f"eq.{ORG_ID}",
-        "is_active": "eq.true",
-        "select": "*",
-        "order": "sort_order.asc",
+        "organization_id": f"eq.{ORG_ID}", "is_active": "eq.true", "select": "*", "order": "sort_order.asc",
     })
 
 
@@ -389,50 +263,26 @@ async def show_home(m: Message, user: Optional[dict] = None) -> None:
         shell = user or await ensure_user_shell(m)
         await start_registration(m, shell)
         return
-
     await clear_session(m.from_user.id, user_id=user["id"])
     items = await menu_items()
-    rows = [
-        [InlineKeyboardButton(text=i["label"], callback_data=f"menu:{i['key']}")]
-        for i in items
-    ]
-    greeting = BOT_SETTINGS.get("welcome_message") or (
-        "🏠 <b>TIMCHENKO.PRO</b>\nИнженерные системы частных домов\n\nВыберите, что хотите сделать:"
-    )
+    rows = [[InlineKeyboardButton(text=i["label"], callback_data=f"menu:{i['key']}")] for i in items]
+    greeting = BOT_SETTINGS.get("welcome_message") or "🏠 <b>TIMCHENKO.PRO</b>\nИнженерные системы частных домов\n\nВыберите, что хотите сделать:"
     await m.answer(greeting, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
 
 
-# ---------------------------------------------------------------------
-# dynamic quiz engine
-# ---------------------------------------------------------------------
-
 async def get_quiz(slug: str) -> Optional[dict]:
     rows = await db_get("quiz_definitions", {
-        "organization_id": f"eq.{ORG_ID}",
-        "slug": f"eq.{slug}",
-        "is_active": "eq.true",
-        "select": "*",
-        "limit": "1",
+        "organization_id": f"eq.{ORG_ID}", "slug": f"eq.{slug}", "is_active": "eq.true", "select": "*", "limit": "1",
     })
     return rows[0] if rows else None
 
 
 async def get_questions(quiz_id: str) -> list[dict]:
-    return await db_get("quiz_questions", {
-        "quiz_id": f"eq.{quiz_id}",
-        "is_active": "eq.true",
-        "select": "*",
-        "order": "sort_order.asc",
-    })
+    return await db_get("quiz_questions", {"quiz_id": f"eq.{quiz_id}", "is_active": "eq.true", "select": "*", "order": "sort_order.asc"})
 
 
 async def get_options(question_id: str) -> list[dict]:
-    return await db_get("quiz_options", {
-        "question_id": f"eq.{question_id}",
-        "is_active": "eq.true",
-        "select": "*",
-        "order": "sort_order.asc",
-    })
+    return await db_get("quiz_options", {"question_id": f"eq.{question_id}", "is_active": "eq.true", "select": "*", "order": "sort_order.asc"})
 
 
 def question_visible(q: dict, answers: dict) -> bool:
@@ -475,15 +325,7 @@ async def start_quiz_for_tg(m: Message, user: dict, slug: str, tg_id: int) -> No
     if not q:
         await m.answer("В квизе пока нет вопросов.", reply_markup=inline_nav())
         return
-    await set_session(
-        tg_id,
-        flow=f"quiz:{slug}",
-        step_key=q["key"],
-        user_id=user["id"],
-        answers={},
-        history=[],
-        current_question_id=q["id"],
-    )
+    await set_session(tg_id, flow=f"quiz:{slug}", step_key=q["key"], user_id=user["id"], answers={}, history=[], current_question_id=q["id"])
     if quiz.get("start_message"):
         await m.answer(f"{quiz.get('icon') or ''} <b>{quiz['title']}</b>\n\n{quiz['start_message']}", parse_mode="HTML")
     await render_question(m, q, {}, slug, quiz)
@@ -495,7 +337,6 @@ async def render_question(m: Message, q: dict, answers: dict, slug: str, quiz: O
         text += f"\n\n{q['help_text']}"
     if q.get("unit"):
         text += f"\n\nЕдиница: {q['unit']}"
-
     if q["input_type"] in ("single", "multi"):
         opts = await get_options(q["id"])
         selected = answers.get(q["key"], [])
@@ -509,10 +350,7 @@ async def render_question(m: Message, q: dict, answers: dict, slug: str, quiz: O
             rows.append([InlineKeyboardButton(text=label, callback_data=f"qo:{o['id']}")])
         if q["input_type"] == "multi":
             rows.append([InlineKeyboardButton(text="Готово ✅", callback_data=f"qdone:{q['id']}")])
-        rows.append([
-            InlineKeyboardButton(text=BACK, callback_data="nav:back"),
-            InlineKeyboardButton(text=HOME, callback_data="nav:home"),
-        ])
+        rows.append([InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")])
         await m.answer(text, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
     else:
         await m.answer(text, parse_mode="HTML", reply_markup=inline_nav())
@@ -524,72 +362,41 @@ async def advance_quiz(m: Message, tg_id: int, session: dict, current_q: dict, a
     answers[current_q["key"]] = answer_value
     if not history or history[-1] != current_q["key"]:
         history.append(current_q["key"])
-
     slug = session["flow"].split(":", 1)[1]
     quiz = await get_quiz(slug)
     next_q = await first_or_next_question(quiz["id"], answers, after_key=current_q["key"])
     if not next_q:
         await complete_quiz(m, tg_id, session, quiz, answers)
         return
-
-    await update_session(
-        tg_id,
-        step_key=next_q["key"],
-        answers=answers,
-        history=history,
-        current_question_id=next_q["id"],
-    )
+    await update_session(tg_id, step_key=next_q["key"], answers=answers, history=history, current_question_id=next_q["id"])
     await render_question(m, next_q, answers, slug, quiz)
 
 
 async def complete_quiz(m: Message, tg_id: int, session: dict, quiz: dict, answers: dict) -> None:
     user = await get_user(tg_id)
-    payload = {
-        "user_id": user["id"] if user else session.get("user_id"),
-        "telegram_user_id": tg_id,
-        "quiz_type": quiz["slug"],
-        "source": "telegram",
-        "answers": answers,
+    submission = await db_insert("quiz_submissions", {
+        "user_id": user["id"] if user else session.get("user_id"), "telegram_user_id": tg_id,
+        "quiz_type": quiz["slug"], "source": "telegram", "answers": answers,
         "contact_name": user.get("first_name") if user else None,
         "contact_phone": user.get("phone") if user else None,
-        "city": user.get("city") if user else None,
-        "status": "new",
-        "organization_id": ORG_ID,
-    }
-    submission = await db_insert("quiz_submissions", payload)
-
+        "city": user.get("city") if user else None, "status": "new", "organization_id": ORG_ID,
+    })
     lead_rows = await db_insert("leads", {
-        "source": "telegram_quiz",
-        "name": user.get("first_name") if user else None,
-        "phone": user.get("phone") if user else None,
-        "comment": f"Пройден квиз: {quiz['title']}",
-        "status": "new",
-        "telegram_user_id": tg_id,
-        "app_user_id": user.get("id") if user else None,
-        "city": user.get("city") if user else None,
-        "quiz_type": quiz["slug"],
+        "source": "telegram_quiz", "name": user.get("first_name") if user else None,
+        "phone": user.get("phone") if user else None, "comment": f"Пройден квиз: {quiz['title']}",
+        "status": "new", "telegram_user_id": tg_id, "app_user_id": user.get("id") if user else None,
+        "city": user.get("city") if user else None, "quiz_type": quiz["slug"],
         "payload": {"answers": answers, "submission_id": submission[0]["id"] if submission else None},
         "organization_id": ORG_ID,
     })
-
     await clear_session(tg_id, user_id=user.get("id") if user else session.get("user_id"))
-
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="☎️ Обсудить с инженером", callback_data="service:consultation")],
         [InlineKeyboardButton(text="📐 Заказать проектирование", callback_data="service:design")],
         [InlineKeyboardButton(text=HOME, callback_data="nav:home")],
     ])
-    completion = quiz.get("completion_message") or "✅ Расчёт сохранён."
-    await m.answer(completion, reply_markup=kb)
-
-    await notify_admin(
-        f"🔥 <b>Новый квиз</b>\n"
-        f"{quiz['title']}\n"
-        f"Клиент: {user.get('first_name') if user else '—'}\n"
-        f"Телефон: {user.get('phone') if user else '—'}\n"
-        f"Город: {user.get('city') if user else '—'}\n"
-        f"Lead: {lead_rows[0]['id'] if lead_rows else '—'}"
-    )
+    await m.answer(quiz.get("completion_message") or "✅ Расчёт сохранён.", reply_markup=kb)
+    await notify_admin(f"🔥 <b>Новый квиз</b>\n{quiz['title']}\nКлиент: {user.get('first_name') if user else '—'}\nТелефон: {user.get('phone') if user else '—'}\nГород: {user.get('city') if user else '—'}\nLead: {lead_rows[0]['id'] if lead_rows else '—'}")
 
 
 async def quiz_back(m: Message, tg_id: int, session: dict) -> bool:
@@ -600,58 +407,30 @@ async def quiz_back(m: Message, tg_id: int, session: dict) -> bool:
     new_history = history[:-1]
     answers = dict(session.get("answers") or {})
     answers.pop(target_key, None)
-
     slug = session["flow"].split(":", 1)[1]
     quiz = await get_quiz(slug)
     qs = await get_questions(quiz["id"])
     target = next((q for q in qs if q["key"] == target_key), None)
     if not target:
         return False
-    await update_session(
-        tg_id,
-        step_key=target["key"],
-        answers=answers,
-        history=new_history,
-        current_question_id=target["id"],
-    )
+    await update_session(tg_id, step_key=target["key"], answers=answers, history=new_history, current_question_id=target["id"])
     await render_question(m, target, answers, slug, quiz)
     return True
 
 
-# ---------------------------------------------------------------------
-# client portal / catalog / AI
-# ---------------------------------------------------------------------
-
 async def open_client_portal(m: Message, user: dict) -> None:
-    settings_url = (BOT_SETTINGS.get("miniapp_url") or "").strip()
-    url = settings_url or ENV_MINIAPP_URL
+    url = (BOT_SETTINGS.get("miniapp_url") or "").strip() or ENV_MINIAPP_URL
     if url:
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="🏗 Открыть мой объект", web_app=WebAppInfo(url=url))],
             [InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")],
         ])
-        await m.answer(
-            "В личном кабинете будут этапы работ, фото, сметы, документы, оплаты и связь с инженером.",
-            reply_markup=kb,
-        )
+        await m.answer("В личном кабинете будут этапы работ, фото, сметы, документы, оплаты и связь с инженером.", reply_markup=kb)
         return
-
-    projects = await db_get("projects", {
-        "client_user_id": f"eq.{user['id']}",
-        "select": "id,title,status,current_stage,progress_percent",
-        "order": "updated_at.desc",
-    })
+    projects = await db_get("projects", {"client_user_id": f"eq.{user['id']}", "select": "id,title,status,current_stage,progress_percent", "order": "updated_at.desc"})
     if projects:
         p = projects[0]
-        await m.answer(
-            f"🏗 <b>{p['title']}</b>\n"
-            f"Статус: {p.get('status')}\n"
-            f"Этап: {p.get('current_stage') or '—'}\n"
-            f"Готовность: {p.get('progress_percent', 0)}%\n\n"
-            f"Полный Mini App подключим сюда без изменения структуры бота.",
-            parse_mode="HTML",
-            reply_markup=inline_nav(),
-        )
+        await m.answer(f"🏗 <b>{p['title']}</b>\nСтатус: {p.get('status')}\nЭтап: {p.get('current_stage') or '—'}\nГотовность: {p.get('progress_percent', 0)}%\n\nПолный Mini App подключим сюда без изменения структуры бота.", parse_mode="HTML", reply_markup=inline_nav())
     else:
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="📐 Заказать проектирование", callback_data="service:design")],
@@ -662,28 +441,13 @@ async def open_client_portal(m: Message, user: dict) -> None:
 
 
 async def show_assemblies(m: Message) -> None:
-    rows = await db_get("assemblies", {
-        "is_active": "eq.true",
-        "select": "id,name,kind,description,price_out,build_days",
-        "order": "id.asc",
-        "limit": "10",
-    })
+    rows = await db_get("assemblies", {"is_active": "eq.true", "select": "id,name,kind,description,price_out,build_days", "order": "id.asc", "limit": "10"})
     if not rows:
-        await m.answer(
-            "📦 Каталог готовых инженерных узлов уже подключён к структуре.\n\n"
-            "Сейчас в базе нет опубликованных узлов. Добавим карточки — и они появятся здесь автоматически.",
-            reply_markup=inline_nav(),
-        )
+        await m.answer("📦 Каталог готовых инженерных узлов уже подключён к структуре.\n\nСейчас в базе нет опубликованных узлов. Добавим карточки — и они появятся здесь автоматически.", reply_markup=inline_nav())
         return
     for a in rows:
         price = f"{float(a['price_out']):,.0f} ₽".replace(",", " ")
-        text = (
-            f"<b>{a['name']}</b>\n"
-            f"{a.get('description') or ''}\n\n"
-            f"Стоимость: от {price}\n"
-            f"Срок сборки: {a.get('build_days', 0)} дн."
-        )
-        await m.answer(text, parse_mode="HTML")
+        await m.answer(f"<b>{a['name']}</b>\n{a.get('description') or ''}\n\nСтоимость: от {price}\nСрок сборки: {a.get('build_days', 0)} дн.", parse_mode="HTML")
     await m.answer("Выберите следующее действие:", reply_markup=inline_nav())
 
 
@@ -693,46 +457,22 @@ async def handle_ai_message(m: Message, session: dict, user: dict) -> None:
         await m.answer("Напишите вопрос текстом.", reply_markup=inline_nav())
         return
     await db_insert("messages", {
-        "project_id": None,
-        "user_id": user["id"],
-        "direction": "user",
-        "channel": "telegram_bot",
-        "body": body,
-        "metadata": {"telegram_user_id": m.from_user.id, "agent": session["flow"].split(":", 1)[1]},
+        "project_id": None, "user_id": user["id"], "direction": "user", "channel": "telegram_bot",
+        "body": body, "metadata": {"telegram_user_id": m.from_user.id, "agent": session["flow"].split(":", 1)[1]},
     }, return_rows=False)
-    await notify_admin(
-        f"🤖 <b>Вопрос AI-инженеру</b>\n"
-        f"{user.get('first_name') or 'Клиент'} / {user.get('phone') or '—'}\n\n"
-        f"{body}"
-    )
-    await m.answer(
-        "Вопрос сохранил. Агентную часть подключаем следующим слоем; пока сложные вопросы можно передать инженеру.",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="☎️ Передать инженеру", callback_data="service:consultation")],
-            [InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")],
-        ]),
-    )
+    await notify_admin(f"🤖 <b>Вопрос AI-инженеру</b>\n{user.get('first_name') or 'Клиент'} / {user.get('phone') or '—'}\n\n{body}")
+    await m.answer("Вопрос сохранил. Агентную часть подключаем следующим слоем; пока сложные вопросы можно передать инженеру.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="☎️ Передать инженеру", callback_data="service:consultation")],
+        [InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")],
+    ]))
 
-
-# ---------------------------------------------------------------------
-# consultation / design service requests
-# ---------------------------------------------------------------------
 
 CONSULT_TOPICS = [
-    ("nodes", "🔧 Инженерные узлы"),
-    ("engineering", "🏡 Инженерные системы"),
-    ("electrical", "⚡ Электрика"),
-    ("design", "📐 Проектирование"),
-    ("project", "🏗 Текущий объект"),
-    ("other", "❓ Другой вопрос"),
+    ("nodes", "🔧 Инженерные узлы"), ("engineering", "🏡 Инженерные системы"),
+    ("electrical", "⚡ Электрика"), ("design", "📐 Проектирование"),
+    ("project", "🏗 Текущий объект"), ("other", "❓ Другой вопрос"),
 ]
-
-CONTACT_WINDOWS = [
-    ("now", "📞 Можно звонить сейчас"),
-    ("morning", "🌅 Утром"),
-    ("day", "☀️ Днём"),
-    ("evening", "🌆 Вечером"),
-]
+CONTACT_WINDOWS = [("now", "📞 Можно звонить сейчас"), ("morning", "🌅 Утром"), ("day", "☀️ Днём"), ("evening", "🌆 Вечером")]
 
 
 async def finish_consultation(m: Message, tg_id: int, session: dict, user: dict, window: str) -> None:
@@ -740,33 +480,15 @@ async def finish_consultation(m: Message, tg_id: int, session: dict, user: dict,
     answers["contact_window"] = window
     topic = answers.get("topic", "other")
     await db_insert("service_requests", {
-        "project_id": None,
-        "created_by": user["id"],
-        "category": "consultation",
-        "title": f"Консультация: {topic}",
-        "description": "Заявка из Telegram-бота",
-        "priority": "normal",
-        "status": "new",
-        "metadata": {
-            "source": "telegram",
-            "topic": topic,
-            "contact_window": window,
-            "telegram_user_id": tg_id,
-            "phone": user.get("phone"),
-            "city": user.get("city"),
-        },
+        "project_id": None, "created_by": user["id"], "category": "consultation",
+        "title": f"Консультация: {topic}", "description": "Заявка из Telegram-бота",
+        "priority": "normal", "status": "new",
+        "metadata": {"source": "telegram", "topic": topic, "contact_window": window, "telegram_user_id": tg_id, "phone": user.get("phone"), "city": user.get("city")},
         "organization_id": ORG_ID,
     }, return_rows=False)
     await clear_session(tg_id, user_id=user["id"])
-    await m.answer("✅ Записал. Заявка на консультацию создана.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=HOME, callback_data="nav:home")]
-    ]))
-    await notify_admin(
-        f"☎️ <b>Новая консультация</b>\n"
-        f"{user.get('first_name') or 'Клиент'}\n"
-        f"{user.get('phone') or '—'} / {user.get('city') or '—'}\n"
-        f"Тема: {topic}\nУдобно: {window}"
-    )
+    await m.answer("✅ Записал. Заявка на консультацию создана.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=HOME, callback_data="nav:home")]]))
+    await notify_admin(f"☎️ <b>Новая консультация</b>\n{user.get('first_name') or 'Клиент'}\n{user.get('phone') or '—'} / {user.get('city') or '—'}\nТема: {topic}\nУдобно: {window}")
 
 
 async def finish_design(m: Message, tg_id: int, session: dict, user: dict, comment: str = "") -> None:
@@ -774,41 +496,61 @@ async def finish_design(m: Message, tg_id: int, session: dict, user: dict, comme
     if comment:
         answers["comment"] = comment
     await db_insert("service_requests", {
-        "project_id": None,
-        "created_by": user["id"],
-        "category": "design",
-        "title": "Заявка на проектирование дома",
-        "description": comment or "Заявка из Telegram-бота",
-        "priority": "normal",
-        "status": "new",
-        "metadata": {
-            "source": "telegram",
-            "telegram_user_id": tg_id,
-            "phone": user.get("phone"),
-            "city": user.get("city"),
-            **answers,
-        },
+        "project_id": None, "created_by": user["id"], "category": "design",
+        "title": "Заявка на проектирование дома", "description": comment or "Заявка из Telegram-бота",
+        "priority": "normal", "status": "new",
+        "metadata": {"source": "telegram", "telegram_user_id": tg_id, "phone": user.get("phone"), "city": user.get("city"), **answers},
         "organization_id": ORG_ID,
     }, return_rows=False)
     await clear_session(tg_id, user_id=user["id"])
-    await m.answer(
-        "✅ Заявка на проектирование создана. Исходные данные сохранены в вашем профиле.",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="☎️ Записаться на консультацию", callback_data="service:consultation")],
-            [InlineKeyboardButton(text=HOME, callback_data="nav:home")],
-        ]),
-    )
-    await notify_admin(
-        f"📐 <b>Новая заявка на проектирование</b>\n"
-        f"{user.get('first_name') or 'Клиент'}\n"
-        f"{user.get('phone') or '—'} / {user.get('city') or '—'}\n"
-        f"Данные: <code>{json.dumps(answers, ensure_ascii=False)[:1200]}</code>"
-    )
+    await m.answer("✅ Заявка на проектирование создана. Исходные данные сохранены в вашем профиле.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="☎️ Записаться на консультацию", callback_data="service:consultation")],
+        [InlineKeyboardButton(text=HOME, callback_data="nav:home")],
+    ]))
+    await notify_admin(f"📐 <b>Новая заявка на проектирование</b>\n{user.get('first_name') or 'Клиент'}\n{user.get('phone') or '—'} / {user.get('city') or '—'}\nДанные: <code>{json.dumps(answers, ensure_ascii=False)[:1200]}</code>")
 
 
-# ---------------------------------------------------------------------
-# handlers
-# ---------------------------------------------------------------------
+async def service_back(m: Message, tg_id: int, session: dict, user: Optional[dict]) -> bool:
+    flow = session.get("flow")
+    step = session.get("step_key")
+    if flow == "service:consultation":
+        if step == "window":
+            await update_session(tg_id, step_key="topic")
+            rows = [[InlineKeyboardButton(text=label, callback_data=f"svc_topic:{k}")] for k, label in CONSULT_TOPICS]
+            rows.append([InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")])
+            await m.answer("☎️ <b>Консультация инженера</b>\n\nПо какому вопросу хотите поговорить?", parse_mode="HTML", reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+            return True
+        return False
+    if flow == "service:design":
+        if step == "comment":
+            await update_session(tg_id, step_key="project_ready")
+            kb = InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="✅ Да, есть", callback_data="design_project:yes")],
+                [InlineKeyboardButton(text="📄 Есть часть проекта / планы", callback_data="design_project:partial")],
+                [InlineKeyboardButton(text="❌ Нет", callback_data="design_project:no")],
+                [InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")],
+            ])
+            await m.answer("Есть архитектурный проект или планы дома?", reply_markup=kb)
+            return True
+        if step == "project_ready":
+            await update_session(tg_id, step_key="area")
+            await m.answer("Площадь дома, м²?", reply_markup=inline_nav())
+            return True
+        if step == "area":
+            await update_session(tg_id, step_key="scope")
+            rows = [
+                [InlineKeyboardButton(text="🏡 Все инженерные системы", callback_data="design_scope:all")],
+                [InlineKeyboardButton(text="🔥 Отопление", callback_data="design_scope:heating")],
+                [InlineKeyboardButton(text="💧 Водоснабжение и канализация", callback_data="design_scope:water")],
+                [InlineKeyboardButton(text="⚡ Электрика", callback_data="design_scope:electrical")],
+                [InlineKeyboardButton(text="🌬 Вентиляция / кондиционирование", callback_data="design_scope:ventilation")],
+                [InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")],
+            ]
+            await m.answer("📐 <b>Проектирование дома</b>\n\nЧто нужно спроектировать?", parse_mode="HTML", reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+            return True
+        return False
+    return False
+
 
 @dp.message(CommandStart())
 async def on_start(m: Message):
@@ -850,7 +592,6 @@ async def on_nav_back(c: CallbackQuery):
     if not session or not session.get("flow"):
         await on_nav_home(c)
         return
-
     flow = session["flow"]
     if flow.startswith("quiz:"):
         if await quiz_back(c.message, c.from_user.id, session):
@@ -858,7 +599,6 @@ async def on_nav_back(c: CallbackQuery):
             return
         await on_nav_home(c)
         return
-
     if flow == "registration":
         step = session.get("step_key")
         if step == "city":
@@ -871,7 +611,9 @@ async def on_nav_back(c: CallbackQuery):
             await c.message.answer("Регистрация обязательна. Как к вам обращаться?", reply_markup=reply_nav())
         await c.answer()
         return
-
+    if flow.startswith("service:") and await service_back(c.message, c.from_user.id, session, user):
+        await c.answer()
+        return
     await clear_session(c.from_user.id, user_id=user["id"] if user else None)
     await on_nav_home(c)
 
@@ -883,19 +625,12 @@ async def on_menu_item(c: CallbackQuery):
         await c.answer("Сначала регистрация", show_alert=True)
         return
     key = c.data.split(":", 1)[1]
-    rows = await db_get("bot_menu_items", {
-        "organization_id": f"eq.{ORG_ID}",
-        "key": f"eq.{key}",
-        "is_active": "eq.true",
-        "select": "*",
-        "limit": "1",
-    })
+    rows = await db_get("bot_menu_items", {"organization_id": f"eq.{ORG_ID}", "key": f"eq.{key}", "is_active": "eq.true", "select": "*", "limit": "1"})
     if not rows:
         await c.answer("Раздел недоступен", show_alert=True)
         return
     item = rows[0]
-    action_type = item["action_type"]
-    target = item["action_target"]
+    action_type, target = item["action_type"], item["action_target"]
     if action_type == "quiz":
         await start_quiz_for_tg(c.message, user, target, c.from_user.id)
     elif action_type == "miniapp":
@@ -904,16 +639,9 @@ async def on_menu_item(c: CallbackQuery):
         await show_assemblies(c.message)
     elif action_type == "ai":
         await set_session(c.from_user.id, flow=f"ai:{target}", step_key="chat", user_id=user["id"], answers={}, history=[])
-        agent = await db_get("ai_agents", {
-            "organization_id": f"eq.{ORG_ID}", "slug": f"eq.{target}", "is_active": "eq.true",
-            "select": "name,description", "limit": "1"
-        })
+        agent = await db_get("ai_agents", {"organization_id": f"eq.{ORG_ID}", "slug": f"eq.{target}", "is_active": "eq.true", "select": "name,description", "limit": "1"})
         a = agent[0] if agent else {"name": "AI-инженер", "description": ""}
-        await c.message.answer(
-            f"🤖 <b>{a['name']}</b>\n\n{a.get('description') or ''}\n\nПишите вопрос обычным сообщением.",
-            parse_mode="HTML",
-            reply_markup=inline_nav(),
-        )
+        await c.message.answer(f"🤖 <b>{a['name']}</b>\n\n{a.get('description') or ''}\n\nПишите вопрос обычным сообщением.", parse_mode="HTML", reply_markup=inline_nav())
     elif action_type == "service":
         if target == "consultation":
             await set_session(c.from_user.id, flow="service:consultation", step_key="topic", user_id=user["id"], answers={}, history=[])
@@ -941,11 +669,7 @@ async def on_quiz_option(c: CallbackQuery):
     if not session or not (session.get("flow") or "").startswith("quiz:"):
         await c.answer("Квиз уже завершён", show_alert=True)
         return
-    qrows = await db_get("quiz_questions", {
-        "id": f"eq.{session.get('current_question_id')}",
-        "select": "*",
-        "limit": "1",
-    })
+    qrows = await db_get("quiz_questions", {"id": f"eq.{session.get('current_question_id')}", "select": "*", "limit": "1"})
     if not qrows:
         await c.answer("Вопрос не найден", show_alert=True)
         return
@@ -954,14 +678,11 @@ async def on_quiz_option(c: CallbackQuery):
     if not opts or opts[0]["question_id"] != q["id"]:
         await c.answer("Вариант не найден", show_alert=True)
         return
-    o = opts[0]
-    value = o.get("value") or o["key"]
-
+    value = opts[0].get("value") or opts[0]["key"]
     if q["input_type"] == "single":
         await c.answer()
         await advance_quiz(c.message, c.from_user.id, session, q, value)
         return
-
     answers = dict(session.get("answers") or {})
     selected = list(answers.get(q["key"]) or [])
     if value in selected:
@@ -971,13 +692,11 @@ async def on_quiz_option(c: CallbackQuery):
     answers[q["key"]] = selected
     await update_session(c.from_user.id, answers=answers)
     await c.answer("Выбрано" if value in selected else "Убрано")
-
     opts_all = await get_options(q["id"])
     rows = []
     for opt in opts_all:
         v = opt.get("value") or opt["key"]
-        label = ("✅ " if v in selected else "") + opt["label"]
-        rows.append([InlineKeyboardButton(text=label, callback_data=f"qo:{opt['id']}")])
+        rows.append([InlineKeyboardButton(text=("✅ " if v in selected else "") + opt["label"], callback_data=f"qo:{opt['id']}")])
     rows.append([InlineKeyboardButton(text="Готово ✅", callback_data=f"qdone:{q['id']}")])
     rows.append([InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")])
     try:
@@ -1008,8 +727,7 @@ async def on_quiz_multi_done(c: CallbackQuery):
 
 @dp.callback_query(F.data.startswith("svc_topic:"))
 async def on_service_topic(c: CallbackQuery):
-    user = await get_user(c.from_user.id)
-    session = await get_session(c.from_user.id)
+    user, session = await get_user(c.from_user.id), await get_session(c.from_user.id)
     if not user or not session:
         await c.answer("Сессия закончилась", show_alert=True)
         return
@@ -1025,13 +743,11 @@ async def on_service_topic(c: CallbackQuery):
 
 @dp.callback_query(F.data.startswith("svc_window:"))
 async def on_service_window(c: CallbackQuery):
-    user = await get_user(c.from_user.id)
-    session = await get_session(c.from_user.id)
+    user, session = await get_user(c.from_user.id), await get_session(c.from_user.id)
     if not user or not session:
         await c.answer("Сессия закончилась", show_alert=True)
         return
-    window = c.data.split(":", 1)[1]
-    await finish_consultation(c.message, c.from_user.id, session, user, window)
+    await finish_consultation(c.message, c.from_user.id, session, user, c.data.split(":", 1)[1])
     await c.answer()
 
 
@@ -1041,9 +757,8 @@ async def on_design_scope(c: CallbackQuery):
     if not session:
         await c.answer("Сессия закончилась", show_alert=True)
         return
-    scope = c.data.split(":", 1)[1]
     answers = dict(session.get("answers") or {})
-    answers["scope"] = scope
+    answers["scope"] = c.data.split(":", 1)[1]
     await update_session(c.from_user.id, step_key="area", answers=answers)
     await c.message.answer("Площадь дома, м²?", reply_markup=inline_nav())
     await c.answer()
@@ -1055,14 +770,10 @@ async def on_design_project(c: CallbackQuery):
     if not session:
         await c.answer("Сессия закончилась", show_alert=True)
         return
-    val = c.data.split(":", 1)[1]
     answers = dict(session.get("answers") or {})
-    answers["project_ready"] = val
+    answers["project_ready"] = c.data.split(":", 1)[1]
     await update_session(c.from_user.id, step_key="comment", answers=answers)
-    await c.message.answer(
-        "Коротко опишите задачу или особенности дома. Если добавить нечего — напишите «нет».",
-        reply_markup=inline_nav(),
-    )
+    await c.message.answer("Коротко опишите задачу или особенности дома. Если добавить нечего — напишите «нет».", reply_markup=inline_nav())
     await c.answer()
 
 
@@ -1094,8 +805,7 @@ async def on_service_quick(c: CallbackQuery):
 
 @dp.message(F.contact)
 async def on_contact(m: Message):
-    session = await get_session(m.from_user.id)
-    user = await get_user(m.from_user.id)
+    session, user = await get_session(m.from_user.id), await get_user(m.from_user.id)
     if not session or session.get("flow") != "registration" or session.get("step_key") != "phone" or not user:
         return
     if m.contact.user_id and m.contact.user_id != m.from_user.id:
@@ -1111,9 +821,7 @@ async def on_text(m: Message):
     if text == HOME:
         await show_home(m)
         return
-    session = await get_session(m.from_user.id)
-    user = await get_user(m.from_user.id)
-
+    session, user = await get_session(m.from_user.id), await get_user(m.from_user.id)
     if text == BACK:
         if not session or not session.get("flow"):
             await show_home(m, user)
@@ -1134,15 +842,15 @@ async def on_text(m: Message):
             else:
                 await m.answer("Как к вам обращаться?", reply_markup=reply_nav())
             return
+        if flow.startswith("service:") and await service_back(m, m.from_user.id, session, user):
+            return
         await show_home(m, user)
         return
-
     if not user:
         user = await ensure_user_shell(m)
     if not user.get("onboarding_complete") and (not session or session.get("flow") != "registration"):
         await start_registration(m, user)
         return
-
     if session and session.get("flow") == "registration":
         step = session.get("step_key")
         if step == "name":
@@ -1163,13 +871,8 @@ async def on_text(m: Message):
         if step == "city":
             await finish_registration(m, user["id"], text)
             return
-
     if session and (session.get("flow") or "").startswith("quiz:"):
-        qrows = await db_get("quiz_questions", {
-            "id": f"eq.{session.get('current_question_id')}",
-            "select": "*",
-            "limit": "1",
-        })
+        qrows = await db_get("quiz_questions", {"id": f"eq.{session.get('current_question_id')}", "select": "*", "limit": "1"})
         if not qrows:
             await m.answer("Не удалось восстановить вопрос. Вернитесь на главную.", reply_markup=inline_nav())
             return
@@ -1192,11 +895,9 @@ async def on_text(m: Message):
         if q["input_type"] == "text":
             await advance_quiz(m, m.from_user.id, session, q, text)
             return
-
     if session and (session.get("flow") or "").startswith("ai:"):
         await handle_ai_message(m, session, user)
         return
-
     if session and session.get("flow") == "service:design":
         step = session.get("step_key")
         answers = dict(session.get("answers") or {})
@@ -1222,10 +923,7 @@ async def on_text(m: Message):
         if step == "comment":
             await finish_design(m, m.from_user.id, session, user, "" if text.lower() in ("нет", "no", "-") else text)
             return
-
-    await m.answer("Выберите действие в главном меню.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=HOME, callback_data="nav:home")]
-    ]))
+    await m.answer("Выберите действие в главном меню.", reply_markup=InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=HOME, callback_data="nav:home")]]))
 
 
 async def main() -> None:
