@@ -1,0 +1,41 @@
+name: Fix Timchenko Telegram links
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-telegram-links.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Point all public Telegram links to uzelpro_bot
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('https://t.me/Timchenko_pro', 'https://t.me/uzelpro_bot')
+          s = s.replace('http://t.me/Timchenko_pro', 'https://t.me/uzelpro_bot')
+          s = s.replace('Telegram @Timchenko_pro', 'Telegram @uzelpro_bot')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit patched site
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo 'No link changes needed'
+            exit 0
+          fi
+          git config user.name 'timchenko-site-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Point site Telegram links to uzelpro_bot'
+          git push
