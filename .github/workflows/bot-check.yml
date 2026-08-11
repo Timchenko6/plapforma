@@ -15,4 +15,4 @@ jobs:
         with:
           python-version: '3.12'
       - name: Compile bot
-        run: python -m py_compile telegram-bot/timchenko_bot_v5.py
+        run: python -m py_compile telegram-bot/timchenko_bot_v6.py
