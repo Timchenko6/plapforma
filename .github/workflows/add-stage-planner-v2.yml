@@ -1,0 +1,51 @@
+name: Add stage planner v2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-stage-planner-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Add detailed stage planning UI
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          files=[Path('client-v2/index.html'),Path('client-v3/index.html')]
+          stage_fn=r'''function stageEditor(stages,sid){const x=stages.find(z=>z.id===sid);if(!x)return`<div class="notice">Выберите этап выше — после этого здесь появятся сроки, бюджет и план работ.</div>`;return`<div class="card form"><div class="sectionHead" style="margin:0"><h2>План этапа</h2><span>${esc(x.name)}</span></div><div class="form2"><div><div class="label">Название</div><input class="input" id="seName" value="${esc(x.name||'')}"></div><div><div class="label">Система</div><input class="input" id="seSystem" value="${esc(x.system||'')}" placeholder="Отопление / ВК / Электрика"></div></div><textarea class="input" id="seDesc" placeholder="Что входит в этап">${esc(x.description||'')}</textarea><div class="form3"><div><div class="label">Статус</div><select class="input" id="seStatus"><option value="planned" ${x.status==='planned'?'selected':''}>Запланирован</option><option value="in_progress" ${x.status==='in_progress'?'selected':''}>В работе</option><option value="review" ${x.status==='review'?'selected':''}>Проверка</option><option value="done" ${x.status==='done'?'selected':''}>Готово</option><option value="blocked" ${x.status==='blocked'?'selected':''}>Стоп</option><option value="cancelled" ${x.status==='cancelled'?'selected':''}>Отменён</option></select></div><div><div class="label">Готовность, %</div><input class="input" id="seProgress" inputmode="numeric" value="${Number(x.progress_percent||0)}"></div><div><div class="label">Бюджет этапа, ₽</div><input class="input" id="seBudget" inputmode="decimal" value="${esc(x.budget_amount||'')}"></div></div><div class="form2"><div><div class="label">План старт</div><input class="input" id="seStart" type="date" value="${String(x.planned_start||'').slice(0,10)}"></div><div><div class="label">План финиш</div><input class="input" id="seFinish" type="date" value="${String(x.planned_finish||'').slice(0,10)}"></div></div><div><div class="label">Видимость этапа</div><select class="input" id="seVis"><option value="client" ${x.visibility!=='team'?'selected':''}>Клиент видит</option><option value="team" ${x.visibility==='team'?'selected':''}>Только я/команда</option></select></div><button class="btn navy w100" id="saveStagePlan">Сохранить план этапа</button></div>`}
+'''
+          new_assets=r'''function objectAssets(d){const stages=d.stages||[],sid=S.stageId,docs=(d.documents||[]).filter(x=>(x.stage_id||'')===sid),media=(d.media||[]).filter(x=>(x.stage_id||'')===sid),pay=(d.payments||[]).filter(x=>(x.stage_id||'')===sid),est=(d.estimates||[]).filter(x=>(x.stage_id||'')===sid);return`<div class="section"><div class="sectionHead"><h2>Управление выбранным этапом</h2><span>${sid?esc(stages.find(x=>x.id===sid)?.name||'этап'):'Весь объект'}</span></div>${stageEditor(stages,sid)}<div class="assetNav"><button class="${S.asset==='photos'?'on':''}" data-asset="photos">📷 Фото ${media.length}</button><button class="${S.asset==='docs'?'on':''}" data-asset="docs">📄 Документы ${docs.length}</button><button class="${S.asset==='pay'?'on':''}" data-asset="pay">₽ Оплаты ${pay.length}</button><button class="${S.asset==='est'?'on':''}" data-asset="est">∑ Сметы ${est.length}</button></div>${S.asset==='photos'?photoAdmin(media):S.asset==='docs'?docsAdmin(docs):S.asset==='pay'?payAdmin(pay):estimateAdmin(est)}</div>`}
+'''
+          handler=r''' $('#saveStagePlan')?.addEventListener('click',async e=>{const sid=S.stageId;if(!sid)return;e.target.disabled=true;try{await adminCall('stage.update',{stage_id:sid,name:$('#seName').value,system:$('#seSystem').value||null,description:$('#seDesc').value||null,status:$('#seStatus').value,progress_percent:Math.max(0,Math.min(100,Number($('#seProgress').value)||0)),budget_amount:$('#seBudget').value||null,planned_start:$('#seStart').value||null,planned_finish:$('#seFinish').value||null,visibility:$('#seVis').value});notice('План этапа сохранён','ok');const pid=S.project.project.id;await openProject(pid);S.stageId=sid;renderAdmin()}catch(x){notice(x.message,'error');e.target.disabled=false}});
+'''
+          for p in files:
+              s=p.read_text(encoding='utf-8')
+              if 'function stageEditor(stages,sid)' not in s:
+                  m=re.search(r'function objectAssets\(d\)\{.*?\}\nfunction visSwitch',s,re.S)
+                  if not m: raise SystemExit(f'objectAssets target missing in {p}')
+                  s=s[:m.start()]+stage_fn+new_assets+'function visSwitch'+s[m.end():]
+              marker=" document.querySelectorAll('[data-asset]').forEach(b=>b.onclick=()=>{S.asset=b.dataset.asset;renderAdmin()});"
+              if "$('#saveStagePlan')?.addEventListener" not in s:
+                  if marker not in s: raise SystemExit(f'handler marker missing in {p}')
+                  s=s.replace(marker,handler+marker,1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit detailed stage planner
+        shell: bash
+        run: |
+          git config user.name 'timchenko-site-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add client-v2/index.html client-v3/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Add detailed stage planning to owner cabinet'
+          git push
