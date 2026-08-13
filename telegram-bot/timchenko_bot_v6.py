@@ -986,9 +986,20 @@ async def on_start(m: Message) -> None:
     user = await ensure_user_shell(m)
     if not user.get("onboarding_complete"):
         await start_registration(m, user)
-    else:
-        await link_telegram_user(user, m)
-        await show_home(m, user)
+        return
+
+    await link_telegram_user(user, m)
+    parts = (m.text or "").split(maxsplit=1)
+    payload = parts[1].strip() if len(parts) > 1 else ""
+    quiz_payloads = {
+        "quiz_engineering_nodes": "engineering_nodes",
+        "quiz_home_engineering": "home_engineering",
+        "quiz_electrical": "electrical",
+    }
+    if payload in quiz_payloads:
+        await start_quiz_for_tg(m, user, quiz_payloads[payload], m.from_user.id)
+        return
+    await show_home(m, user)
 
 
 @dp.message(Command("menu", "home"))
