@@ -12,7 +12,7 @@ if (partNames.length !== 7) throw new Error(`Expected 7 payload parts, found ${p
 const encoded = (await Promise.all(partNames.map((name) => readFile(path.join(root, name), "utf8")))).join("");
 const html = gunzipSync(Buffer.from(encoded, "base64")).toString("utf8");
 const required = [
-  "show('home')",
+  "show('estimate')",
   "systemCabinetMount",
   "system-cabinet-preview",
   "https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/public-lead-api",
