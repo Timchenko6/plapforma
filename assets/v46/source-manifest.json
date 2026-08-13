@@ -1,0 +1,659 @@
+{
+  "source": "Google Drive",
+  "downloadedAt": "2026-08-12",
+  "note": "Файл с названием «1» в каждой папке используется первым кадром.",
+  "folders": {
+    "service-heating": {
+      "label": "Котельные",
+      "driveFolderId": "1LmB2y7MWj8HBZg2E7p7USFzoNAmKeNS7",
+      "items": [
+        {
+          "order": 1,
+          "driveFileId": "1f8FirjWryUFnsiKqws-CHp6TWnmgVj93",
+          "originalTitle": "1",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 3669987,
+          "localFile": "001.jpg"
+        },
+        {
+          "order": 2,
+          "driveFileId": "1wOa9BkSotRpslvAdoxhm2wElBNoPOv8H",
+          "originalTitle": "IMG_20240219_095359.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 9333960,
+          "localFile": "002.jpg"
+        },
+        {
+          "order": 3,
+          "driveFileId": "1w0HAltY52TfKsyObWcNXth2vHZSNxHe1",
+          "originalTitle": "IMG_20240219_095407.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 8155268,
+          "localFile": "003.jpg"
+        },
+        {
+          "order": 4,
+          "driveFileId": "1LinXCg9gkVRY3JAWFwDjlqcdef_TBvwf",
+          "originalTitle": "IMG_20260805_123605.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 2762550,
+          "localFile": "004.jpg"
+        },
+        {
+          "order": 5,
+          "driveFileId": "1ZjfBZCC56jetUDB9GYAiqPyT630PTLXg",
+          "originalTitle": "IMG_20260805_123717.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 3052277,
+          "localFile": "005.jpg"
+        },
+        {
+          "order": 6,
+          "driveFileId": "15wXap_qxJGFGOhxQ4o20Q4jobvInXTA3",
+          "originalTitle": "2022-09-01 14-31-04.JPG",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 3456708,
+          "localFile": "006.jpg"
+        },
+        {
+          "order": 7,
+          "driveFileId": "1lmxp4D8wlFxWFcBQRM_UGPRtkKRfVsl6",
+          "originalTitle": "2022-09-01 14-30-11.JPG",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 2224161,
+          "localFile": "007.jpg"
+        },
+        {
+          "order": 8,
+          "driveFileId": "1q3QaGSxsR3H4__VEl3dQmI1lzH5SEDl8",
+          "originalTitle": "c72939e462dd44242db7dd621bbe5d1c.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 291423,
+          "localFile": "008.jpg"
+        },
+        {
+          "order": 9,
+          "driveFileId": "1rxm6xob-oq1nQcMZ9XY7e3X6IoSuu0hY",
+          "originalTitle": "photo_2026-04-24_15-40-07.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 194500,
+          "localFile": "009.jpg"
+        },
+        {
+          "order": 10,
+          "driveFileId": "1JdxsIfogSfQdKQ-MUaxE9oyoeHSk8FLg",
+          "originalTitle": "photo_2026-04-27_14-21-12 (7).jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 170560,
+          "localFile": "010.jpg"
+        },
+        {
+          "order": 11,
+          "driveFileId": "10E2HqI7NjfJONC0d2fDAb21nsq0yLCId",
+          "originalTitle": "photo_2026-04-27_14-21-12 (6).jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 180316,
+          "localFile": "011.jpg"
+        },
+        {
+          "order": 12,
+          "driveFileId": "19UavFgh1jrGWBi8CIrMOogsY4bkMbd_8",
+          "originalTitle": "photo_2026-04-27_14-16-43.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 153577,
+          "localFile": "012.jpg"
+        },
+        {
+          "order": 13,
+          "driveFileId": "16xWNmTJa7gWb-RXFWoXogKJFzQQvGNgU",
+          "originalTitle": "photo_9_2025-07-01_14-35-37.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 344493,
+          "localFile": "013.jpg"
+        },
+        {
+          "order": 14,
+          "driveFileId": "1gOQc0cGIv2IN702IAzZ60xJ7I77Nzu_a",
+          "originalTitle": "Изображение WhatsApp 2025-07-01 в 13.19.09_5e51c252.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 1020911,
+          "localFile": "014.jpg"
+        },
+        {
+          "order": 15,
+          "driveFileId": "13qk-_MVbdJvbzbezezCGYmYF1JvGHhCd",
+          "originalTitle": "triplehhydronics_1634157132665.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 287392,
+          "localFile": "015.jpg"
+        },
+        {
+          "order": 16,
+          "driveFileId": "1975_KgF2eBa1JCPcp_VC9F0jWEhI4hbt",
+          "originalTitle": "triplehhydronics_1634157323764.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 232903,
+          "localFile": "016.jpg"
+        },
+        {
+          "order": 17,
+          "driveFileId": "1tTgdhbxjtXHpP_zTSGMwDF1jLEJzQCaq",
+          "originalTitle": "IMG_20211130_144340.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 12540009,
+          "localFile": "017.jpg"
+        },
+        {
+          "order": 18,
+          "driveFileId": "1ATrh9ro_BMg5X2mc4D5PVIwCAQk_JB4D",
+          "originalTitle": "IMG_20211124_114950.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 12613832,
+          "localFile": "018.jpg"
+        }
+      ]
+    },
+    "service-ventilation": {
+      "label": "Вентиляция",
+      "driveFolderId": "1dBV2lUchyOeKllIMNczR0tEkmRrNNyc2",
+      "items": [
+        {
+          "order": 1,
+          "driveFileId": "1TctxrOqspfnMZ8gn0l7z4lxbczvt8r_J",
+          "originalTitle": "1",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 2757809,
+          "localFile": "001.jpg"
+        },
+        {
+          "order": 2,
+          "driveFileId": "1L5EwObKBIY45cSLTlvJ6peymCw1cK5LG",
+          "originalTitle": "20240601_194943.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 2872865,
+          "localFile": "002.jpg"
+        },
+        {
+          "order": 3,
+          "driveFileId": "1kzWJ8rrfLzR8kFM2ZoEQEgukDuqYA56l",
+          "originalTitle": "20240415_122207.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 2583865,
+          "localFile": "003.jpg"
+        },
+        {
+          "order": 4,
+          "driveFileId": "1h-HCV_prNFT7ebBgMFsgaFP2wyxx6_Bx",
+          "originalTitle": "20230228_224558.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 12837698,
+          "localFile": "004.jpg"
+        },
+        {
+          "order": 5,
+          "driveFileId": "1XSGVbs_uabmB8j6uEjokG1SEDstFV9Eu",
+          "originalTitle": "20230228_223716.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 28398125,
+          "localFile": "005.jpg"
+        },
+        {
+          "order": 6,
+          "driveFileId": "1W-p-ruWF7VYkSamHNSwDVa4ic1OV4Iji",
+          "originalTitle": "photo_44_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 178497,
+          "localFile": "006.jpg"
+        },
+        {
+          "order": 7,
+          "driveFileId": "15J2giBX-Qx5nRrIFDOvuzeMS8m65Y-6f",
+          "originalTitle": "photo_28_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 134408,
+          "localFile": "007.jpg"
+        },
+        {
+          "order": 8,
+          "driveFileId": "1VzpNNaslX-8vHs4VvhmfoZX3JyxrWC_s",
+          "originalTitle": "photo_68_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 157746,
+          "localFile": "008.jpg"
+        },
+        {
+          "order": 9,
+          "driveFileId": "1xZLu7Gnz82lho3D_NFdeUjfOpUXKY7tg",
+          "originalTitle": "photo_66_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 146385,
+          "localFile": "009.jpg"
+        },
+        {
+          "order": 10,
+          "driveFileId": "1MsGBRPNohe1qJ_idt6HHQojmic8I7GRm",
+          "originalTitle": "photo_60_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 164616,
+          "localFile": "010.jpg"
+        },
+        {
+          "order": 11,
+          "driveFileId": "1FciDHhyYZXZgFZWWRjb5DGWldMdLZkKp",
+          "originalTitle": "photo_26_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 120375,
+          "localFile": "011.jpg"
+        },
+        {
+          "order": 12,
+          "driveFileId": "1XlL772s0FLOmkVAAIpRtkgXAOSCTAV2r",
+          "originalTitle": "photo_56_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 137167,
+          "localFile": "012.jpg"
+        },
+        {
+          "order": 13,
+          "driveFileId": "1_39I5qkUR-GzYG8hEk5NyxVTE0lr-2hM",
+          "originalTitle": "photo_50_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 127063,
+          "localFile": "013.jpg"
+        },
+        {
+          "order": 14,
+          "driveFileId": "1YAQ1txu0dIx6ymCgZ34xkPno6NWkXp75",
+          "originalTitle": "photo_63_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 178839,
+          "localFile": "014.jpg"
+        },
+        {
+          "order": 15,
+          "driveFileId": "1LJnhjshx6r0CXvS0zIfyFonaaWloDo2H",
+          "originalTitle": "photo_22_2025-07-01_14-35-25.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 152793,
+          "localFile": "015.jpg"
+        }
+      ]
+    },
+    "service-water": {
+      "label": "Водоснабжение",
+      "driveFolderId": "16Gwsqrdrri1H2iVDFWLD4qDhDkNqvDfT",
+      "items": [
+        {
+          "order": 1,
+          "driveFileId": "1laR0Bu9rwydEP34ZZwiBKenkxQ9Fs02B",
+          "originalTitle": "1",
+          "mimeType": "image/png",
+          "sizeBytes": 1475981,
+          "localFile": "001.png"
+        },
+        {
+          "order": 2,
+          "driveFileId": "1T5v_0Z2O5YzSBFFMAhZliD18XsHEib1q",
+          "originalTitle": "IMG_20230130_143845.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 1442725,
+          "localFile": "002.jpg"
+        },
+        {
+          "order": 3,
+          "driveFileId": "1CTG2dd1OzS-l0kosKsuATBgoVWDew5vy",
+          "originalTitle": "2021-11-26 11-57-45.JPG",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 14036445,
+          "localFile": "003.jpg"
+        },
+        {
+          "order": 4,
+          "driveFileId": "15WxHSAVjWK3XRYt4ts8zc8Hi7eRjDuoK",
+          "originalTitle": "2021-10-25 16-39-47.JPG",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 14140985,
+          "localFile": "004.jpg"
+        },
+        {
+          "order": 5,
+          "driveFileId": "1oF1Civ1UdH2KqPByaAjtfLQF-OadgjFW",
+          "originalTitle": "2021-10-25 16-38-54.JPG",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 13250369,
+          "localFile": "005.jpg"
+        },
+        {
+          "order": 6,
+          "driveFileId": "1e3H0eb9_GL0wYIjJNpzSyVYy7G6BzUzT",
+          "originalTitle": "2021-10-21 16-32-22.JPG",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 11322478,
+          "localFile": "006.jpg"
+        },
+        {
+          "order": 7,
+          "driveFileId": "1HYwB5OvzbyKx3f05jamU1RfHudIMBMrI",
+          "originalTitle": "2dbddb37-cc42-487e-8949-c246f83c7f50.jfif",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 542311,
+          "localFile": "007.jpg"
+        },
+        {
+          "order": 8,
+          "driveFileId": "1NTUr2JZpDRvC117mDa9uumoIHvWO7HtB",
+          "originalTitle": "photo_5_2025-07-01_14-35-37.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 230396,
+          "localFile": "008.jpg"
+        },
+        {
+          "order": 9,
+          "driveFileId": "1udQov4FlSstJraAq77z4_i3VCP7xAad0",
+          "originalTitle": "Изображение WhatsApp 2025-07-01 в 13.19.06_97ac3869.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 803703,
+          "localFile": "009.jpg"
+        },
+        {
+          "order": 10,
+          "driveFileId": "1wJUyozsV0EmnuFdj0DTMlCtOP45lR6GB",
+          "originalTitle": "Изображение WhatsApp 2025-07-01 в 13.18.57_bf4dfa45.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 775869,
+          "localFile": "010.jpg"
+        },
+        {
+          "order": 11,
+          "driveFileId": "1KvaVSBBFdEPn3PGvv0HoN4zXqIVrWB4l",
+          "originalTitle": "WhatsApp Image 2024-02-24 at 12.25.09 (2).jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 397831,
+          "localFile": "011.jpg"
+        },
+        {
+          "order": 12,
+          "driveFileId": "1_60lae-_EqHyoZodCm9o8h71Lz7xZcpI",
+          "originalTitle": "WhatsApp Image 2024-02-24 at 12.25.10 (2).jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 515495,
+          "localFile": "012.jpg"
+        }
+      ]
+    },
+    "service-electric": {
+      "label": "Электрика",
+      "driveFolderId": "12Z8lEG0-GEExBK_yZmrnG9VWWhyNwPr0",
+      "items": [
+        {
+          "order": 1,
+          "driveFileId": "15y9qU6C_MGKI81wyZCieZ4Y7Ir21OtSF",
+          "originalTitle": "1",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 305396,
+          "localFile": "001.jpg"
+        },
+        {
+          "order": 2,
+          "driveFileId": "1poLH65ChtG-zg8xIbR9pJKrWoqx-YiLh",
+          "originalTitle": "57F269EA-D8D8-48BD-846C-97AE473DC072_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 134151,
+          "localFile": "002.jpg"
+        },
+        {
+          "order": 3,
+          "driveFileId": "1ksbnSNZQwaJXIKn3L3fs1jPxKTYP5SZM",
+          "originalTitle": "E59D2393-E4EF-4171-B86B-FACB23857225_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 214971,
+          "localFile": "003.jpg"
+        },
+        {
+          "order": 4,
+          "driveFileId": "1Te_8F8B5QohzYAq-A0SgBbV7kwy-NbWC",
+          "originalTitle": "C8579427-47F4-46C0-B2B2-364689C80268_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 283891,
+          "localFile": "004.jpg"
+        },
+        {
+          "order": 5,
+          "driveFileId": "1Rc67YWX37xKyamWCLAJqgpncGRTgtPXg",
+          "originalTitle": "41DCA704-882B-40CD-87E3-78BBF73FFF33_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 308009,
+          "localFile": "005.jpg"
+        },
+        {
+          "order": 6,
+          "driveFileId": "1lz8KWGNeG63f1uwVqjXnedaV6jyM68G1",
+          "originalTitle": "2012C377-ECCB-49A0-9177-4171CFCDF948_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 263719,
+          "localFile": "006.jpg"
+        },
+        {
+          "order": 7,
+          "driveFileId": "1ufYfBVZttKz18Z1I2RO_OXCQt8hQKY2C",
+          "originalTitle": "BE07D331-28D6-484D-9D7D-815355758EA5_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 157493,
+          "localFile": "007.jpg"
+        },
+        {
+          "order": 8,
+          "driveFileId": "1tov5Jhbvkcv-DUKjbzr5NN3DNwRACP_k",
+          "originalTitle": "A299BF2C-5FB1-409F-A711-D75E97D9C392_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 174458,
+          "localFile": "008.jpg"
+        },
+        {
+          "order": 9,
+          "driveFileId": "1tAjTJdf3BJsXN51qxSmuiIlwo8WV4MMo",
+          "originalTitle": "A357F9C1-0633-4425-89A5-DA6F9832CA57_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 303267,
+          "localFile": "009.jpg"
+        },
+        {
+          "order": 10,
+          "driveFileId": "1Nl8mosXT_hghCLKOMPXdq7k3zQxLZiSh",
+          "originalTitle": "335767E3-A0CE-4A1F-8C2D-F7E5EE531306_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 276834,
+          "localFile": "010.jpg"
+        },
+        {
+          "order": 11,
+          "driveFileId": "1OS0qnObTU7iJ8r0RSyhapxmPHzaUvORH",
+          "originalTitle": "44EE0468-74B6-4F7D-B0FF-0E4F9A171BC4_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 257011,
+          "localFile": "011.jpg"
+        },
+        {
+          "order": 12,
+          "driveFileId": "1JQPQGZeGBbVv4UfikmWOeMD5k5MUSDwq",
+          "originalTitle": "53A7599D-968B-4D33-99EF-2F5C64F5A420_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 310925,
+          "localFile": "012.jpg"
+        },
+        {
+          "order": 13,
+          "driveFileId": "1y9D1-jmBmEOqykt4peL0oFG-VLkCHoEf",
+          "originalTitle": "A9B6204C-5E74-4293-8E5B-C7161A7BF747_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 298180,
+          "localFile": "013.jpg"
+        },
+        {
+          "order": 14,
+          "driveFileId": "1Y7xFofx_YAY0xHa6ZFxKhB3eNUDwDvAV",
+          "originalTitle": "F1497A53-36D9-4D43-AEC2-CD612F41F4F0_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 141095,
+          "localFile": "014.jpg"
+        },
+        {
+          "order": 15,
+          "driveFileId": "1e_XCNCaRnRf1Qefq6qdhOWcXWJywg-xu",
+          "originalTitle": "12FE0DEA-46F5-4A8A-A76A-7B3DBF577627_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 230649,
+          "localFile": "015.jpg"
+        },
+        {
+          "order": 16,
+          "driveFileId": "11Oauu8jc8cHOdmL2NvIaU_gxmiQx2Ucf",
+          "originalTitle": "0F188064-0F22-4155-A3C0-7BC4ADAFBCA4_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 302924,
+          "localFile": "016.jpg"
+        },
+        {
+          "order": 17,
+          "driveFileId": "1lI7k2iK-L6zVZgeV8Hh9j_t8xykDu6Sg",
+          "originalTitle": "18620A83-6E9B-4CA1-B10C-BA9EA49771AF_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 266762,
+          "localFile": "017.jpg"
+        },
+        {
+          "order": 18,
+          "driveFileId": "1yJFjjVtsxgnMBordbleIIvucG5_l9exM",
+          "originalTitle": "1A329309-7700-41CA-94F2-E76DACF81287_1_105_c.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 206239,
+          "localFile": "018.jpg"
+        }
+      ]
+    },
+    "service-conditioning": {
+      "label": "Кондиционирование",
+      "driveFolderId": "189rVv6qRh7ewFkXJGS3z-yrAo05DrxUo",
+      "items": [
+        {
+          "order": 1,
+          "driveFileId": "1VqFCITiw0Rix-w-KezISDdEE6KaociFa",
+          "originalTitle": "1",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 239758,
+          "localFile": "001.jpg"
+        },
+        {
+          "order": 2,
+          "driveFileId": "1L1ZRVQ6FBmk3G3_XOawQGYWbmPa-I6Qp",
+          "originalTitle": "h9ytqduni8663d8dr0fesgcj3k03w188.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 165506,
+          "localFile": "002.jpg"
+        },
+        {
+          "order": 3,
+          "driveFileId": "1UnRCPenTwX5cSkCcd11qBAN6or_VKvp9",
+          "originalTitle": "orig.jfif",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 4602696,
+          "localFile": "003.jpg"
+        },
+        {
+          "order": 4,
+          "driveFileId": "14xkHFl7_-Ss6u-85VQcuuqeyvisN-1aX",
+          "originalTitle": "uunu1qx3tbevy19zj1nt3w8n4pnlvoxf.png",
+          "mimeType": "image/png",
+          "sizeBytes": 1863989,
+          "localFile": "004.png"
+        },
+        {
+          "order": 5,
+          "driveFileId": "1TJtlXIqt50C7opNvlE6NGrclwLSrV2HQ",
+          "originalTitle": "rlnyhxntmawz1ydc2r23x30c2ln98gzh.jpeg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 557262,
+          "localFile": "005.jpg"
+        },
+        {
+          "order": 6,
+          "driveFileId": "1uUo1edPPPJ111JTU3KI9j5hRUpHSOmEJ",
+          "originalTitle": "кондиционирование.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 210447,
+          "localFile": "006.jpg"
+        }
+      ]
+    },
+    "service-automation": {
+      "label": "Умный дом",
+      "driveFolderId": "1OXPuJHMrRbnzeF5HvHFrEZiMcmJ5V4y3",
+      "items": [
+        {
+          "order": 1,
+          "driveFileId": "1fxrsiP2kVP4MXMgTuJHBXULK340dkNxR",
+          "originalTitle": "1",
+          "mimeType": "image/png",
+          "sizeBytes": 1145881,
+          "localFile": "001.png"
+        },
+        {
+          "order": 2,
+          "driveFileId": "1PPOSRjI1SNbFTIvA_1ozlTwYNtOYX7Fx",
+          "originalTitle": "IMG_20240523_103235_065(2).jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 321384,
+          "localFile": "002.jpg"
+        },
+        {
+          "order": 3,
+          "driveFileId": "1kEp1sDuZnzAQup73vRGrOFWvAi_jqcs0",
+          "originalTitle": "IMG_20240523_103319_039(2).jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 233827,
+          "localFile": "003.jpg"
+        },
+        {
+          "order": 4,
+          "driveFileId": "1OpGbbG9gMTCumRFt6QntRUZ5PLZLSKgN",
+          "originalTitle": "IMG_20240523_103259_624(2).jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 192641,
+          "localFile": "004.jpg"
+        },
+        {
+          "order": 5,
+          "driveFileId": "1qcaJQVDnkfPPkBO5AD2fjcCleoj508HN",
+          "originalTitle": "Cabinet-Design-and-Manufacturing-Ecosystem-Zuken-USA.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 255050,
+          "localFile": "005.jpg"
+        },
+        {
+          "order": 6,
+          "driveFileId": "1GDYhBqr6BKi-wMZQK7Th785Px-KJR0Hn",
+          "originalTitle": "photo_2020-06-11_16-.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 378019,
+          "localFile": "006.jpg"
+        },
+        {
+          "order": 7,
+          "driveFileId": "1SmlyhFa-do05CQ83LQ9ep4P2NliuATNM",
+          "originalTitle": "2513-3.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 343756,
+          "localFile": "007.jpg"
+        },
+        {
+          "order": 8,
+          "driveFileId": "1O9ovKRYNTitKRg9Dubf0O8LKII4rYSkD",
+          "originalTitle": "умный дом.jpg",
+          "mimeType": "image/jpeg",
+          "sizeBytes": 199027,
+          "localFile": "008.jpg"
+        }
+      ]
+    }
+  }
+}
