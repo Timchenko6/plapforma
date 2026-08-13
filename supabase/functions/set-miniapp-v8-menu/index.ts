@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 const TOKEN=Deno.env.get('TELEGRAM_BOT_TOKEN')||Deno.env.get('BOT_TOKEN')||Deno.env.get('TELEGRAM_TOKEN')||'';
-const URL='https://timchenko6.github.io/plapforma/client-v3/?v=20260813-5';
+const URL='https://timchenko6.github.io/plapforma/client-v3/?v=20260813-6';
 const db=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false,autoRefreshToken:false}});
 async function tg(method:string,body:any={}){if(!TOKEN)throw new Error('BOT_TOKEN_NOT_CONFIGURED');const r=await fetch(`https://api.telegram.org/bot${TOKEN}/${method}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!d.ok)throw new Error(d.description||method+' failed');return d.result}
 const menu={type:'web_app',text:'Открыть приложение',web_app:{url:URL}};
