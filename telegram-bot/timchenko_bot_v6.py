@@ -37,7 +37,7 @@ from aiogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     KeyboardButton,
-    MenuButtonWebApp,
+    MenuButtonCommands,
     Message,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
@@ -306,18 +306,13 @@ async def process_lead_notifications() -> None:
 async def setup_bot_menu() -> None:
     commands = [
         BotCommand(command="menu", description="Главное меню"),
-        BotCommand(command="cabinet", description="Личный кабинет"),
+        BotCommand(command="cabinet", description="Открыть кабинет"),
         BotCommand(command="design", description="Заказать проектирование"),
         BotCommand(command="consultation", description="Записаться на консультацию"),
         BotCommand(command="start", description="Перезапустить диалог"),
     ]
     await bot.set_my_commands(commands)
-    await load_runtime_config(force=True)
-    base_url = (BOT_SETTINGS.get("miniapp_url") or "").strip() or ENV_MINIAPP_URL
-    if not base_url:
-        log.warning("Mini App URL is empty; Telegram menu button was not changed")
-        return
-    menu_button = MenuButtonWebApp(text="Открыть кабинет", web_app=WebAppInfo(url=base_url))
+    menu_button = MenuButtonCommands()
     await bot.set_chat_menu_button(menu_button=menu_button)
     admins = await db_get("platform_admins", {
         "is_active": "eq.true", "select": "telegram_user_id",

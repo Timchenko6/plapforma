@@ -2,7 +2,12 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? Deno.env.get("BOT_TOKEN") ?? "";
+const BOT_TOKENS = [...new Set([
+  Deno.env.get("BOT_TOKEN"),
+  Deno.env.get("TELEGRAM_BOT_TOKEN"),
+  Deno.env.get("TELEGRAM_TOKEN"),
+].filter((value): value is string => Boolean(value)))];
+const BOT_TOKEN = BOT_TOKENS[0] ?? "";
 const cors = {"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"GET, OPTIONS"};
 const encoder = new TextEncoder();
 function json(data:unknown,status=200){return new Response(JSON.stringify(data),{status,headers:{...cors,"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"}})}
@@ -10,13 +15,14 @@ async function sha256Hex(value:string){const bytes=new TextEncoder().encode(valu
 async function hmac(key:Uint8Array,value:string){const cryptoKey=await crypto.subtle.importKey("raw",key,{name:"HMAC",hash:"SHA-256"},false,["sign"]);return new Uint8Array(await crypto.subtle.sign("HMAC",cryptoKey,encoder.encode(value)))}
 function hex(bytes:Uint8Array){return Array.from(bytes).map(b=>b.toString(16).padStart(2,"0")).join("")}
 async function telegramUser(initData:string){
- if(!BOT_TOKEN)throw new Error("bot_token_not_configured");
+ if(!BOT_TOKENS.length)throw new Error("bot_token_not_configured");
  const params=new URLSearchParams(initData),received=params.get("hash")??"",authDate=Number(params.get("auth_date")??0);
  if(!received||!authDate)throw new Error("telegram_auth_required");
  if(Math.abs(Math.floor(Date.now()/1000)-authDate)>86400)throw new Error("telegram_initdata_expired");
  const rows:string[]=[];params.forEach((value,key)=>{if(key!=="hash"&&key!=="signature")rows.push(`${key}=${value}`)});rows.sort();
- const secret=await hmac(encoder.encode("WebAppData"),BOT_TOKEN),calculated=hex(await hmac(secret,rows.join("\n")));
- if(calculated!==received.toLowerCase())throw new Error("telegram_signature_invalid");
+ let valid=false;
+ for(const token of BOT_TOKENS){const secret=await hmac(encoder.encode("WebAppData"),token),calculated=hex(await hmac(secret,rows.join("\n")));if(calculated===received.toLowerCase()){valid=true;break}}
+ if(!valid)throw new Error("telegram_signature_invalid");
  const user=JSON.parse(params.get("user")??"{}");if(!user?.id||user.is_bot)throw new Error("telegram_user_missing");return user;
 }
 async function rest(table:string,params:Record<string,string>){const qs=new URLSearchParams(params);const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs}`,{headers:{apikey:SERVICE_KEY,Authorization:`Bearer ${SERVICE_KEY}`}});if(!r.ok)throw new Error(`${table}: ${r.status} ${await r.text()}`);return await r.json()}
