@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""TimchenkoBot v6 — client Telegram gateway for Timchenko.pro.
+"""TimchenkoBot v6.1 — client Telegram gateway for Timchenko.pro.
 
 Client rules:
 - mandatory registration with verified Telegram contact;
@@ -220,13 +220,87 @@ def reply_nav(*, with_phone: bool = False) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(keyboard=rows, resize_keyboard=True)
 
 
-async def notify_admin(text: str) -> None:
+async def notify_admin(text: str) -> bool:
     if not ADMIN_CHAT_ID:
-        return
+        return False
     try:
         await bot.send_message(int(ADMIN_CHAT_ID), text, parse_mode="HTML")
+        return True
     except Exception:
         log.exception("admin notification failed")
+        return False
+
+
+def queued_lead_text(lead: dict[str, Any]) -> str:
+    payload = lead.get("payload") if isinstance(lead.get("payload"), dict) else {}
+    if lead.get("source") == "website_chat":
+        session_id = str(payload.get("chat_session_id") or "")
+        marker = f"#sitechat:{session_id}" if session_id else ""
+        return (
+            "💬 <b>Чат сайта Timchenko.pro</b>\n"
+            f"{esc(lead.get('name') or 'Клиент')}\n"
+            f"{esc(lead.get('phone') or '—')}\n\n"
+            f"{esc(lead.get('comment') or 'Новое сообщение')}\n\n"
+            f"<code>{esc(marker)}</code>\n"
+            "Ответьте на это сообщение — ответ появится у клиента на сайте."
+        )
+
+    labels = {
+        "water_node": "Узел водоснабжения",
+        "engineering": "Инженерные системы",
+        "electric": "Электрика",
+        "other": "Заявка с сайта",
+    }
+    files = payload.get("files") if isinstance(payload.get("files"), list) else []
+    city = f"\n{esc(lead.get('city'))}" if lead.get("city") else ""
+    file_line = f"\nФайлы: {len(files)}" if files else ""
+    return (
+        "🔧 <b>Новая заявка Timchenko.pro</b>\n"
+        f"{esc(labels.get(lead.get('quiz_type'), lead.get('quiz_type') or 'Заявка с сайта'))}\n"
+        f"{esc(lead.get('name') or 'Клиент')}\n"
+        f"{esc(lead.get('phone') or '—')}{city}{file_line}\n"
+        f"Lead: <code>{esc(lead.get('id'))}</code>"
+    )
+
+
+async def process_lead_notifications() -> None:
+    """Deliver website leads through the bot that already owns BOT_TOKEN."""
+    while True:
+        try:
+            if not ADMIN_CHAT_ID:
+                await asyncio.sleep(30)
+                continue
+            pending = await db_get("lead_notifications", {
+                "status": "eq.pending",
+                "select": "lead_id",
+                "order": "created_at.asc",
+                "limit": "10",
+            })
+            for item in pending:
+                lead_id = item.get("lead_id")
+                rows = await db_get("leads", {
+                    "id": f"eq.{lead_id}",
+                    "select": "id,source,name,phone,city,quiz_type,comment,payload",
+                    "limit": "1",
+                })
+                now = datetime.now(timezone.utc).isoformat()
+                if not rows:
+                    await db_patch("lead_notifications", {"lead_id": f"eq.{lead_id}"}, {
+                        "status": "failed", "last_error": "lead not found", "updated_at": now,
+                    }, return_rows=False)
+                    continue
+                delivered = await notify_admin(queued_lead_text(rows[0]))
+                await db_patch("lead_notifications", {"lead_id": f"eq.{lead_id}"}, {
+                    "status": "sent" if delivered else "pending",
+                    "notified_at": now if delivered else None,
+                    "last_error": None if delivered else "telegram delivery failed",
+                    "updated_at": now,
+                }, return_rows=False)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            log.exception("lead notification worker failed")
+        await asyncio.sleep(12)
 
 
 async def setup_bot_menu() -> None:
@@ -1226,9 +1300,49 @@ async def on_file_or_photo(m: Message) -> None:
     await m.answer("Файлы и планы лучше отправлять через раздел «📐 Заказать проектирование».", reply_markup=inline_nav())
 
 
+async def handle_site_chat_admin_reply(m: Message) -> bool:
+    """Route an owner's Telegram reply back to the matching website chat."""
+    if not m.reply_to_message or not m.text:
+        return False
+    source = m.reply_to_message.text or m.reply_to_message.caption or ""
+    match = re.search(r"#sitechat:([0-9a-fA-F-]{36})", source)
+    if not match:
+        return False
+    admins = await db_get("platform_admins", {
+        "telegram_user_id": f"eq.{m.from_user.id}",
+        "is_active": "eq.true",
+        "select": "id",
+        "limit": "1",
+    })
+    if not admins:
+        await m.answer("Ответ в чат сайта доступен только владельцу.")
+        return True
+    session_id = match.group(1).lower()
+    body = m.text.strip()
+    if not body:
+        return True
+    await db_insert("messages", {
+        "project_id": None,
+        "user_id": None,
+        "direction": "manager",
+        "channel": "website",
+        "body": body,
+        "metadata": {
+            "session_id": session_id,
+            "source": "telegram_admin_reply",
+            "telegram_admin_id": m.from_user.id,
+            "telegram_reply_to_message_id": m.reply_to_message.message_id,
+        },
+    }, return_rows=False)
+    await m.answer("✅ Ответ отправлен клиенту в чат на сайте.")
+    return True
+
+
 @dp.message(F.text)
 async def on_text(m: Message) -> None:
     text = (m.text or "").strip()
+    if await handle_site_chat_admin_reply(m):
+        return
     if text == HOME:
         await show_home(m)
         return
@@ -1352,8 +1466,13 @@ async def main() -> None:
     me = await bot.get_me()
     await bot.delete_webhook(drop_pending_updates=False)
     await setup_bot_menu()
-    log.info("TimchenkoBot v6 starting as @%s (id=%s)", me.username, me.id)
-    await dp.start_polling(bot, allowed_updates=["message", "callback_query"])
+    log.info("TimchenkoBot v6.1 starting as @%s (id=%s)", me.username, me.id)
+    notification_task = asyncio.create_task(process_lead_notifications())
+    try:
+        await dp.start_polling(bot, allowed_updates=["message", "callback_query"])
+    finally:
+        notification_task.cancel()
+        await asyncio.gather(notification_task, return_exceptions=True)
 
 
 if __name__ == "__main__":

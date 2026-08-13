@@ -1,0 +1,30 @@
+{
+  "build": "v46-drive-original-galleries",
+  "retainedEmbeddedObjectPhotos": 34,
+  "services": {
+    "service-heating": {
+      "label": "Котельные",
+      "count": 18
+    },
+    "service-water": {
+      "label": "Водоснабжение",
+      "count": 12
+    },
+    "service-electric": {
+      "label": "Электрика",
+      "count": 18
+    },
+    "service-ventilation": {
+      "label": "Вентиляция",
+      "count": 15
+    },
+    "service-conditioning": {
+      "label": "Кондиционирование",
+      "count": 6
+    },
+    "service-automation": {
+      "label": "Умный дом",
+      "count": 8
+    }
+  }
+}
