@@ -15,7 +15,7 @@ const db = createClient(supabaseUrl, serviceKey, {
 const corsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-headers": "content-type, apikey",
-  "access-control-allow-methods": "POST,OPTIONS",
+  "access-control-allow-methods": "GET,POST,OPTIONS",
   "cache-control": "no-store",
 };
 
@@ -118,7 +118,24 @@ async function notifyAdmins(text: string) {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
-  if (req.method !== "POST") return json({ ok: true, service: "timchenko-public-lead-api", version: 2 });
+  if (req.method === "GET") {
+    const url = new URL(req.url);
+    if (url.searchParams.get("quizzes") !== "1") {
+      return json({ ok: true, service: "timchenko-public-lead-api", version: 3 });
+    }
+    const { data: quizzes, error } = await db
+      .from("quiz_definitions")
+      .select("slug,title,icon,start_message,completion_message,quiz_questions!inner(key,prompt,input_type,required,sort_order,unit,placeholder,help_text,min_value,max_value,visibility_rule,quiz_options(key,label,value,sort_order))")
+      .eq("is_active", true)
+      .eq("quiz_questions.is_active", true)
+      .eq("quiz_questions.quiz_options.is_active", true)
+      .order("slug")
+      .order("sort_order", { referencedTable: "quiz_questions" })
+      .order("sort_order", { referencedTable: "quiz_questions.quiz_options" });
+    if (error) return json({ error: error.message }, 500);
+    return json({ ok: true, quizzes });
+  }
+  if (req.method !== "POST") return json({ error: "METHOD_NOT_ALLOWED" }, 405);
 
   try {
     if (!supabaseUrl || !serviceKey) return json({ error: "SERVER_NOT_CONFIGURED" }, 503);
@@ -272,3 +289,4 @@ Deno.serve(async (req) => {
     return json({ error: error instanceof Error ? error.message : String(error) }, 500);
   }
 });
+
