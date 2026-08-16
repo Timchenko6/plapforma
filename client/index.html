@@ -1,423 +1,141 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1530">
-  <title>TIMCHENKO PLATFORM — Личный кабинет</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root {
-      color-scheme: light;
-      --bg: #eef2f6;
-      --panel: #ffffff;
-      --panel-2: #f5f7fa;
-      --text: #12213b;
-      --muted: #6b7789;
-      --line: #dce3ec;
-      --navy: #0b1530;
-      --navy-2: #172a4b;
-      --gold: #b88a00;
-      --gold-2: #d4aa25;
-      --accent: var(--navy);
-      --accent-text: #ffffff;
-      --good: #237a51;
-      --warn: #a86e08;
-      --radius: 18px;
-      --shadow: 0 14px 38px rgba(13, 31, 58, .08);
-    }
-    * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { padding: env(safe-area-inset-top) 0 calc(92px + env(safe-area-inset-bottom)); }
-    button, a { font: inherit; }
-    .app { width: min(860px, 100%); margin: 0 auto; padding: 18px 16px 30px; }
-    .top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 20px; }
-    .brand { display: flex; align-items: center; gap: 11px; }
-    .logo { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: var(--navy); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); font-weight: 900; letter-spacing: -.04em; }
-    .brand strong { display: block; color: var(--navy); font-size: 14px; letter-spacing: .08em; }
-    .brand strong span { color: var(--gold); }
-    .brand small { display: block; color: var(--muted); font-size: 11px; margin-top: 3px; }
-    .refresh { border: 1px solid var(--line); background: var(--panel); color: var(--navy); border-radius: 12px; min-height: 40px; padding: 0 13px; cursor: pointer; font-size: 12px; font-weight: 750; box-shadow: 0 4px 14px rgba(13,31,58,.04); }
-    .hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; border: 1px solid rgba(255,255,255,.08); border-radius: 25px; padding: 23px; box-shadow: 0 18px 46px rgba(11,21,48,.18); margin-bottom: 14px; }
-    .hero::after { content: ""; position: absolute; width: 220px; height: 220px; right: -105px; top: -125px; border: 1px solid rgba(212,170,37,.28); border-radius: 50%; box-shadow: 0 0 0 34px rgba(212,170,37,.035), 0 0 0 68px rgba(212,170,37,.025); pointer-events: none; }
-    .hero > * { position: relative; z-index: 1; }
-    .eyebrow { color: var(--gold-2); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 8px; }
-    .hero p { color: rgba(255,255,255,.68) !important; line-height: 1.5; }
-    h1 { margin: 0; font-size: clamp(27px, 7vw, 38px); line-height: 1.08; letter-spacing: -.04em; }
-    .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .chip { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.88); border-radius: 999px; padding: 7px 10px; font-size: 12px; }
-    .progress-wrap { margin-top: 20px; }
-    .progress-head { display: flex; justify-content: space-between; gap: 12px; align-items: end; margin-bottom: 9px; color: rgba(255,255,255,.68); font-size: 12px; }
-    .progress-head strong { color: #fff; font-size: 25px; }
-    .track { height: 7px; background: rgba(255,255,255,.12); border-radius: 999px; overflow: hidden; }
-    .bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-2)); border-radius: inherit; transition: width .35s ease; }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0 16px; }
-    .metric { position: relative; overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: 0 6px 22px rgba(13,31,58,.04); }
-    .metric::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--gold); }
-    .metric small { display: block; color: var(--muted); margin-bottom: 7px; font-size: 10px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
-    .metric strong { color: var(--navy); font-size: clamp(16px, 4vw, 20px); letter-spacing: -.025em; }
-    .section { margin-top: 22px; }
-    .section-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0 2px 10px; }
-    .section-title h2 { margin: 0; color: var(--navy); font-size: 18px; letter-spacing: -.02em; }
-    .section-title span { color: var(--muted); font-size: 13px; }
-    .list { display: grid; gap: 8px; }
-    .row { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; padding: 14px 15px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 16px rgba(13,31,58,.035); }
-    .row-main { min-width: 0; }
-    .row-main strong { display: block; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .row-main small { color: var(--muted); display: block; margin-top: 5px; font-size: 12px; }
-    .status { flex: 0 0 auto; color: var(--navy); font-size: 11px; font-weight: 700; padding: 6px 9px; background: #f8f2df; border: 1px solid #eadcad; border-radius: 999px; }
-    .file { color: inherit; text-decoration: none; }
-    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
-    .photo { aspect-ratio: 1.2 / 1; position: relative; border: 1px solid var(--line); background: var(--panel); border-radius: 16px; overflow: hidden; }
-    .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .photo .caption { position: absolute; inset: auto 0 0; padding: 24px 10px 9px; background: linear-gradient(transparent, rgba(0,0,0,.65)); color: white; font-size: 12px; }
-    .empty { background: var(--panel); border: 1px dashed #cbd5e2; border-radius: var(--radius); padding: 24px 16px; color: var(--muted); text-align: center; }
-    .project-switch { width: 100%; margin-top: 15px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.08); color: #fff; border-radius: 12px; padding: 11px 12px; }
-    .project-switch option { color: var(--text); background: #fff; }
-    .view { display: none; }
-    .view.active { display: block; }
-    .nav { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: 0; width: min(860px, 100%); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); background: rgba(11,21,48,.96); backdrop-filter: blur(18px); border-top: 1px solid rgba(255,255,255,.08); display: grid; grid-template-columns: repeat(5, 1fr); box-shadow: 0 -10px 30px rgba(11,21,48,.14); }
-    .nav button { appearance: none; border: 0; background: transparent; color: rgba(255,255,255,.52); padding: 7px 2px 6px; display: grid; gap: 4px; place-items: center; font-size: 9px; font-weight: 700; cursor: pointer; border-radius: 11px; }
-    .nav button b { font-size: 18px; line-height: 1; font-family: Arial, sans-serif; }
-    .nav button.active { color: #fff; background: rgba(255,255,255,.08); box-shadow: inset 0 2px 0 var(--gold); }
-    .nav button.active b { color: var(--gold-2); }
-    .loader { min-height: 72vh; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 30px; }
-    .error { width: min(430px, 100%); padding: 28px; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
-    .error::before { content: "T"; width: 46px; height: 46px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 14px; background: var(--navy); color: #fff; font-weight: 900; }
-    .error strong { color: var(--navy); display: block; margin-bottom: 8px; font-size: 18px; }
-    .error span { font-size: 13px; line-height: 1.55; }
-    .profile-card { background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; border: 1px solid rgba(255,255,255,.08); border-radius: 22px; padding: 20px; box-shadow: 0 16px 38px rgba(11,21,48,.16); }
-    .profile-card h2 { margin: 0 0 4px; }
-    .profile-card p { margin: 3px 0; color: rgba(255,255,255,.68); }
-    .quiz-answer { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.45; }
-    .core-launch-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
-    .core-launch { appearance: none; width: 100%; min-height: 126px; border: 1px solid var(--line); border-radius: 19px; background: var(--panel); color: var(--text); padding: 16px; text-align: left; cursor: pointer; box-shadow: 0 6px 22px rgba(13,31,58,.04); transition: transform .18s ease, border-color .18s ease; }
-    .core-launch:active { transform: scale(.985); }
-    .core-launch:hover { border-color: #c8aa55; }
-    .core-launch-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; background: var(--navy); color: var(--gold-2); font-size: 17px; font-weight: 850; }
-    .core-launch strong { display: block; margin-top: 14px; color: var(--navy); font-size: 15px; }
-    .core-launch small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.4; }
-    .core-tabs { display: grid; grid-template-columns: repeat(4, minmax(86px,1fr)); gap: 7px; margin: 0 0 16px; overflow-x: auto; scrollbar-width: none; }
-    .core-tabs::-webkit-scrollbar { display: none; }
-    .core-tabs button { appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 12px; min-height: 42px; padding: 8px 10px; font-size: 11px; font-weight: 750; white-space: nowrap; cursor: pointer; }
-    .core-tabs button.active { background: var(--navy); border-color: var(--navy); color: #fff; box-shadow: inset 0 -2px 0 var(--gold); }
-    .module-head { margin-bottom: 14px; }
-    .module-head button { appearance: none; border: 0; background: transparent; color: var(--gold); padding: 0; margin-bottom: 8px; font-size: 12px; font-weight: 800; cursor: pointer; }
-    .module-head h1 { color: var(--navy); font-size: clamp(27px,7vw,36px); }
-    .module-head p { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
-    .system-card, .order-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px; box-shadow: 0 5px 18px rgba(13,31,58,.035); }
-    .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-    .card-head h3 { margin: 0; color: var(--navy); font-size: 16px; }
-    .card-head p { margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
-    .node-list, .order-items { display: grid; gap: 7px; margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--line); }
-    .node-line, .order-line { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; line-height: 1.4; }
-    .node-line strong, .order-line strong { color: var(--text); font-weight: 700; }
-    .mini-track { height: 5px; margin-top: 9px; overflow: hidden; border-radius: 999px; background: #e9edf2; }
-    .mini-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--gold),var(--gold-2)); }
-    .status.good { color: var(--good); background: #eaf6ef; border-color: #c6e7d3; }
-    .status.warn { color: var(--warn); background: #fff5dd; border-color: #ecdba9; }
-    .status.muted { color: var(--muted); background: #f4f6f8; border-color: var(--line); }
-    .order-total { color: var(--navy); font-size: 17px; white-space: nowrap; }
-    .permission-note { margin-bottom: 12px; }
-    @media (min-width: 640px) { .grid { grid-template-columns: repeat(4, 1fr); } .gallery { grid-template-columns: repeat(3, 1fr); } .hero { padding: 28px; } .core-launch-grid { grid-template-columns: repeat(4,1fr); } }
-    @media (max-width: 380px) { .brand small { display: none; } .refresh { width: 40px; padding: 0; font-size: 0; } .refresh::before { content: "↻"; font-size: 18px; } }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#101214">
+<title>TIMCHENKO PLATFORM · Единый кабинет</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{color-scheme:light dark;--bg:#f4f5f6;--panel:#fff;--panel-2:#f0f1f2;--card:var(--panel);--soft:var(--panel-2);--text:#111315;--muted:#6f7479;--line:rgba(17,19,21,.10);--accent:#171a1d;--accent-text:#fff;--navy:var(--accent);--navy2:var(--accent);--gold:var(--accent);--gold2:#555b60;--green:#25784a;--red:#a43c3c;--orange:#a16413;--r:18px;--shadow:0 10px 35px rgba(10,12,14,.06);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#0d0f10;--panel:#151719;--panel-2:#1d2022;--card:var(--panel);--soft:var(--panel-2);--text:#f4f5f6;--muted:#a0a5aa;--line:rgba(255,255,255,.10);--accent:#f1f3f4;--accent-text:#111315;--navy:var(--accent);--gold:var(--accent);--gold2:#aeb3b7;--shadow:none}}
+*{box-sizing:border-box}[hidden]{display:none!important}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}body{padding:env(safe-area-inset-top) 0 calc(86px + env(safe-area-inset-bottom))}button,input,select,textarea,a{font:inherit}button{cursor:pointer}.app{width:min(760px,100%);margin:0 auto;padding:18px 16px 24px}.startup{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px 14px;color:var(--muted);font-size:13px;margin-bottom:14px;box-shadow:var(--shadow)}.startup i{width:9px;height:9px;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:11px;min-width:0}.logo{width:38px;height:38px;display:grid;place-items:center;flex:0 0 38px;border-radius:12px;background:var(--accent);color:var(--accent-text);font-weight:800;letter-spacing:-.03em}.brandText{min-width:0}.brandText strong{display:block;font-size:14px;letter-spacing:.02em;white-space:nowrap}.sub{display:block;color:var(--muted);font-size:11px;margin-top:2px}.topActions{display:flex;gap:7px}.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;min-height:38px;padding:0 12px;font-size:13px;font-weight:700}
+.hero{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}.eyebrow{color:var(--muted);font-size:13px;margin-bottom:6px}.hero h1{font-size:clamp(24px,7vw,34px);line-height:1.08;letter-spacing:-.035em;margin:0}.hero p{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.5}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{font-size:13px;padding:7px 10px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);color:var(--text)}
+.grid{display:grid;gap:10px;margin:12px 0 16px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}.card,.metric,.row,.stageCard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}.card{padding:15px;box-shadow:var(--shadow)}.metric{padding:15px}.metric small{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.metric b{display:block;font-size:20px;letter-spacing:-.02em}.section{margin-top:20px}.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 2px 10px}.sectionHead h2{font-size:18px;margin:0}.sectionHead span{font-size:13px;color:var(--muted)}
+.btn{border:0;border-radius:12px;min-height:42px;padding:0 14px;font-weight:750;font-size:13px}.btn.navy,.btn.gold{background:var(--accent);color:var(--accent-text)}.btn.light{background:var(--panel);color:var(--text);border:1px solid var(--line)}.btn.red{background:#fff0f0;color:var(--red);border:1px solid #e9c0c0}.btn.w100{width:100%}.btn:disabled{opacity:.5}.input{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:11px 12px;outline:none;font-size:15px}.input:focus{border-color:var(--text)}textarea.input{min-height:90px;resize:vertical}.label{font-size:11px;color:var(--muted);font-weight:700;margin:0 0 5px 2px}.form{display:grid;gap:9px}.form2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.form3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.row{padding:13px 14px;display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}.row:last-child{margin-bottom:0}.row strong{display:block;font-size:14px}.row small{display:block;font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}.pill{font-size:12px;padding:6px 8px;border-radius:999px;background:var(--panel-2);white-space:nowrap}.pill.green{color:var(--green)}.pill.red{color:var(--red)}.pill.gold{color:var(--orange)}.empty{border:1px dashed var(--line);border-radius:var(--r);padding:22px 16px;text-align:center;color:var(--muted);font-size:13px}.notice{border:1px solid #dfc979;background:#fff8e4;color:#725500;border-radius:13px;padding:11px 12px;font-size:13px;line-height:1.45;margin-bottom:10px}.notice.error{border-color:#e6b3b3;background:#fff0f0;color:#812d2d}.notice.ok{border-color:#a9d5bd;background:#effbf4;color:#216844}
+.tabs{position:fixed;z-index:30;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:grid;gap:3px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--line)}.tab{border:0;background:transparent;color:var(--muted);border-radius:12px;padding:7px 2px;font-size:10px;display:grid;gap:3px;place-items:center}.tab b{font-size:19px;line-height:1}.tab.on{color:var(--text);background:var(--panel)}.view{display:none}.view.on{display:block}
+.pipeline{display:flex;gap:8px;overflow:auto;padding:1px 1px 9px;scrollbar-width:none}.pipeline::-webkit-scrollbar{display:none}.pipe{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:9px 12px;white-space:nowrap;font-size:12px;font-weight:700}.pipe.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}.lead{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:16px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}.leadTop{display:flex;justify-content:space-between;gap:10px}.lead h3{font-size:15px;margin:0}.lead p{font-size:12px;color:var(--muted);margin:5px 0 0}.leadMeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.leadMeta span{font-size:11px;background:var(--panel-2);padding:6px 8px;border-radius:9px}.leadValue{font-weight:800;font-size:13px;white-space:nowrap}.back{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:700;padding:3px 0 10px}.json{white-space:pre-wrap;word-break:break-word;background:var(--panel-2);border:1px solid var(--line);border-radius:13px;padding:11px;font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;max-height:240px;overflow:auto}.link{color:inherit;text-decoration:none}.link:hover{opacity:.72}
+.projectBtn{width:100%;text-align:left;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}.projectBtn h3{font-size:15px;margin:0}.projectBtn p{font-size:12px;color:var(--muted);margin:5px 0}.bar{height:9px;background:var(--panel-2);border-radius:999px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:var(--accent);border-radius:inherit}.projectFoot{display:flex;justify-content:space-between;gap:8px;margin-top:9px;font-size:11px;color:var(--muted)}
+.stageCard{padding:14px;margin-bottom:8px}.stageTop{display:flex;justify-content:space-between;gap:10px}.stageCard h3{font-size:14px;margin:0}.stageCard p{font-size:12px;color:var(--muted);margin:5px 0}.stageActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.stageActions button{min-height:36px}.stageCard.active{border-color:var(--text);box-shadow:inset 0 0 0 1px var(--text)}
+.assetNav{display:flex;gap:6px;overflow:auto;margin:10px 0}.assetNav button{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:10px;padding:8px 10px;font-size:11px;font-weight:700;white-space:nowrap}.assetNav button.on{background:var(--accent);color:var(--accent-text)}.fileInput{padding:9px;font-size:12px}.switch{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--muted)}.switch input{width:18px;height:18px}.thumbGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.thumb{aspect-ratio:1.15;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:9px;display:flex;flex-direction:column;justify-content:flex-end}.thumb b{font-size:12px}.thumb small{font-size:11px;color:var(--muted);margin-top:3px}.photo{position:relative;aspect-ratio:1.2;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}.photo img{width:100%;height:100%;object-fit:cover}.photoCap{position:absolute;inset:auto 0 0;padding:24px 10px 9px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-size:12px}
+.coreSummary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.coreMetric{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px}.coreMetric b{display:block;font-size:20px}.coreMetric small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.coreModule{margin-top:8px;background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden}.coreModule summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;cursor:pointer;font-weight:800}.coreModule summary::-webkit-details-marker{display:none}.coreModule summary span{display:inline-flex;min-width:28px;height:28px;align-items:center;justify-content:center;border-radius:9px;background:var(--accent);color:var(--accent-text);font-size:11px}.coreBody{padding:0 12px 12px;display:grid;gap:7px}.coreRow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:10px;background:var(--panel-2);border-radius:11px}.coreRow b{font-size:13px}.coreRow small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.coreRow .pill{flex:0 0 auto}.loginActions{display:grid;gap:8px;margin-top:14px}.loginActions .btn{width:100%}.loginHint{font-size:12px;line-height:1.55;color:var(--muted);margin-top:12px}.platformFlag{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.platformFlag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(184,138,0,.12)}
+.clientStage{margin-bottom:8px}.clientStage summary{list-style:none;cursor:pointer}.clientStage summary::-webkit-details-marker{display:none}.stageSummary{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:13px 14px}.stageSummaryTop{display:flex;justify-content:space-between;gap:10px}.stageSummary b{font-size:14px}.stageSummary small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.stageBody{padding:8px 2px 2px}.stageBody h4{font-size:14px;margin:14px 2px 7px}.profile{padding:18px;border-radius:22px}.profile h2{font-size:22px;margin:4px 0}.profile p{font-size:13px;color:var(--muted);margin:4px 0}.verified{color:var(--green);font-weight:750}
+.liveDot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);vertical-align:middle;margin-right:4px}.securityNote{margin-top:14px;padding:12px;border-radius:12px;background:var(--panel-2);color:var(--muted);font-size:12px;line-height:1.5}.accessCard{padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--panel);margin-bottom:8px;box-shadow:var(--shadow)}.accessTop{display:flex;justify-content:space-between;gap:10px}.accessCard h3{font-size:15px;margin:0}.accessCard p{font-size:12px;color:var(--muted);line-height:1.45;margin:5px 0 0}.accessActions{display:flex;gap:7px;margin-top:11px}.accessActions .btn{flex:1}.gateHero{text-align:center;padding:24px 20px}.gateIcon{width:52px;height:52px;margin:0 auto 13px;display:grid;place-items:center;border-radius:18px;background:var(--panel-2);font-size:25px}.quizGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.quizBtn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:16px;padding:14px 10px;text-align:left;min-height:96px;box-shadow:var(--shadow)}.quizBtn b{display:block;font-size:20px}.quizBtn strong{display:block;font-size:13px;margin-top:8px}.quizBtn small{display:block;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.35}.answerList{display:grid;gap:8px}.answerRow{display:grid;grid-template-columns:minmax(110px,.8fr) minmax(0,1.4fr);gap:12px;padding:13px 14px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.answerRow dt{margin:0;color:var(--muted);font-size:12px;line-height:1.4}.answerRow dd{margin:0;font-size:14px;font-weight:700;line-height:1.4;word-break:break-word}.dangerZone{margin-top:20px;padding:15px;border:1px solid #e2b4b4;border-radius:18px;background:var(--panel)}.dangerZone h2{font-size:16px;color:var(--red);margin:0 0 6px}.dangerZone p{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 11px}.bootError{margin-top:10px}.bootError .btn{margin-top:10px}
+@media(max-width:520px){.form2,.form3{grid-template-columns:1fr}.thumbGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.quizGrid{grid-template-columns:1fr}.answerRow{grid-template-columns:1fr;gap:4px}}@media(min-width:640px){.g2{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.clientPhotos{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
 </head>
 <body>
-  <main class="app" id="app">
-    <div class="loader" id="loader">Загружаю данные объекта…</div>
-    <div id="content" hidden>
-      <header class="top">
-        <div class="brand"><div class="logo">T</div><div><strong>TIMCHENKO <span>PLATFORM</span></strong><small>Личный кабинет · управление объектом</small></div></div>
-        <button class="refresh" id="refresh" type="button">↻&nbsp; Обновить</button>
-      </header>
-
-      <section class="view active" data-view="project">
-        <div id="projectView"></div>
-      </section>
-      <section class="view" data-view="systems"><div id="systemsView"></div></section>
-      <section class="view" data-view="works"><div id="worksView"></div></section>
-      <section class="view" data-view="materials"><div id="materialsView"></div></section>
-      <section class="view" data-view="purchases"><div id="purchasesView"></div></section>
-      <section class="view" data-view="estimates"><div id="estimatesView"></div></section>
-      <section class="view" data-view="documents"><div id="documentsView"></div></section>
-      <section class="view" data-view="photos"><div id="photosView"></div></section>
-      <section class="view" data-view="profile"><div id="profileView"></div></section>
-    </div>
-  </main>
-
-  <nav class="nav" id="nav" hidden>
-    <button class="active" data-target="project" type="button"><b>⌂</b><span>Обзор</span></button>
-    <button data-target="estimates" type="button"><b>₽</b><span>Финансы</span></button>
-    <button data-target="documents" type="button"><b>▤</b><span>Документы</span></button>
-    <button data-target="photos" type="button"><b>▧</b><span>Фото</span></button>
-    <button data-target="profile" type="button"><b>○</b><span>Профиль</span></button>
-  </nav>
-
-  <script>
-    const API = 'https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/client-portal';
-    const qs = new URLSearchParams(location.search);
-    const token = qs.get('token') || '';
-    const state = { data: null, projectIndex: 0 };
-    const tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); }
-
-    const $ = (s) => document.querySelector(s);
-    const money = (v) => Number(v || 0).toLocaleString('ru-RU') + ' ₽';
-    const date = (v) => v ? new Date(v).toLocaleDateString('ru-RU') : '—';
-    const esc = (v) => String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    const statusText = (s) => ({lead:'Заявка',survey:'Замер / исходные данные',design:'Проектирование',estimate:'Смета',approved:'Согласовано',procurement:'Комплектация',installation:'Монтаж',commissioning:'Пусконаладка',completed:'Завершён',paused:'Пауза',cancelled:'Отменён',new:'Новый',draft:'Черновик',planned:'Запланировано',requested:'Запрошено',paid:'Оплачено',approved_estimate:'Согласовано',ready:'Готово к старту',in_progress:'В работе',blocked:'Приостановлено',review:'Проверка',done:'Выполнено',ordered:'Заказано',installed:'Смонтировано',commissioned:'Запущено',active:'Работает',fault:'Неисправность',service:'Обслуживание',retired:'Выведено',partially_delivered:'Частично доставлено',delivered:'Доставлено',submitted:'Отправлено',confirmed:'Подтверждено',disabled:'Отключено'}[s] || s || '—');
-    const systemTypeText = (s) => ({heating:'Отопление',water:'Водоснабжение',sewer:'Канализация',electric:'Электрика',ventilation:'Вентиляция',air_conditioning:'Кондиционирование',automation:'Автоматизация',security:'Безопасность',other:'Другая система'}[s] || s || 'Инженерная система');
-    const quizName = (s) => ({engineering_nodes:'Инженерные узлы',home_engineering:'Инженерные системы',electrical:'Электрика'}[s] || s);
-    const qty = (v) => Number(v || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
-    const ratio = (value, total) => total > 0 ? Math.max(0, Math.min(100, Math.round(Number(value || 0) / Number(total) * 100))) : 0;
-    const statusClass = (s) => ['done','delivered','installed','commissioned','active','completed','paid'].includes(s) ? 'good' : ['blocked','fault','partially_delivered','requested'].includes(s) ? 'warn' : 'muted';
-
-    function currentProject() { return state.data?.projects?.[state.projectIndex] || null; }
-    function totalEstimate(e) { return Number(e.labor_total||0)+Number(e.mat_total||0)+Number(e.equipment_total||0)-Number(e.discount_total||0); }
-    function byId(items) { return new Map((items || []).map(x => [x.id, x])); }
-    function coreTabs(active) {
-      return `<div class="core-tabs">
-        <button class="${active==='systems'?'active':''}" data-open-view="systems" type="button">Системы</button>
-        <button class="${active==='works'?'active':''}" data-open-view="works" type="button">Работы</button>
-        <button class="${active==='materials'?'active':''}" data-open-view="materials" type="button">Материалы</button>
-        <button class="${active==='purchases'?'active':''}" data-open-view="purchases" type="button">Закупки</button>
-      </div>`;
-    }
-    function moduleHead(title, text) {
-      const p = currentProject();
-      return `<div class="module-head"><button data-open-view="project" type="button">← Обзор объекта</button><h1>${esc(title)}</h1><p>${esc(p?.title || '')}${text ? ' · '+esc(text) : ''}</p></div>`;
-    }
-
-    function projectSelector() {
-      const items = state.data.projects || [];
-      if (items.length < 2) return '';
-      return `<select class="project-switch" id="projectSwitch">${items.map((p,i)=>`<option value="${i}" ${i===state.projectIndex?'selected':''}>${esc(p.title)}</option>`).join('')}</select>`;
-    }
-
-    function renderProject() {
-      const el = $('#projectView');
-      const p = currentProject();
-      if (!p) {
-        el.innerHTML = `<div class="hero"><div class="eyebrow">TIMCHENKO PLATFORM · Мой объект</div><h1>Объект пока не создан</h1><p style="color:var(--muted);margin-bottom:0">Пройдите квиз в Telegram-боте и создайте объект из результата, либо закажите проектирование.</p></div>${renderQuizSection()}`;
-        return;
-      }
-      const budget = Number(p.budget_estimate || 0);
-      const paid = Number(p.paid_amount || 0);
-      const stages = p.stages || [];
-      el.innerHTML = `
-        <div class="hero">
-          <div class="eyebrow">TIMCHENKO PLATFORM · Мой объект</div>
-          <h1>${esc(p.title)}</h1>
-          <div class="meta">
-            ${p.area_m2 ? `<span class="chip">${esc(p.area_m2)} м²</span>` : ''}
-            ${p.city ? `<span class="chip">${esc(p.city)}</span>` : ''}
-            <span class="chip">${esc(statusText(p.status))}</span>
-          </div>
-          ${projectSelector()}
-          <div class="progress-wrap">
-            <div class="progress-head"><span>Готовность</span><strong>${Number(p.progress_percent || 0)}%</strong></div>
-            <div class="track"><div class="bar" style="width:${Math.max(0,Math.min(100,Number(p.progress_percent||0)))}%"></div></div>
-          </div>
-        </div>
-        <div class="grid">
-          <div class="metric"><small>Текущий этап</small><strong>${esc(p.current_stage || '—')}</strong></div>
-          <div class="metric"><small>План завершения</small><strong>${date(p.planned_finish)}</strong></div>
-          <div class="metric"><small>Бюджет</small><strong>${budget ? money(budget) : '—'}</strong></div>
-          <div class="metric"><small>Оплачено</small><strong>${paid ? money(paid) : '—'}</strong></div>
-        </div>
-        ${renderCoreLaunch(p)}
-        <div class="section">
-          <div class="section-title"><h2>Этапы работ</h2><span>${stages.length}</span></div>
-          <div class="list">${stages.length ? stages.map(s => `<div class="row"><div class="row-main"><strong>${esc(s.name)}</strong><small>${s.planned_finish ? 'до '+date(s.planned_finish) : esc(s.system || '')}</small></div><span class="status">${Number(s.progress_percent||0)}%</span></div>`).join('') : '<div class="empty">Этапы появятся после планирования работ.</div>'}</div>
-        </div>
-        ${renderQuizSection()}
-      `;
-      $('#projectSwitch')?.addEventListener('change', (e) => { state.projectIndex = Number(e.target.value); renderAll(); });
-    }
-
-    function renderCoreLaunch(p) {
-      const systems = p.systems || [], nodes = p.nodes || [], works = p.works || [];
-      const materials = p.project_materials || [], purchases = p.purchase_orders || [];
-      const doneWorks = works.filter(x => x.status === 'done').length;
-      const delivered = materials.filter(x => ['delivered','installed'].includes(x.status)).length;
-      return `<div class="section"><div class="section-title"><h2>Платформа объекта</h2><span>Core v2</span></div>
-        <div class="core-launch-grid">
-          <button class="core-launch" data-open-view="systems" type="button"><span class="core-launch-icon">⌘</span><strong>Системы</strong><small>${systems.length} систем · ${nodes.length} узлов</small></button>
-          <button class="core-launch" data-open-view="works" type="button"><span class="core-launch-icon">✓</span><strong>Работы</strong><small>${doneWorks} из ${works.length} выполнено</small></button>
-          <button class="core-launch" data-open-view="materials" type="button"><span class="core-launch-icon">▦</span><strong>Материалы</strong><small>${delivered} из ${materials.length} доставлено</small></button>
-          <button class="core-launch" data-open-view="purchases" type="button"><span class="core-launch-icon">₽</span><strong>Закупки</strong><small>${purchases.length} заказов</small></button>
-        </div>
-      </div>`;
-    }
-
-    function renderQuizSection() {
-      const qs = state.data.quizzes || [];
-      if (!qs.length) return '';
-      return `<div class="section"><div class="section-title"><h2>Мои расчёты</h2><span>${qs.length}</span></div><div class="list">${qs.slice(0,6).map(q=>`<div class="row"><div class="row-main"><strong>${esc(quizName(q.quiz_type))}</strong><small>${date(q.created_at)}</small></div><span class="status">${q.project_id ? 'В объекте' : 'Сохранён'}</span></div>`).join('')}</div></div>`;
-    }
-
-    function renderSystems() {
-      const el = $('#systemsView'), p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Системы появятся после создания объекта.</div>'; return; }
-      const systems = p.systems || [], nodes = p.nodes || [], zones = byId(p.zones);
-      if (p.permissions?.can_view_progress === false) { el.innerHTML = `${moduleHead('Системы','доступ ограничен')}${coreTabs('systems')}<div class="empty permission-note">Данные инженерных систем недоступны для вашей роли.</div>`; return; }
-      const activeSystems = systems.filter(x => ['active','service'].includes(x.status)).length;
-      const installedNodes = nodes.filter(x => ['installed','commissioned','active'].includes(x.status)).length;
-      el.innerHTML = `${moduleHead('Инженерные системы','структура систем и узлов')}${coreTabs('systems')}
-        <div class="grid">
-          <div class="metric"><small>Системы</small><strong>${systems.length}</strong></div>
-          <div class="metric"><small>Узлы</small><strong>${nodes.length}</strong></div>
-          <div class="metric"><small>В эксплуатации</small><strong>${activeSystems}</strong></div>
-          <div class="metric"><small>Узлы смонтированы</small><strong>${installedNodes}</strong></div>
-        </div>
-        <div class="list">${systems.length ? systems.map(system => {
-          const systemNodes = nodes.filter(node => node.system_id === system.id);
-          const zone = zones.get(system.zone_id);
-          return `<article class="system-card"><div class="card-head"><div><h3>${esc(system.name)}</h3><p>${esc(systemTypeText(system.system_type))}${zone ? ' · '+esc(zone.name) : ''}</p></div><span class="status ${statusClass(system.status)}">${esc(statusText(system.status))}</span></div>
-            ${systemNodes.length ? `<div class="node-list">${systemNodes.map(node => `<div class="node-line"><span><strong>${esc(node.name)}</strong>${node.manufacturer||node.model ? '<br>'+esc([node.manufacturer,node.model].filter(Boolean).join(' ')) : ''}</span><span>${esc(statusText(node.status))}</span></div>`).join('')}</div>` : '<div class="node-list"><div class="node-line"><span>Узлы ещё не добавлены</span></div></div>'}
-          </article>`;
-        }).join('') : '<div class="empty">Инженерные системы ещё не добавлены в объект.</div>'}</div>`;
-    }
-
-    function renderWorks() {
-      const el = $('#worksView'), p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Работы появятся после создания объекта.</div>'; return; }
-      const works = p.works || [], zones = byId(p.zones), systems = byId(p.systems);
-      if (p.permissions?.can_view_progress === false) { el.innerHTML = `${moduleHead('Работы','доступ ограничен')}${coreTabs('works')}<div class="empty permission-note">План работ недоступен для вашей роли.</div>`; return; }
-      const done = works.filter(x => x.status === 'done').length, active = works.filter(x => x.status === 'in_progress').length, blocked = works.filter(x => x.status === 'blocked').length;
-      el.innerHTML = `${moduleHead('Работы','план и фактическое выполнение')}${coreTabs('works')}
-        <div class="grid">
-          <div class="metric"><small>Всего</small><strong>${works.length}</strong></div>
-          <div class="metric"><small>Выполнено</small><strong>${done}</strong></div>
-          <div class="metric"><small>В работе</small><strong>${active}</strong></div>
-          <div class="metric"><small>Приостановлено</small><strong>${blocked}</strong></div>
-        </div>
-        <div class="list">${works.length ? works.map(work => {
-          const progress = work.status === 'done' ? 100 : ratio(work.completed_quantity, work.planned_quantity);
-          const scope = [systems.get(work.system_id)?.name, zones.get(work.zone_id)?.name].filter(Boolean).join(' · ');
-          const quantity = work.planned_quantity != null ? `${qty(work.completed_quantity)} / ${qty(work.planned_quantity)} ${esc(work.unit || '')}` : '';
-          return `<div class="row"><div class="row-main"><strong>${esc(work.title)}</strong><small>${esc(scope || work.description || 'Работа по объекту')}${quantity ? ' · '+quantity : ''}</small><div class="mini-track"><span style="width:${progress}%"></span></div></div><span class="status ${statusClass(work.status)}">${esc(statusText(work.status))}</span></div>`;
-        }).join('') : '<div class="empty">Работы ещё не запланированы.</div>'}</div>`;
-    }
-
-    function renderMaterials() {
-      const el = $('#materialsView'), p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Материалы появятся после создания объекта.</div>'; return; }
-      const materials = p.project_materials || [], systems = byId(p.systems);
-      if (p.permissions?.can_view_progress === false) { el.innerHTML = `${moduleHead('Материалы','доступ ограничен')}${coreTabs('materials')}<div class="empty permission-note">План материалов недоступен для вашей роли.</div>`; return; }
-      const requested = materials.reduce((sum,x)=>sum+Number(x.required_quantity||0),0);
-      const ordered = materials.reduce((sum,x)=>sum+Number(x.ordered_quantity||0),0);
-      const delivered = materials.reduce((sum,x)=>sum+Number(x.delivered_quantity||0),0);
-      const installed = materials.reduce((sum,x)=>sum+Number(x.installed_quantity||0),0);
-      el.innerHTML = `${moduleHead('Материалы','потребность, поставка и монтаж')}${coreTabs('materials')}
-        <div class="grid">
-          <div class="metric"><small>Позиций</small><strong>${materials.length}</strong></div>
-          <div class="metric"><small>Требуется</small><strong>${qty(requested)}</strong></div>
-          <div class="metric"><small>Доставлено</small><strong>${qty(delivered)}</strong></div>
-          <div class="metric"><small>Смонтировано</small><strong>${qty(installed)}</strong></div>
-        </div>
-        <div class="list">${materials.length ? materials.map(item => {
-          const progress = ratio(item.delivered_quantity, item.required_quantity);
-          const system = systems.get(item.system_id);
-          return `<div class="row"><div class="row-main"><strong>${esc(item.name_snap)}</strong><small>${system ? esc(system.name)+' · ' : ''}нужно ${qty(item.required_quantity)} ${esc(item.unit)} · заказано ${qty(item.ordered_quantity)} · доставлено ${qty(item.delivered_quantity)}</small><div class="mini-track"><span style="width:${progress}%"></span></div></div><span class="status ${statusClass(item.status)}">${esc(statusText(item.status))}</span></div>`;
-        }).join('') : '<div class="empty">Потребность в материалах ещё не сформирована.</div>'}</div>
-        ${materials.length && ordered < requested ? '<div class="empty" style="margin-top:10px">Часть потребности ещё ожидает заказа.</div>' : ''}`;
-    }
-
-    function renderPurchases() {
-      const el = $('#purchasesView'), p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Закупки появятся после создания объекта.</div>'; return; }
-      const orders = p.purchase_orders || [], items = p.purchase_items || [];
-      if (p.permissions?.can_view_payments === false) { el.innerHTML = `${moduleHead('Закупки','доступ ограничен')}${coreTabs('purchases')}<div class="empty permission-note">Финансовые данные закупок недоступны для вашей роли.</div>`; return; }
-      const total = orders.reduce((sum,x)=>sum+Number(x.total_amount||0),0);
-      const delivered = orders.filter(x => x.status === 'delivered').length;
-      const expected = orders.filter(x => !['delivered','cancelled'].includes(x.status)).length;
-      el.innerHTML = `${moduleHead('Закупки','заказы поставщикам и поставки')}${coreTabs('purchases')}
-        <div class="grid">
-          <div class="metric"><small>Заказы</small><strong>${orders.length}</strong></div>
-          <div class="metric"><small>Сумма</small><strong>${money(total)}</strong></div>
-          <div class="metric"><small>Доставлено</small><strong>${delivered}</strong></div>
-          <div class="metric"><small>Ожидается</small><strong>${expected}</strong></div>
-        </div>
-        <div class="list">${orders.length ? orders.map(order => {
-          const orderItems = items.filter(item => item.purchase_order_id === order.id);
-          return `<article class="order-card"><div class="card-head"><div><h3>${esc(order.order_number || 'Заказ')}</h3><p>${esc(order.supplier_name || 'Поставщик не указан')}${order.expected_at ? ' · ожидается '+date(order.expected_at) : ''}</p></div><div style="text-align:right"><strong class="order-total">${money(order.total_amount)}</strong><br><span class="status ${statusClass(order.status)}">${esc(statusText(order.status))}</span></div></div>
-            ${orderItems.length ? `<div class="order-items">${orderItems.map(item => `<div class="order-line"><span><strong>${esc(item.name_snap)}</strong><br>${qty(item.delivered_quantity)} из ${qty(item.quantity)} ${esc(item.unit)}</span><span>${money(item.total)}</span></div>`).join('')}</div>` : ''}
-          </article>`;
-        }).join('') : '<div class="empty">Заказы поставщикам ещё не созданы.</div>'}</div>`;
-    }
-
-    function renderEstimates() {
-      const el = $('#estimatesView'); const p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Сметы появятся после создания объекта.</div>'; return; }
-      const estimates = p.estimates || [];
-      const payments = p.payments || [];
-      el.innerHTML = `<div class="section-title"><h2>Сметы</h2><span>${esc(p.title)}</span></div><div class="list">${estimates.length ? estimates.map(e=>`<div class="row"><div class="row-main"><strong>${esc(e.title)}</strong><small>Версия ${esc(e.version)} · ${esc(statusText(e.status))}</small></div><strong>${money(totalEstimate(e))}</strong></div>`).join('') : '<div class="empty">Сметы ещё не опубликованы.</div>'}</div>
-      <div class="section"><div class="section-title"><h2>Оплаты</h2><span>${payments.length}</span></div><div class="list">${payments.length ? payments.map(x=>`<div class="row"><div class="row-main"><strong>${money(x.amount)}</strong><small>${esc(x.note || x.payment_type || '')} · ${date(x.paid_at || x.due_date || x.created_at)}</small></div><span class="status">${esc(statusText(x.status))}</span></div>`).join('') : '<div class="empty">Данные по оплатам пока не добавлены.</div>'}</div></div>`;
-    }
-
-    function renderDocuments() {
-      const el = $('#documentsView'); const p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Документы появятся после создания объекта.</div>'; return; }
-      const docs = p.documents || [];
-      el.innerHTML = `<div class="section-title"><h2>Документы</h2><span>${docs.length}</span></div><div class="list">${docs.length ? docs.map(d=>`${d.url ? `<a class="row file" href="${esc(d.url)}" target="_blank" rel="noopener">` : '<div class="row">'}<div class="row-main"><strong>${esc(d.title)}</strong><small>${esc(d.document_type)} · версия ${esc(d.version)} · ${date(d.updated_at)}</small></div><span class="status">${d.url?'Открыть':'Готовится'}</span>${d.url?'</a>':'</div>'}`).join('') : '<div class="empty">Клиентские документы пока не опубликованы.</div>'}</div>`;
-    }
-
-    function renderPhotos() {
-      const el = $('#photosView'); const p = currentProject();
-      if (!p) { el.innerHTML = '<div class="empty">Фото появятся после создания объекта.</div>'; return; }
-      const media = (p.media || []).filter(x => x.url);
-      el.innerHTML = `<div class="section-title"><h2>Фото с объекта</h2><span>${media.length}</span></div>${media.length ? `<div class="gallery">${media.map(x=>`<a class="photo" href="${esc(x.url)}" target="_blank" rel="noopener"><img src="${esc(x.url)}" loading="lazy" alt="${esc(x.caption || x.file_name || 'Фото объекта')}">${x.caption?`<div class="caption">${esc(x.caption)}</div>`:''}</a>`).join('')}</div>` : '<div class="empty">Фотоотчёты пока не опубликованы.</div>'}`;
-    }
-
-    function renderProfile() {
-      const u = state.data.profile || {}; const quizzes = state.data.quizzes || [];
-      $('#profileView').innerHTML = `<div class="profile-card"><div class="eyebrow">Профиль клиента</div><h2>${esc([u.first_name,u.last_name].filter(Boolean).join(' ') || 'Клиент')}</h2><p>${esc(u.phone || 'Телефон не указан')}</p><p>${esc(u.city || 'Город не указан')}</p></div>
-      <div class="section"><div class="section-title"><h2>История расчётов</h2><span>${quizzes.length}</span></div><div class="list">${quizzes.length ? quizzes.map(q=>`<div class="row"><div class="row-main"><strong>${esc(quizName(q.quiz_type))}</strong><small>${date(q.created_at)}</small><div class="quiz-answer">${esc(Object.entries(q.answers||{}).slice(0,4).map(([k,v])=>`${k}: ${Array.isArray(v)?v.join(', '):v}`).join(' · '))}</div></div></div>`).join('') : '<div class="empty">Вы ещё не проходили расчёты.</div>'}</div></div>`;
-    }
-
-    function renderAll() { renderProject(); renderSystems(); renderWorks(); renderMaterials(); renderPurchases(); renderEstimates(); renderDocuments(); renderPhotos(); renderProfile(); }
-
-    function activateView(target) {
-      const coreViews = ['systems','works','materials','purchases'];
-      const navTarget = coreViews.includes(target) ? 'project' : target;
-      document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.target===navTarget));
-      document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.dataset.view===target));
-      scrollTo({top:0,behavior:'smooth'});
-      tg?.HapticFeedback?.selectionChanged();
-    }
-
-    async function load() {
-      $('#loader').innerHTML = 'Загружаю данные объекта…';
-      if (!token) { showError('Нет доступа', 'Откройте «Мой объект» из Telegram-бота Timchenko.pro.'); return; }
-      try {
-        const r = await fetch(`${API}?token=${encodeURIComponent(token)}`, { cache: 'no-store' });
-        const data = await r.json();
-        if (!r.ok || !data.ok) throw new Error(data.error || 'request_failed');
-        state.data = data;
-        if (state.projectIndex >= data.projects.length) state.projectIndex = 0;
-        renderAll();
-        $('#loader').hidden = true; $('#content').hidden = false; $('#nav').hidden = false;
-      } catch (e) {
-        showError('Не удалось открыть кабинет', e.message === 'expired_or_invalid_token' ? 'Ссылка устарела. Вернитесь в бот и снова нажмите «Мой объект».' : 'Попробуйте открыть кабинет из бота ещё раз.');
-      }
-    }
-
-    function showError(title, text) { $('#content').hidden = true; $('#nav').hidden = true; $('#loader').hidden = false; $('#loader').innerHTML = `<div class="error"><strong>${esc(title)}</strong><span>${esc(text)}</span></div>`; }
-
-    $('#refresh').addEventListener('click', load);
-    $('#content').addEventListener('click', (e) => {
-      const b = e.target.closest('[data-open-view]'); if (!b) return;
-      activateView(b.dataset.openView);
-    });
-    $('#nav').addEventListener('click', (e) => {
-      const b = e.target.closest('button[data-target]'); if (!b) return;
-      activateView(b.dataset.target);
-    });
-    load();
-  </script>
-</body>
-</html>
-
+<main class="app">
+<div id="startup" class="startup"><i></i><span>Проверяем защищённый доступ…</span></div>
+<div id="notice"></div>
+<div id="shell" hidden>
+ <div class="top"><div class="brand"><div class="logo">T</div><div class="brandText"><strong>TIMCHENKO PLATFORM</strong><small class="sub" id="modeTitle">Единая платформа объекта</small></div></div><div class="topActions"><button class="iconbtn" id="homeBtn" aria-label="На главную">⌂</button><button class="iconbtn" id="refreshBtn" aria-label="Обновить">↻</button></div></div>
+ <section class="view on" id="v1"></section><section class="view" id="v2"></section><section class="view" id="v3"></section>
+</div>
+</main>
+<nav class="tabs" id="tabs" hidden></nav>
+<script>
+(()=>{
+const ADMIN_API='https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/admin-crm-api';
+const CLIENT_API='https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/client-portal';
+const tg=window.Telegram?.WebApp||null;try{tg?.ready();tg?.expand();tg?.setHeaderColor?.('#101214')}catch(e){}
+const queryToken=new URLSearchParams(location.search).get('token')||'';
+if(queryToken.length>=32){try{localStorage.setItem('timchenko_portal_token',queryToken)}catch(e){}}
+const token=queryToken||(()=>{try{return localStorage.getItem('timchenko_portal_token')||''}catch(e){return''}})();
+if(queryToken&&history.replaceState)history.replaceState({},document.title,location.pathname+location.hash);
+const S={mode:'',data:null,view:'v1',leadStage:'new',lead:null,project:null,stageId:'',asset:'photos',clientProject:0};
+const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),money=v=>Number(v||0).toLocaleString('ru-RU',{maximumFractionDigits:0})+' ₽',dt=v=>v?new Date(v).toLocaleDateString('ru-RU'):'—';
+const qname=s=>({water_node:'Узел ввода воды',engineering_nodes:'Узел ввода воды',engineering:'Инженерные системы дома',home_engineering:'Инженерные системы дома',electric:'Электрика',electrical:'Электрика',other:'Обращение клиента'}[s]||'Заявка');
+const sourceNames={website:'Форма на сайте',website_chat:'Чат на сайте',telegram_quiz:'Квиз в Telegram',telegram_bot:'Telegram-бот',telegram_mini_app:'Telegram Mini App'};
+const answerLabels={housing:'Тип объекта',meters:'Где находятся счётчики',risers:'Количество стояков',outlets:'Точки водоснабжения',placement:'Размещение узла',nodePlacement:'Размещение узла',filtration:'Фильтрация воды',heater:'Водонагреватель',leak:'Защита от протечек',leakProtection:'Защита от протечек',heating_layout:'Разводка отопления',heatingLayout:'Разводка отопления',design:'Наличие проекта',extras:'Дополнительное оборудование',area:'Площадь дома',area_m2:'Площадь дома',floors:'Количество этажей',bathrooms:'Количество санузлов',systems:'Нужные инженерные системы',scope:'Объём работ',timing:'Когда планируется начало',project:'Проектная документация',material:'Материал дома',channel:'Удобный способ связи',total:'Предварительная стоимость',range:'Расчётный диапазон',city:'Город',files:'Приложенные файлы'};
+const answerValues={
+ 'housing:new':'Новостройка','housing:secondary':'Вторичное жильё','housing:house':'Частный дом',
+ 'meters:apartment':'В квартире','meters:corridor':'В общем коридоре','meters:basement':'В подвале или техпомещении',
+ 'placement:installation':'Над инсталляцией унитаза','placement:closet':'В техническом шкафу','placement:boiler':'В котельной',
+ 'filtration:cartridge_5':'Картриджный фильтр 5 мкм','filtration:self_wash_100':'Самопромывной фильтр 100 мкм','filtration:none':'Без дополнительной фильтрации',
+ 'heater:flow_1_phase':'Проточный водонагреватель, 1 фаза','heater:flow_3_phase':'Проточный водонагреватель, 3 фазы','heater:storage':'Накопительный водонагреватель','heater:none':'Не требуется',
+ 'leak:app':'Защита «Нептун» с управлением через приложение','leak:relay':'Защита от протечек с реле','leak:none':'Не требуется',
+ 'heating_layout:radial':'Лучевая разводка по полу','heating_layout:tee':'Тройниковая разводка',
+ 'design:yes':'Проект есть','design:no':'Проекта нет','extras:steam_machine':'Парогенератор','extras:vacuum_station':'Вакуумная станция','extras:washer_hot':'Стиральная машина с горячей водой'
+};
+const stageNames={new:'Новые',contacted:'Связались',qualified:'Квалифицирован',estimate:'Смета',proposal:'КП отправлено',negotiation:'Переговоры',won:'Выигран',lost:'Проигран'};
+const pStatus={lead:'Заявка',survey:'Исходные данные',design:'Проектирование',estimate:'Смета',approved:'Согласовано',procurement:'Комплектация',installation:'Монтаж',commissioning:'Пусконаладка',completed:'Завершён',paused:'Пауза',cancelled:'Отменён'};
+const st=s=>pStatus[s]||({planned:'Запланирован',in_progress:'В работе',review:'Проверка',done:'Готово',blocked:'Стоп',draft:'Черновик',issued:'Опубликован',paid:'Оплачено',requested:'Запрошено'}[s]||s||'—');
+const coreStatus=s=>({ready:'Готово к старту',ordered:'Заказано',partially_delivered:'Частично доставлено',delivered:'Доставлено',installed:'Смонтировано',commissioned:'Запущено',active:'Работает',fault:'Неисправность',service:'Обслуживание',retired:'Выведено',submitted:'Отправлено',confirmed:'Подтверждено'}[s]||st(s));
+const coreSystem=s=>({heating:'Отопление',water:'Водоснабжение',sewer:'Канализация',electric:'Электрика',ventilation:'Вентиляция',air_conditioning:'Кондиционирование',automation:'Автоматизация',security:'Безопасность',other:'Другая система'}[s]||s||'Инженерная система');
+const qty=v=>Number(v||0).toLocaleString('ru-RU',{maximumFractionDigits:2});
+function corePlatform(d,owner=false){
+ const systems=d?.systems||[],nodes=d?.nodes||[],works=d?.works||[],materials=d?.project_materials||[],orders=d?.purchase_orders||[],items=d?.purchase_items||[];
+ const zones=new Map((d?.zones||[]).map(x=>[x.id,x]));
+ const systemsById=new Map(systems.map(x=>[x.id,x]));
+ const done=works.filter(x=>x.status==='done').length,delivered=materials.filter(x=>['delivered','installed'].includes(x.status)).length,total=orders.reduce((sum,x)=>sum+Number(x.total_amount||0),0);
+ const systemRows=systems.map(x=>{const count=nodes.filter(n=>n.system_id===x.id).length,zone=zones.get(x.zone_id);return`<div class="coreRow"><div><b>${esc(x.name)}</b><small>${esc(coreSystem(x.system_type))}${zone?' · '+esc(zone.name):''} · ${count} узлов</small></div><span class="pill">${esc(coreStatus(x.status))}</span></div>`}).join('');
+ const workRows=works.map(x=>{const system=systemsById.get(x.system_id),progress=x.status==='done'?100:(Number(x.planned_quantity)>0?Math.round(Number(x.completed_quantity||0)/Number(x.planned_quantity)*100):0);return`<div class="coreRow"><div><b>${esc(x.title)}</b><small>${system?esc(system.name)+' · ':''}${qty(x.completed_quantity)} из ${qty(x.planned_quantity)} ${esc(x.unit||'')} · ${progress}%</small></div><span class="pill">${esc(coreStatus(x.status))}</span></div>`}).join('');
+ const materialRows=materials.map(x=>`<div class="coreRow"><div><b>${esc(x.name_snap)}</b><small>Нужно ${qty(x.required_quantity)} ${esc(x.unit||'')} · заказано ${qty(x.ordered_quantity)} · доставлено ${qty(x.delivered_quantity)}</small></div><span class="pill">${esc(coreStatus(x.status))}</span></div>`).join('');
+ const orderRows=orders.map(x=>{const count=items.filter(i=>i.purchase_order_id===x.id).length;return`<div class="coreRow"><div><b>${esc(x.order_number||'Заказ поставщику')}</b><small>${esc(x.supplier_name||'Поставщик не указан')} · ${count} позиций${x.expected_at?' · до '+dt(x.expected_at):''}</small></div><div style="text-align:right"><b>${money(x.total_amount)}</b><small>${esc(coreStatus(x.status))}</small></div></div>`}).join('');
+ return`<div class="section"><div class="sectionHead"><h2>Платформа объекта</h2><span class="platformFlag">Core v2${owner?' · управление':''}</span></div><div class="coreSummary"><div class="coreMetric"><b>${systems.length}</b><small>систем · ${nodes.length} узлов</small></div><div class="coreMetric"><b>${done}/${works.length}</b><small>работ выполнено</small></div><div class="coreMetric"><b>${delivered}/${materials.length}</b><small>материалов доставлено</small></div><div class="coreMetric"><b>${money(total)}</b><small>${orders.length} закупок</small></div></div><details class="coreModule" open><summary>Инженерные системы <span>${systems.length}</span></summary><div class="coreBody">${systemRows||'<div class="empty">Системы ещё не добавлены.</div>'}</div></details><details class="coreModule"><summary>Работы <span>${works.length}</span></summary><div class="coreBody">${workRows||'<div class="empty">Работы ещё не запланированы.</div>'}</div></details><details class="coreModule"><summary>Материалы <span>${materials.length}</span></summary><div class="coreBody">${materialRows||'<div class="empty">Материалы ещё не сформированы.</div>'}</div></details><details class="coreModule"><summary>Закупки <span>${orders.length}</span></summary><div class="coreBody">${orderRows||'<div class="empty">Закупки ещё не созданы.</div>'}</div></details></div>`;
+}
+function notice(t,type=''){ $('#notice').innerHTML=t?`<div class="notice ${type}">${esc(t)}</div>`:'' }
+async function timedFetch(url,options={},ms=12000){const c=new AbortController(),timer=setTimeout(()=>c.abort(),ms);try{return await fetch(url,{...options,signal:c.signal})}catch(e){if(e.name==='AbortError')throw Error('Сервер не ответил вовремя. Проверьте интернет и нажмите «Повторить».');throw e}finally{clearTimeout(timer)}}
+async function adminCall(action,p={},timeout=12000){const r=await timedFetch(ADMIN_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,initData:tg?.initData||'',portalToken:token,...p})},timeout);const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
+async function clientCall(){const q=new URLSearchParams();if(token)q.set('token',token);else if(tg?.initData)q.set('initData',tg.initData);const r=await timedFetch(CLIENT_API+'?'+q.toString(),{cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||('HTTP '+r.status));e.code=d.error||'';e.payload=d;throw e}return d}
+async function upload(action,file,p={}){const f=new FormData();f.append('action',action);f.append('initData',tg?.initData||'');f.append('portalToken',token);f.append('file',file);Object.entries(p).forEach(([k,v])=>f.append(k,String(v??'')));const r=await timedFetch(ADMIN_API,{method:'POST',body:f},45000);const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
+function showShell(){ $('#startup').hidden=true;$('#shell').hidden=false;$('#tabs').hidden=false }
+function tabs(items){$('#tabs').style.gridTemplateColumns=`repeat(${items.length},1fr)`;$('#tabs').innerHTML=items.map((x,i)=>`<button class="tab ${S.view==='v'+(i+1)?'on':''}" data-view="v${i+1}"><b>${x[0]}</b>${x[1]}</button>`).join('');document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{S.view=b.dataset.view;render()})}
+function setView(){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===S.view))}
+function answerValue(k,v){if(v==null||v==='')return'Не указано';if(Array.isArray(v))return v.length?v.map(x=>answerValue(k,x)).join(', '):'Не выбрано';if(typeof v==='object')return Object.entries(v).map(([x,y])=>`${answerLabels[x]||x}: ${answerValue(x,y)}`).join('; ');const raw=String(v),canonical=k==='heatingLayout'?'heating_layout':k==='leakProtection'?'leak':k==='nodePlacement'?'placement':k;return answerValues[`${canonical}:${raw}`]||({'yes':'Да','no':'Нет','true':'Да','false':'Нет'}[raw.toLowerCase()])||raw}
+function fmtAnswersHtml(a){if(!a||typeof a!=='object'||!Object.keys(a).length)return'<div class="empty">Ответов на вопросы нет.</div>';return`<dl class="answerList">${Object.entries(a).filter(([k])=>!k.startsWith('_')).map(([k,v])=>`<div class="answerRow"><dt>${esc(answerLabels[k]||k.replaceAll('_',' '))}</dt><dd>${esc(answerValue(k,v))}</dd></div>`).join('')}</dl>`}
+function leadAnswers(x){const p=x?.payload||{};if(p.answers&&typeof p.answers==='object')return p.answers;const skip=new Set(['form','stage','flow_slug','submission_id','consent','page_url','referrer','submitted_at','consent_version','preferred_channel','chat_session_id']);return Object.fromEntries(Object.entries(p).filter(([k])=>!skip.has(k)))}
+function leadKind(x){return x?.source==='website_chat'?'Сообщение из чата':qname(x?.quiz_type)}
+function pipeline(){const a=S.data.pipeline||Object.keys(stageNames);return`<div class="pipeline">${a.map(k=>`<button class="pipe ${S.leadStage===k?'on':''}" data-pipe="${k}">${stageNames[k]} · ${(S.data.leads||[]).filter(x=>(x.pipeline_stage||'new')===k).length}</button>`).join('')}</div>`}
+function leadList(){const a=(S.data.leads||[]).filter(x=>(x.pipeline_stage||'new')===S.leadStage);return`${pipeline()}${a.length?a.map(x=>`<button class="lead" data-lead="${x.id}"><div class="leadTop"><div><h3>${esc(x.name||x.phone||'Без имени')}</h3><p>${esc(leadKind(x))} · ${esc(x.city||'город не указан')} · ${dt(x.created_at)}</p></div><div class="leadValue">${x.estimated_value?money(x.estimated_value):''}</div></div><div class="leadMeta"><span>${esc(sourceNames[x.source]||'Источник не указан')}</span><span>${esc(x.phone||'без телефона')}</span>${x.next_action_at?`<span>Следующее действие: ${dt(x.next_action_at)}</span>`:''}${x.project_id?'<span>Объект уже создан</span>':''}</div></button>`).join(''):'<div class="empty">В этой колонке лидов нет.</div>'}`}
+function leadDetail(){const x=S.lead;if(!x)return leadList();const answers=leadAnswers(x),isChat=x.source==='website_chat';return`<button class="back" data-lead-back>← Все обращения</button><div class="hero"><div class="eyebrow">Заявка #${x.id} · ${esc(stageNames[x.pipeline_stage]||x.pipeline_stage)}</div><h1>${esc(x.name||'Клиент')}</h1><p>${esc(leadKind(x))} · ${esc(sourceNames[x.source]||'Источник не указан')}</p><div class="chips"><a class="chip" href="tel:${esc(x.phone||'')}">${esc(x.phone||'Без телефона')}</a>${x.city?`<span class="chip">${esc(x.city)}</span>`:''}</div></div><div class="sectionHead"><h2>${isChat?'Сообщение клиента':'Ответы на вопросы'}</h2><span>${dt(x.created_at)}</span></div>${isChat?`<div class="card">${esc(x.comment||'Сообщение не указано')}</div>`:fmtAnswersHtml(answers)}${x.comment&&!isChat?`<div class="section"><div class="label">Комментарий клиента</div><div class="card">${esc(x.comment)}</div></div>`:''}<div class="section"><div class="sectionHead"><h2>Работа с заявкой</h2></div><div class="card form"><div><div class="label">Этап воронки</div><select class="input" id="leadStage">${Object.entries(stageNames).map(([k,v])=>`<option value="${k}" ${x.pipeline_stage===k?'selected':''}>${v}</option>`).join('')}</select></div><div class="form2"><div><div class="label">Потенциал сделки</div><input class="input" id="leadValue" inputmode="decimal" value="${esc(x.estimated_value||'')}" placeholder="₽"></div><div><div class="label">Следующее действие</div><input class="input" id="leadNext" type="datetime-local" value="${x.next_action_at?new Date(x.next_action_at).toISOString().slice(0,16):''}"></div></div><div><div class="label">Мои заметки</div><textarea class="input" id="leadNotes" placeholder="Что обсуждали, что отправить, когда перезвонить">${esc(x.admin_notes||'')}</textarea></div><button class="btn navy w100" id="saveLead">Сохранить заявку</button>${x.project_id?`<button class="btn gold w100" data-open-project="${x.project_id}">Открыть объект</button>`:`<button class="btn gold w100" id="convertLead">Создать объект из заявки</button>`}<button class="btn red w100" id="deleteLead">Удалить заявку навсегда</button></div></div>`}
+function accessQueue(){const all=S.data.access_requests||[],pending=all.filter(x=>x.status==='pending'),approved=all.filter(x=>x.status==='approved');const card=x=>{const name=[x.first_name,x.last_name].filter(Boolean).join(' ')||'Без имени',username=x.telegram_username?'@'+x.telegram_username:'username не указан';return`<div class="accessCard"><div class="accessTop"><div><h3>${esc(name)}</h3><p>${esc(username)} · ${esc(x.phone||'телефон не указан')}<br>Запрос: ${dt(x.requested_at)}</p></div><span class="pill ${x.status==='pending'?'gold':x.status==='approved'?'green':'red'}">${x.status==='pending'?'Ожидает':x.status==='approved'?'Разрешён':x.status==='rejected'?'Отклонён':'Отозван'}</span></div><div class="accessActions">${x.status==='pending'? `<button class="btn gold" data-access-review="${x.id}" data-access-status="approved">Разрешить</button><button class="btn red" data-access-review="${x.id}" data-access-status="rejected">Отклонить</button>` : x.status==='approved'? `<button class="btn red" data-access-review="${x.id}" data-access-status="revoked">Отозвать доступ</button>` : `<button class="btn light" data-access-review="${x.id}" data-access-status="approved">Разрешить</button>`}</div></div>`};return`<div class="section"><div class="sectionHead"><h2>Доступ к Mini App</h2><span>Закрытый режим · ждут: ${pending.length}</span></div>${pending.length?pending.map(card).join(''):'<div class="empty">Новых запросов на доступ нет.</div>'}${approved.length?`<details style="margin-top:8px"><summary class="btn light w100">Разрешённые пользователи · ${approved.length}</summary><div style="margin-top:8px">${approved.map(card).join('')}</div></details>`:''}</div>`}
+function adminLeads(){const leads=S.data.leads||[],projects=S.data.projects||[],requests=S.data.access_requests||[],fresh=leads.filter(x=>(x.pipeline_stage||'new')==='new').length,pending=requests.filter(x=>x.status==='pending').length;return`<div class="hero"><div class="eyebrow"><span class="liveDot"></span> Личный кабинет владельца</div><h1>Работа с проектами</h1><p>Заявки, объекты, этапы, документы, фото и оплаты — в том же интерфейсе, который видит клиент.</p></div><div class="grid g2"><div class="metric"><small>Ждут доступа</small><b>${pending}</b></div><div class="metric"><small>Новые заявки</small><b>${fresh}</b></div><div class="metric"><small>Все заявки</small><b>${leads.length}</b></div><div class="metric"><small>Объекты</small><b>${projects.length}</b></div></div>${accessQueue()}${S.lead?leadDetail():`<div class="section"><div class="sectionHead"><h2>Лиды и обращения</h2><span>${leads.length}</span></div>${leadList()}</div>`}`}
+function projectList(){const a=S.data.projects||[];return`<div class="hero"><div class="eyebrow">Управление объектами</div><h1>Проекты и стройка</h1><p>Исходные данные, этапы, сметы, оплаты, документы и фотоотчёты.</p><div class="chips"><span class="chip">${a.length} объектов</span></div></div>${a.length?a.map(p=>`<button class="projectBtn" data-open-project="${p.id}"><div class="leadTop"><div><h3>${esc(p.title)}</h3><p>${esc(p.client?[p.client.first_name,p.client.last_name].filter(Boolean).join(' '):'Клиент не привязан')} · ${esc(p.city||p.address||'')}</p></div><span class="pill">${esc(st(p.status))}</span></div><div class="bar"><i style="width:${Math.max(0,Math.min(100,Number(p.progress_percent||0)))}%"></i></div><div class="projectFoot"><span>${p.progress_percent||0}% · ${esc(p.current_stage||'')}</span><span>${p.document_count||0} док. · ${p.media_count||0} фото</span></div></button>`).join(''):'<div class="empty">Объектов пока нет. Конвертируйте первый лид.</div>'}`}
+function objectAssets(d){const stages=d.stages||[],sid=S.stageId,docs=(d.documents||[]).filter(x=>(x.stage_id||'')===sid),media=(d.media||[]).filter(x=>(x.stage_id||'')===sid),pay=(d.payments||[]).filter(x=>(x.stage_id||'')===sid),est=(d.estimates||[]).filter(x=>(x.stage_id||'')===sid);return`<div class="section"><div class="sectionHead"><h2>Управление выбранным этапом</h2><span>${sid?esc(stages.find(x=>x.id===sid)?.name||'этап'):'Весь объект'}</span></div><div class="assetNav"><button class="${S.asset==='photos'?'on':''}" data-asset="photos">📷 Фото ${media.length}</button><button class="${S.asset==='docs'?'on':''}" data-asset="docs">📄 Документы ${docs.length}</button><button class="${S.asset==='pay'?'on':''}" data-asset="pay">₽ Оплаты ${pay.length}</button><button class="${S.asset==='est'?'on':''}" data-asset="est">∑ Сметы ${est.length}</button></div>${S.asset==='photos'?photoAdmin(media):S.asset==='docs'?docsAdmin(docs):S.asset==='pay'?payAdmin(pay):estimateAdmin(est)}</div>`}
+function visSwitch(){return`<label class="switch"><input type="checkbox" id="pubClient"> Показать клиенту сразу</label>`}
+function photoAdmin(a){return`<div class="card form"><div><div class="label">Фото отчёта</div><input class="input fileInput" type="file" id="photoFile" accept="image/jpeg,image/png,image/webp"></div><input class="input" id="photoCaption" placeholder="Комментарий: опрессовка, скрытые работы…">${visSwitch()}<button class="btn navy w100" id="uploadPhoto">Загрузить фото</button></div><div class="sectionHead" style="margin-top:10px"><h2>Фото этого этапа</h2></div>${a.length?`<div class="thumbGrid">${a.map(x=>`<div class="thumb"><b>${esc(x.file_name||'Фото')}</b><small>${x.visibility==='client'?'Клиент видит':'Только команда'} · ${dt(x.created_at)}</small><button class="btn light vis" data-entity="media" data-id="${x.id}" data-vis="${x.visibility==='client'?'team':'client'}" style="margin-top:6px">${x.visibility==='client'?'Скрыть':'Опубликовать'}</button></div>`).join('')}</div>`:'<div class="empty">Фото на этом этапе ещё нет.</div>'}`}
+function docsAdmin(a){return`<div class="card form"><div><div class="label">Файл документа</div><input class="input fileInput" type="file" id="docFile" accept=".pdf,.xlsx,.xls,.docx,.doc,.csv"></div><div class="form2"><input class="input" id="docTitle" placeholder="Название документа"><select class="input" id="docType"><option value="project">Проект</option><option value="estimate">Смета</option><option value="proposal">КП</option><option value="contract">Договор</option><option value="act">Акт</option><option value="invoice">Счёт</option><option value="receipt">Чек</option><option value="specification">Спецификация</option><option value="other">Другое</option></select></div>${visSwitch()}<button class="btn navy w100" id="uploadDoc">Загрузить документ</button></div><div class="sectionHead" style="margin-top:10px"><h2>Документы этого этапа</h2></div>${a.length?a.map(x=>`<div class="row"><div><strong>${esc(x.title)}</strong><small>${esc(x.document_type)} · ${dt(x.updated_at)}</small></div><button class="btn light vis" data-entity="document" data-id="${x.id}" data-vis="${x.visibility==='client'?'team':'client'}">${x.visibility==='client'?'Скрыть':'Клиенту'}</button></div>`).join(''):'<div class="empty">Документов на этом этапе нет.</div>'}`}
+function payAdmin(a){return`<div class="card form"><div class="form2"><div><div class="label">Сумма</div><input class="input" id="payAmount" inputmode="decimal" placeholder="₽"></div><div><div class="label">Срок оплаты</div><input class="input" id="payDue" type="date"></div></div><input class="input" id="payNote" placeholder="Например: аванс за этап монтажа"><select class="input" id="payStatus"><option value="planned">Запланировано</option><option value="requested">Запрошено</option><option value="paid">Оплачено</option></select><button class="btn navy w100" id="addPay">Добавить этап оплаты</button></div><div class="sectionHead" style="margin-top:10px"><h2>Оплаты этого этапа</h2></div>${a.length?a.map(x=>`<div class="row"><div><strong>${money(x.amount)}</strong><small>${esc(x.note||x.payment_type||'')} · ${dt(x.paid_at||x.due_date||x.created_at)}</small></div><div style="display:flex;gap:5px;align-items:center"><span class="pill">${esc(st(x.status))}</span>${x.status!=='paid'?`<button class="btn light markPaid" data-id="${x.id}">Оплачено</button>`:''}</div></div>`).join(''):'<div class="empty">Оплат на этом этапе нет.</div>'}`}
+function estimateAdmin(a){return`<div class="card form"><input class="input" id="estTitle" value="Смета по этапу" placeholder="Название сметы">${visSwitch()}<button class="btn navy w100" id="addEst">Создать смету</button><div style="font-size:12px;color:var(--muted);line-height:1.45">После создания смета появляется в общей базе. Наполнение материалами/работами продолжим через единый сметный движок.</div></div><div class="sectionHead" style="margin-top:10px"><h2>Сметы этого этапа</h2></div>${a.length?a.map(x=>{const t=Number(x.labor_total||0)+Number(x.mat_total||0)+Number(x.equipment_total||0)-Number(x.discount_total||0);return`<div class="row"><div><strong>${esc(x.title)}</strong><small>v${x.version||1} · ${esc(st(x.status))}</small></div><div style="text-align:right"><b>${money(t)}</b><button class="btn light vis" data-entity="estimate" data-id="${x.id}" data-vis="${x.visibility==='client'?'team':'client'}" style="display:block;margin-top:4px">${x.visibility==='client'?'Скрыть':'Клиенту'}</button></div></div>`}).join(''):'<div class="empty">Смет на этом этапе нет.</div>'}`}
+function projectDetail(){const d=S.project;if(!d)return projectList();const p=d.project,src=p.source_data||{},stages=d.stages||[];if(S.stageId&&!stages.some(x=>x.id===S.stageId))S.stageId='';return`<button class="back" data-project-back>← Все объекты</button><div class="hero"><div class="eyebrow">Объект · ${esc(st(p.status))}</div><h1>${esc(p.title)}</h1><p>${esc(p.current_stage||'')} · ${Number(p.progress_percent||0)}%</p><div class="chips">${p.area_m2?`<span class="chip">${p.area_m2} м²</span>`:''}${p.city?`<span class="chip">${esc(p.city)}</span>`:''}${d.client?`<span class="chip">${esc([d.client.first_name,d.client.last_name].filter(Boolean).join(' '))}</span>`:''}</div><div class="bar"><i style="width:${Math.max(0,Math.min(100,Number(p.progress_percent||0)))}%"></i></div></div><div class="card form"><div class="form2"><input class="input" id="pTitle" value="${esc(p.title)}" placeholder="Название"><select class="input" id="pStatus">${Object.entries(pStatus).map(([k,v])=>`<option value="${k}" ${p.status===k?'selected':''}>${v}</option>`).join('')}</select></div><div class="form3"><input class="input" id="pCity" value="${esc(p.city||'')}" placeholder="Город"><input class="input" id="pArea" inputmode="decimal" value="${esc(p.area_m2||'')}" placeholder="м²"><input class="input" id="pProgress" inputmode="numeric" value="${esc(p.progress_percent||0)}" placeholder="%"></div><input class="input" id="pAddress" value="${esc(p.address||'')}" placeholder="Адрес"><div class="form2"><input class="input" id="pStage" value="${esc(p.current_stage||'')}" placeholder="Текущий этап"><input class="input" id="pBudget" inputmode="decimal" value="${esc(p.budget_estimate||'')}" placeholder="Бюджет ₽"></div><button class="btn navy w100" id="saveProject">Сохранить объект</button></div>${src.lead_id?`<div class="section"><div class="sectionHead"><h2>Ответы клиента</h2><span>из заявки #${src.lead_id}</span></div>${fmtAnswersHtml(src.answers||src.payload?.answers||{})}</div>`:''}<div class="section"><div class="sectionHead"><h2>Этапы работ</h2><button class="btn light" id="newStage">＋ Этап</button></div>${stages.length?stages.map(s=>`<div class="stageCard ${S.stageId===s.id?'active':''}"><div class="stageTop"><div><h3>${esc(s.name)}</h3><p>${esc(s.system||'')} · ${s.planned_finish?'до '+dt(s.planned_finish):'срок не задан'}</p></div><span class="pill">${Number(s.progress_percent||0)}%</span></div><div class="bar"><i style="width:${Math.max(0,Math.min(100,Number(s.progress_percent||0)))}%"></i></div><div class="stageActions"><button class="btn ${S.stageId===s.id?'gold':'light'}" data-stage-select="${s.id}">${S.stageId===s.id?'Выбран':'Управлять'}</button><button class="btn light" data-stage-edit="${s.id}">Изменить</button><span class="pill">${esc(st(s.status))}</span>${s.budget_amount?`<span class="pill">${money(s.budget_amount)}</span>`:''}</div></div>`).join(''):'<div class="empty">Этапов пока нет.</div>'}</div>${corePlatform(d,true)}${objectAssets(d)}<div class="dangerZone"><h2>Удаление ошибочного объекта</h2><p>Объект, его этапы, оплаты, документы и фото будут удалены навсегда. Связанные заявки и ответы квиза сохранятся без привязки к объекту.</p><button class="btn red w100" id="deleteProject">Удалить объект навсегда</button></div>`}
+function adminObjects(){return S.project?projectDetail():projectList()}
+function adminProfile(){const a=S.data.admin||{};return`<div class="hero"><div class="eyebrow"><span class="liveDot"></span> Профиль владельца</div><h1>${esc(a.display_name||'Владелец')}</h1><p>Полный доступ к тем же объектам, этапам и материалам, которые публикуются клиентам.</p></div><div class="card profile"><p class="verified">✓ Доступ подтверждён через Telegram</p><p>Заявки → объекты → этапы → сметы → оплаты → документы → фотоотчёты.</p><div class="securityNote">Секретные ключи и права администратора не передаются в браузер.</div></div>`}
+function renderAdmin(){ $('#modeTitle').textContent='Личный кабинет владельца';$('#v1').innerHTML=adminLeads();$('#v2').innerHTML=adminObjects();$('#v3').innerHTML=adminProfile();setView();tabs([['◎','Заявки'],['🏗','Объекты'],['👤','Профиль']]);bindAdmin() }
+async function reloadAdmin(keep=true){const d=await adminCall('bootstrap');S.data=d;if(!keep){S.lead=null;S.project=null;S.stageId=''}renderAdmin()}
+async function openProject(id){notice('Загружаю объект…');S.project=await adminCall('project.detail',{project_id:id});S.stageId=S.project.stages?.[0]?.id||'';S.view='v2';notice('');renderAdmin()}
+function bindAdmin(){document.querySelectorAll('[data-access-review]').forEach(b=>b.onclick=async()=>{const status=b.dataset.accessStatus,label=status==='approved'?'разрешить доступ':status==='rejected'?'отклонить запрос':'отозвать доступ';if(status!=='approved'&&!confirm('Точно '+label+'?'))return;b.disabled=true;try{await adminCall('access.review',{request_id:b.dataset.accessReview,status});notice(status==='approved'?'Доступ подтверждён':'Решение сохранено','ok');await reloadAdmin()}catch(x){notice(x.message,'error');b.disabled=false}});document.querySelectorAll('[data-pipe]').forEach(b=>b.onclick=()=>{S.leadStage=b.dataset.pipe;S.lead=null;renderAdmin()});document.querySelectorAll('[data-lead]').forEach(b=>b.onclick=()=>{S.lead=(S.data.leads||[]).find(x=>String(x.id)===String(b.dataset.lead));renderAdmin()});document.querySelector('[data-lead-back]')?.addEventListener('click',()=>{S.lead=null;renderAdmin()});document.querySelectorAll('[data-open-project]').forEach(b=>b.onclick=()=>openProject(b.dataset.openProject));document.querySelector('[data-project-back]')?.addEventListener('click',()=>{S.project=null;S.stageId='';renderAdmin()});
+ $('#saveLead')?.addEventListener('click',async e=>{e.target.disabled=true;try{const next=$('#leadNext').value;await adminCall('lead.update',{lead_id:S.lead.id,pipeline_stage:$('#leadStage').value,estimated_value:$('#leadValue').value,admin_notes:$('#leadNotes').value,next_action_at:next?new Date(next).toISOString():null});notice('Лид сохранён','ok');const id=S.lead.id;await reloadAdmin();S.lead=(S.data.leads||[]).find(x=>x.id===id);renderAdmin()}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#deleteLead')?.addEventListener('click',async e=>{const name=S.lead?.name||S.lead?.phone||('заявка #'+S.lead?.id);if(!confirm('Удалить заявку «'+name+'» навсегда? Объект, если он уже создан, останется.'))return;e.target.disabled=true;try{await adminCall('lead.delete',{lead_id:S.lead.id});S.lead=null;notice('Заявка удалена','ok');await reloadAdmin()}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#convertLead')?.addEventListener('click',async e=>{if(!confirm('Создать объект и привязать к нему данные этого квиза?'))return;e.target.disabled=true;try{const d=await adminCall('lead.convert',{lead_id:S.lead.id});notice('Объект создан из лида','ok');await reloadAdmin();S.project=d;S.lead=null;S.view='v2';S.stageId=d.stages?.[0]?.id||'';renderAdmin()}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#saveProject')?.addEventListener('click',async e=>{e.target.disabled=true;try{const pid=S.project.project.id;await adminCall('project.update',{project_id:pid,title:$('#pTitle').value,status:$('#pStatus').value,city:$('#pCity').value,address:$('#pAddress').value,area_m2:$('#pArea').value||null,progress_percent:$('#pProgress').value||0,current_stage:$('#pStage').value,budget_estimate:$('#pBudget').value||null});notice('Объект обновлён','ok');await openProject(pid);await reloadAdmin()}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#deleteProject')?.addEventListener('click',async e=>{const p=S.project?.project;if(!p)return;const phrase=prompt(`Вы удаляете объект «${p.title}» со всеми этапами, оплатами, документами и фото.\n\nДля подтверждения введите: УДАЛИТЬ ОБЪЕКТ`,'');if(phrase===null)return;if(phrase.trim()!=='УДАЛИТЬ ОБЪЕКТ')return notice('Удаление отменено: контрольная фраза введена неверно.','error');e.target.disabled=true;try{const d=await adminCall('project.delete',{project_id:p.id,project_title:p.title,confirm_text:phrase.trim()});S.project=null;S.stageId='';notice(d.cleanup_warnings?.length?'Объект удалён. Некоторые файлы требуют дополнительной очистки.':'Объект удалён навсегда. Заявки и ответы квиза сохранены.','ok');await reloadAdmin()}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#newStage')?.addEventListener('click',async()=>{const name=prompt('Название этапа','Новый этап');if(!name)return;try{const d=await adminCall('stage.create',{project_id:S.project.project.id,name,sort_order:(S.project.stages?.length||0)*10+10,visibility:'client'});notice('Этап добавлен','ok');await openProject(S.project.project.id);S.stageId=d.stage.id;renderAdmin()}catch(x){notice(x.message,'error')}});
+ document.querySelectorAll('[data-stage-select]').forEach(b=>b.onclick=()=>{S.stageId=b.dataset.stageSelect;renderAdmin()});document.querySelectorAll('[data-stage-edit]').forEach(b=>b.onclick=async()=>{const s=S.project.stages.find(x=>x.id===b.dataset.stageEdit);if(!s)return;const name=prompt('Название этапа',s.name);if(name===null)return;const progress=prompt('Готовность, %',String(s.progress_percent||0));if(progress===null)return;const status=prompt('Статус: planned / in_progress / review / done / blocked',s.status||'planned');if(status===null)return;try{await adminCall('stage.update',{stage_id:s.id,name,progress_percent:Number(progress)||0,status});notice('Этап обновлён','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error')}});
+ document.querySelectorAll('[data-asset]').forEach(b=>b.onclick=()=>{S.asset=b.dataset.asset;renderAdmin()});
+ $('#uploadPhoto')?.addEventListener('click',async e=>{const f=$('#photoFile').files?.[0];if(!f)return notice('Выберите фото','error');e.target.disabled=true;try{await upload('upload_media',f,{project_id:S.project.project.id,stage_id:S.stageId,caption:$('#photoCaption').value,visibility:$('#pubClient').checked?'client':'team'});notice('Фото загружено','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#uploadDoc')?.addEventListener('click',async e=>{const f=$('#docFile').files?.[0];if(!f)return notice('Выберите документ','error');e.target.disabled=true;try{await upload('upload_document',f,{project_id:S.project.project.id,stage_id:S.stageId,title:$('#docTitle').value||f.name,document_type:$('#docType').value,visibility:$('#pubClient').checked?'client':'team'});notice('Документ загружен','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ $('#addPay')?.addEventListener('click',async e=>{if(!Number($('#payAmount').value))return notice('Введите сумму','error');e.target.disabled=true;try{await adminCall('payment.create',{project_id:S.project.project.id,stage_id:S.stageId||null,amount:$('#payAmount').value,due_date:$('#payDue').value||null,note:$('#payNote').value,status:$('#payStatus').value});notice('Этап оплаты добавлен','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ document.querySelectorAll('.markPaid').forEach(b=>b.onclick=async()=>{try{await adminCall('payment.update',{payment_id:b.dataset.id,status:'paid'});notice('Оплата отмечена','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error')}});
+ $('#addEst')?.addEventListener('click',async e=>{e.target.disabled=true;try{await adminCall('estimate.create',{project_id:S.project.project.id,stage_id:S.stageId||null,title:$('#estTitle').value||'Смета',visibility:$('#pubClient').checked?'client':'team'});notice('Смета создана','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error');e.target.disabled=false}});
+ document.querySelectorAll('.vis').forEach(b=>b.onclick=async()=>{try{await adminCall('visibility.update',{entity:b.dataset.entity,id:b.dataset.id,visibility:b.dataset.vis});notice(b.dataset.vis==='client'?'Опубликовано клиенту':'Скрыто от клиента','ok');await openProject(S.project.project.id)}catch(x){notice(x.message,'error')}})
+}
+function cp(){return S.data?.projects?.[S.clientProject]||null}function clientSelect(){const a=S.data?.projects||[];if(a.length<2)return'';return`<select class="input" id="cpSel" style="margin-top:10px">${a.map((x,i)=>`<option value="${i}" ${i===S.clientProject?'selected':''}>${esc(x.title)}</option>`).join('')}</select>`}
+function clientStages(p){const stages=p?.stages||[];if(!stages.length)return'<div class="empty">Этапы появятся после планирования.</div>';return stages.map(s=>{const docs=(p.documents||[]).filter(x=>x.stage_id===s.id),media=(p.media||[]).filter(x=>x.stage_id===s.id),pay=(p.payments||[]).filter(x=>x.stage_id===s.id),est=(p.estimates||[]).filter(x=>x.stage_id===s.id);return`<details class="clientStage" ${s.status==='in_progress'?'open':''}><summary><div class="stageSummary"><div class="stageSummaryTop"><div><b>${esc(s.name)}</b><small>${esc(s.description||s.system||'')}${s.planned_finish?' · до '+dt(s.planned_finish):''}</small></div><span class="pill">${Number(s.progress_percent||0)}%</span></div><div class="bar"><i style="width:${Math.max(0,Math.min(100,Number(s.progress_percent||0)))}%"></i></div></div></summary><div class="stageBody">${est.length?`<h4>Сметы</h4>${est.map(e=>{const t=Number(e.labor_total||0)+Number(e.mat_total||0)+Number(e.equipment_total||0)-Number(e.discount_total||0);return`<div class="row"><div><strong>${esc(e.title)}</strong><small>v${e.version||1}</small></div><b>${money(t)}</b></div>`}).join('')}`:''}${pay.length?`<h4>Оплаты</h4>${pay.map(x=>`<div class="row"><div><strong>${money(x.amount)}</strong><small>${esc(x.note||'')} · ${dt(x.paid_at||x.due_date)}</small></div><span class="pill">${esc(st(x.status))}</span></div>`).join('')}`:''}${docs.length?`<h4>Документы</h4>${docs.map(x=>`<a class="row link" ${x.url?`href="${esc(x.url)}" target="_blank"`:''}><div><strong>${esc(x.title)}</strong><small>${esc(x.document_type)} · ${dt(x.updated_at)}</small></div><span class="pill">${x.url?'Открыть':esc(st(x.status))}</span></a>`).join('')}`:''}${media.length?`<h4>Фотоотчёт</h4><div class="thumbGrid clientPhotos">${media.filter(x=>x.url).map(x=>`<a class="photo" href="${esc(x.url)}" target="_blank"><img src="${esc(x.url)}" loading="lazy">${x.caption?`<div class="photoCap">${esc(x.caption)}</div>`:''}</a>`).join('')}</div>`:''}${!est.length&&!pay.length&&!docs.length&&!media.length?'<div class="empty">Материалы по этапу ещё не опубликованы.</div>':''}</div></details>`}).join('')}
+function quizLauncher(){return`<div class="section"><div class="sectionHead"><h2>Новый расчёт</h2><span>Можно проходить повторно</span></div><div class="quizGrid"><button class="quizBtn" data-quiz="engineering_nodes"><b>💧</b><strong>Узел ввода воды</strong><small>Комплектация и предварительный расчёт</small></button><button class="quizBtn" data-quiz="home_engineering"><b>🏡</b><strong>Инженерные системы</strong><small>Отопление, вода и коммуникации дома</small></button><button class="quizBtn" data-quiz="electrical"><b>⚡</b><strong>Электрика</strong><small>Исходные данные по электроснабжению</small></button></div></div>`}
+function clientObject(){const p=cp(),quizzes=S.data?.quizzes||[];if(!p){const waiting=quizzes.some(x=>!x.project_id);return`<div class="hero"><div class="eyebrow">Личный кабинет</div><h1>${waiting?'Ожидается ответ':'Начните с расчёта'}</h1><p>${waiting?'Ваши исходные данные получены. Специалист изучит их и свяжется с вами; после создания объекта он появится здесь автоматически.':'У вас пока нет объекта или отправленного расчёта. Выберите подходящий квиз — пройти его можно несколько раз.'}</p><div class="chips">${waiting?'<span class="chip">Заявка принята</span><span class="chip">Ожидается ответ</span>':'<span class="chip">Квиз занимает несколько минут</span>'}</div></div>${quizLauncher()}`};return`<div class="hero"><div class="eyebrow">TIMCHENKO PLATFORM · Мой объект</div><h1>${esc(p.title)}</h1><p>${esc(p.current_stage||st(p.status))}</p><div class="chips">${p.area_m2?`<span class="chip">${p.area_m2} м²</span>`:''}${p.city?`<span class="chip">${esc(p.city)}</span>`:''}<span class="chip">${esc(st(p.status))}</span></div>${clientSelect()}<div class="bar"><i style="width:${Math.max(0,Math.min(100,Number(p.progress_percent||0)))}%"></i></div></div><div class="grid g3"><div class="metric"><small>Готовность</small><b>${p.progress_percent||0}%</b></div><div class="metric"><small>Бюджет</small><b>${p.budget_estimate?money(p.budget_estimate):'—'}</b></div><div class="metric"><small>Оплачено</small><b>${p.paid_amount?money(p.paid_amount):'—'}</b></div></div>${corePlatform(p)}<div class="section"><div class="sectionHead"><h2>Этапы работ</h2><span>Фото и документы по этапам</span></div>${clientStages(p)}</div>`}
+function clientQuizzes(){const a=S.data?.quizzes||[];return`<div class="hero"><div class="eyebrow">Расчёты КП</div><h1>Ваши исходные данные</h1><p>После отправки расчёт получает статус «Ожидается ответ». Вы можете пройти любой квиз повторно — каждое прохождение сохранится отдельно.</p></div>${a.length?a.map(x=>`<div class="row"><div><strong>${esc(qname(x.quiz_type))}</strong><small>${dt(x.created_at)}</small></div><span class="pill ${x.project_id?'green':'gold'}">${x.project_id?'В объекте':'Ожидается ответ'}</span></div>`).join(''):'<div class="empty">Вы ещё не проходили квизы. Выберите расчёт ниже.</div>'}${quizLauncher()}`}
+function clientProfile(){const u=S.data?.profile||{};return`<div class="hero"><div class="eyebrow">Заказчик</div><h1>${esc([u.first_name,u.last_name].filter(Boolean).join(' ')||'Профиль')}</h1><p>Здесь видны только ваши объекты и опубликованные для вас материалы.</p></div><div class="card profile"><p>${esc(u.phone||'')}</p><p>${esc(u.email||'')}</p><p class="verified">${S.data?.identity?.phone_verified?'✓ Номер подтверждён':'Профиль связан с объектом'}</p></div>`}
+function renderClient(){ $('#modeTitle').textContent='Личный кабинет заказчика';$('#v1').innerHTML=clientObject();$('#v2').innerHTML=clientQuizzes();$('#v3').innerHTML=clientProfile();setView();tabs([['🏗','Объект'],['∑','Расчёты'],['👤','Профиль']]);$('#cpSel')?.addEventListener('change',e=>{S.clientProject=Number(e.target.value);renderClient()});document.querySelectorAll('[data-quiz]').forEach(b=>b.onclick=()=>{const url='https://t.me/uzelpro_bot?start=quiz_'+b.dataset.quiz;if(tg?.openTelegramLink)tg.openTelegramLink(url);else location.href=url}) }
+function renderLogin(message=''){S.mode='login';$('#startup').hidden=true;$('#shell').hidden=false;$('#modeTitle').textContent='TIMCHENKO PLATFORM';$('#tabs').hidden=true;$('#v1').classList.add('on');$('#v2').classList.remove('on');$('#v3').classList.remove('on');$('#v1').innerHTML=`<div class="hero"><div class="eyebrow">Единая платформа объекта</div><h1>Личный кабинет</h1><p>Владелец управляет воронкой и всеми объектами. Заказчик видит только свой объект и опубликованные материалы.</p><div class="chips"><span class="chip">Системы</span><span class="chip">Работы</span><span class="chip">Материалы</span><span class="chip">Закупки</span></div></div><div class="card"><strong>${message?'Нужно войти снова':'Безопасный вход через Telegram'}</strong><p class="loginHint">${esc(message||'Откройте кабинет через @uzelpro_bot. Telegram подтвердит вашу личность и платформа автоматически покажет нужную роль.')}</p><div class="loginActions"><a class="btn gold" href="https://t.me/uzelpro_bot?start=cabinet" target="_blank" rel="noopener">Открыть Telegram-бот</a><button class="btn light" id="retryBoot" type="button">Проверить вход ещё раз</button>${token?'<button class="btn light" id="forgetAccess" type="button">Сбросить сохранённый вход</button>':''}</div></div>`;$('#retryBoot').onclick=()=>location.reload();$('#forgetAccess')?.addEventListener('click',()=>{try{localStorage.removeItem('timchenko_portal_token')}catch(e){}location.href=location.pathname})}
+function renderAccessGate(code){S.mode='gate';$('#startup').hidden=true;$('#shell').hidden=false;$('#modeTitle').textContent='Доступ к кабинету';$('#tabs').hidden=true;const rejected=code==='access_rejected'||code==='access_revoked';$('#v1').innerHTML=`<div class="hero gateHero"><div class="gateIcon">${rejected?'⛔':'🔐'}</div><div class="eyebrow">Timchenko.pro · закрытый доступ</div><h1>${rejected?'Доступ не предоставлен':'Запрос отправлен'}</h1><p>${rejected?'Владелец пока не подтвердил доступ к кабинету. Свяжитесь с Timchenko.pro, если считаете это ошибкой.':'Ваш запрос уже видит владелец. После личного подтверждения доступ откроется автоматически.'}</p></div><div class="card"><strong>${rejected?'Что делать':'Что дальше'}</strong><p style="font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:0">${rejected?'Свяжитесь с владельцем и дождитесь решения.':'Владелец свяжется с вами, проверит данные и подтвердит вход. После уведомления нажмите «Обновить» или откройте кабинет из бота ещё раз.'}</p></div>`}
+async function boot(){try{$('#startup').hidden=false;if(!token&&!tg?.initData){renderLogin();return}if(token||tg?.initData){try{const d=await adminCall('bootstrap',{},8000);if(d?.mode==='admin'){S.mode='admin';S.data=d;showShell();renderAdmin();return}}catch(e){if(e.message!=='ADMIN_ONLY'&&e.message!=='TELEGRAM_AUTH_REQUIRED'&&!e.message.includes('403'))console.warn('Admin probe',e)}}S.mode='client';S.data=await clientCall();showShell();renderClient()}catch(e){if(['access_pending','access_rejected','access_revoked'].includes(e.code||e.message)){renderAccessGate(e.code||e.message);return}if(['expired_or_invalid_token','PORTAL_TOKEN_INVALID','PORTAL_TOKEN_REQUIRED'].includes(e.code||e.message)){try{localStorage.removeItem('timchenko_portal_token')}catch(x){}renderLogin('Сохранённая ссылка больше не действует. Получите новую ссылку в Telegram-боте.');return}renderLogin('Не удалось проверить доступ. Проверьте интернет и повторите попытку.')}}
+$('#refreshBtn').onclick=async()=>{notice('Обновляю…');try{if(S.mode==='admin')await reloadAdmin();else if(S.mode==='gate')await boot();else{S.data=await clientCall();renderClient()}notice('Обновлено','ok')}catch(e){if(['access_pending','access_rejected','access_revoked'].includes(e.code||e.message))renderAccessGate(e.code||e.message);else notice(e.message,'error')}};$('#homeBtn').onclick=()=>{S.view='v1';S.lead=null;S.project=null;render()};
+function render(){if(S.mode==='admin')renderAdmin();else if(S.mode==='client')renderClient()}
+boot();
+})();
+</script>
+</body></html>
