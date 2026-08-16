@@ -153,7 +153,7 @@ Deno.serve(async(req:Request)=>{
       return json({error:code,access:{status:approval.status,requested_at:approval.requested_at,reviewed_at:approval.reviewed_at}},403);
     }
   }
-  if(req.method==="POST"){if(requestAction==="quiz.submit")return await submitCabinetQuiz(body,accessToken,user,now);return json({error:"unknown_action"},400)}
+  if(req.method==="POST"&&requestAction){if(requestAction==="quiz.submit")return await submitCabinetQuiz(body,accessToken,user,now);return json({error:"unknown_action"},400)}
 
   const projectSelect="id,title,address,city,area_m2,floors,bathrooms,status,current_stage,progress_percent,planned_start,planned_finish,budget_estimate,paid_amount,updated_at,client_user_id,client_phone_normalized";
   const projectParams:Record<string,string>={select:projectSelect,organization_id:`eq.${accessToken.organization_id}`,order:"updated_at.desc"};
@@ -194,3 +194,4 @@ Deno.serve(async(req:Request)=>{
   return json({ok:true,generated_at:now,token_expires_at:accessToken.expires_at,identity:{project_lookup:user.phone_verified&&user.phone_normalized?"verified_phone":"user_id",phone_verified:!!user.phone_verified},profile:user,projects,quizzes,quiz_catalog,profile_documents});
  }catch(error){const code=error instanceof Error?error.message:"internal_error";console.error(error);const status=code.startsWith("telegram_")?401:500;return json({error:code},status)}
 });
+
