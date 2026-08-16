@@ -15,4 +15,3 @@ revoke execute on function public.sync_auth_user_to_app_user()
   from public, anon, authenticated;
 grant execute on function public.sync_auth_user_to_app_user()
   to service_role;
-
