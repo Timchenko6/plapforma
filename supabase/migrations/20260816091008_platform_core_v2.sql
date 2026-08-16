@@ -278,4 +278,3 @@ to service_role;
 comment on table public.clients is 'Organization-scoped client records; app_users compatibility is preserved.';
 comment on table public.works is 'Project work breakdown between systems/nodes and existing tasks.';
 comment on table public.project_materials is 'Project material plan linked to catalog_products_v2 without duplicating the catalog.';
-
