@@ -289,4 +289,3 @@ Deno.serve(async (req) => {
     return json({ error: error instanceof Error ? error.message : String(error) }, 500);
   }
 });
-
