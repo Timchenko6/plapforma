@@ -3,93 +3,125 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101214">
-  <title>Timchenko.pro — Мой объект</title>
+  <meta name="theme-color" content="#0b1530">
+  <title>TIMCHENKO PLATFORM — Личный кабинет</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: #f4f5f6;
+      color-scheme: light;
+      --bg: #eef2f6;
       --panel: #ffffff;
-      --panel-2: #f0f1f2;
-      --text: #111315;
-      --muted: #6f7479;
-      --line: rgba(17, 19, 21, .10);
-      --accent: #171a1d;
-      --accent-text: #fff;
-      --good: #25784a;
-      --warn: #a16413;
+      --panel-2: #f5f7fa;
+      --text: #12213b;
+      --muted: #6b7789;
+      --line: #dce3ec;
+      --navy: #0b1530;
+      --navy-2: #172a4b;
+      --gold: #b88a00;
+      --gold-2: #d4aa25;
+      --accent: var(--navy);
+      --accent-text: #ffffff;
+      --good: #237a51;
+      --warn: #a86e08;
       --radius: 18px;
-      --shadow: 0 10px 35px rgba(10, 12, 14, .06);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0d0f10;
-        --panel: #151719;
-        --panel-2: #1d2022;
-        --text: #f4f5f6;
-        --muted: #a0a5aa;
-        --line: rgba(255,255,255,.10);
-        --accent: #f1f3f4;
-        --accent-text: #111315;
-        --shadow: none;
-      }
+      --shadow: 0 14px 38px rgba(13, 31, 58, .08);
     }
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { padding: env(safe-area-inset-top) 0 calc(86px + env(safe-area-inset-bottom)); }
+    body { padding: env(safe-area-inset-top) 0 calc(92px + env(safe-area-inset-bottom)); }
     button, a { font: inherit; }
-    .app { width: min(760px, 100%); margin: 0 auto; padding: 18px 16px 24px; }
-    .top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+    .app { width: min(860px, 100%); margin: 0 auto; padding: 18px 16px 30px; }
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 20px; }
     .brand { display: flex; align-items: center; gap: 11px; }
-    .logo { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--accent); color: var(--accent-text); font-weight: 800; letter-spacing: -.03em; }
-    .brand strong { display: block; letter-spacing: .02em; }
-    .brand small { color: var(--muted); }
-    .refresh { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 12px; padding: 9px 12px; cursor: pointer; }
-    .hero { background: var(--panel); border: 1px solid var(--line); border-radius: 24px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 14px; }
-    .eyebrow { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
-    h1 { margin: 0; font-size: clamp(24px, 7vw, 34px); line-height: 1.08; letter-spacing: -.035em; }
+    .logo { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: var(--navy); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); font-weight: 900; letter-spacing: -.04em; }
+    .brand strong { display: block; color: var(--navy); font-size: 14px; letter-spacing: .08em; }
+    .brand strong span { color: var(--gold); }
+    .brand small { display: block; color: var(--muted); font-size: 11px; margin-top: 3px; }
+    .refresh { border: 1px solid var(--line); background: var(--panel); color: var(--navy); border-radius: 12px; min-height: 40px; padding: 0 13px; cursor: pointer; font-size: 12px; font-weight: 750; box-shadow: 0 4px 14px rgba(13,31,58,.04); }
+    .hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; border: 1px solid rgba(255,255,255,.08); border-radius: 25px; padding: 23px; box-shadow: 0 18px 46px rgba(11,21,48,.18); margin-bottom: 14px; }
+    .hero::after { content: ""; position: absolute; width: 220px; height: 220px; right: -105px; top: -125px; border: 1px solid rgba(212,170,37,.28); border-radius: 50%; box-shadow: 0 0 0 34px rgba(212,170,37,.035), 0 0 0 68px rgba(212,170,37,.025); pointer-events: none; }
+    .hero > * { position: relative; z-index: 1; }
+    .eyebrow { color: var(--gold-2); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 8px; }
+    .hero p { color: rgba(255,255,255,.68) !important; line-height: 1.5; }
+    h1 { margin: 0; font-size: clamp(27px, 7vw, 38px); line-height: 1.08; letter-spacing: -.04em; }
     .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .chip { background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; font-size: 13px; }
+    .chip { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.88); border-radius: 999px; padding: 7px 10px; font-size: 12px; }
     .progress-wrap { margin-top: 20px; }
-    .progress-head { display: flex; justify-content: space-between; gap: 12px; align-items: end; margin-bottom: 8px; }
-    .progress-head strong { font-size: 24px; }
-    .track { height: 9px; background: var(--panel-2); border-radius: 999px; overflow: hidden; }
-    .bar { height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .35s ease; }
+    .progress-head { display: flex; justify-content: space-between; gap: 12px; align-items: end; margin-bottom: 9px; color: rgba(255,255,255,.68); font-size: 12px; }
+    .progress-head strong { color: #fff; font-size: 25px; }
+    .track { height: 7px; background: rgba(255,255,255,.12); border-radius: 999px; overflow: hidden; }
+    .bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-2)); border-radius: inherit; transition: width .35s ease; }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0 16px; }
-    .metric { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 15px; }
-    .metric small { display: block; color: var(--muted); margin-bottom: 5px; }
-    .metric strong { font-size: 20px; letter-spacing: -.02em; }
-    .section { margin-top: 20px; }
+    .metric { position: relative; overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: 0 6px 22px rgba(13,31,58,.04); }
+    .metric::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--gold); }
+    .metric small { display: block; color: var(--muted); margin-bottom: 7px; font-size: 10px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+    .metric strong { color: var(--navy); font-size: clamp(16px, 4vw, 20px); letter-spacing: -.025em; }
+    .section { margin-top: 22px; }
     .section-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0 2px 10px; }
-    .section-title h2 { margin: 0; font-size: 18px; }
+    .section-title h2 { margin: 0; color: var(--navy); font-size: 18px; letter-spacing: -.02em; }
     .section-title span { color: var(--muted); font-size: 13px; }
     .list { display: grid; gap: 8px; }
-    .row { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; padding: 13px 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .row { background: var(--panel); border: 1px solid var(--line); border-radius: 15px; padding: 14px 15px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 16px rgba(13,31,58,.035); }
     .row-main { min-width: 0; }
-    .row-main strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .row-main small { color: var(--muted); display: block; margin-top: 4px; }
-    .status { flex: 0 0 auto; font-size: 12px; padding: 6px 8px; background: var(--panel-2); border-radius: 999px; }
+    .row-main strong { display: block; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row-main small { color: var(--muted); display: block; margin-top: 5px; font-size: 12px; }
+    .status { flex: 0 0 auto; color: var(--navy); font-size: 11px; font-weight: 700; padding: 6px 9px; background: #f8f2df; border: 1px solid #eadcad; border-radius: 999px; }
     .file { color: inherit; text-decoration: none; }
     .gallery { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
     .photo { aspect-ratio: 1.2 / 1; position: relative; border: 1px solid var(--line); background: var(--panel); border-radius: 16px; overflow: hidden; }
     .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .photo .caption { position: absolute; inset: auto 0 0; padding: 24px 10px 9px; background: linear-gradient(transparent, rgba(0,0,0,.65)); color: white; font-size: 12px; }
-    .empty { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--radius); padding: 22px 16px; color: var(--muted); text-align: center; }
-    .project-switch { width: 100%; margin-top: 14px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); border-radius: 12px; padding: 10px 12px; }
+    .empty { background: var(--panel); border: 1px dashed #cbd5e2; border-radius: var(--radius); padding: 24px 16px; color: var(--muted); text-align: center; }
+    .project-switch { width: 100%; margin-top: 15px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.08); color: #fff; border-radius: 12px; padding: 11px 12px; }
+    .project-switch option { color: var(--text); background: #fff; }
     .view { display: none; }
     .view.active { display: block; }
-    .nav { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: 0; width: min(760px, 100%); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(18px); border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(5, 1fr); }
-    .nav button { appearance: none; border: 0; background: transparent; color: var(--muted); padding: 7px 2px; display: grid; gap: 3px; place-items: center; font-size: 10px; cursor: pointer; border-radius: 12px; }
-    .nav button b { font-size: 19px; line-height: 1; }
-    .nav button.active { color: var(--text); background: var(--panel); }
-    .loader { min-height: 60vh; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 30px; }
-    .error strong { color: var(--text); display: block; margin-bottom: 8px; }
-    .profile-card { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 18px; }
+    .nav { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: 0; width: min(860px, 100%); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); background: rgba(11,21,48,.96); backdrop-filter: blur(18px); border-top: 1px solid rgba(255,255,255,.08); display: grid; grid-template-columns: repeat(5, 1fr); box-shadow: 0 -10px 30px rgba(11,21,48,.14); }
+    .nav button { appearance: none; border: 0; background: transparent; color: rgba(255,255,255,.52); padding: 7px 2px 6px; display: grid; gap: 4px; place-items: center; font-size: 9px; font-weight: 700; cursor: pointer; border-radius: 11px; }
+    .nav button b { font-size: 18px; line-height: 1; font-family: Arial, sans-serif; }
+    .nav button.active { color: #fff; background: rgba(255,255,255,.08); box-shadow: inset 0 2px 0 var(--gold); }
+    .nav button.active b { color: var(--gold-2); }
+    .loader { min-height: 72vh; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 30px; }
+    .error { width: min(430px, 100%); padding: 28px; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+    .error::before { content: "T"; width: 46px; height: 46px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 14px; background: var(--navy); color: #fff; font-weight: 900; }
+    .error strong { color: var(--navy); display: block; margin-bottom: 8px; font-size: 18px; }
+    .error span { font-size: 13px; line-height: 1.55; }
+    .profile-card { background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; border: 1px solid rgba(255,255,255,.08); border-radius: 22px; padding: 20px; box-shadow: 0 16px 38px rgba(11,21,48,.16); }
     .profile-card h2 { margin: 0 0 4px; }
-    .profile-card p { margin: 3px 0; color: var(--muted); }
+    .profile-card p { margin: 3px 0; color: rgba(255,255,255,.68); }
     .quiz-answer { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.45; }
-    @media (min-width: 640px) { .grid { grid-template-columns: repeat(4, 1fr); } .gallery { grid-template-columns: repeat(3, 1fr); } }
+    .core-launch-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .core-launch { appearance: none; width: 100%; min-height: 126px; border: 1px solid var(--line); border-radius: 19px; background: var(--panel); color: var(--text); padding: 16px; text-align: left; cursor: pointer; box-shadow: 0 6px 22px rgba(13,31,58,.04); transition: transform .18s ease, border-color .18s ease; }
+    .core-launch:active { transform: scale(.985); }
+    .core-launch:hover { border-color: #c8aa55; }
+    .core-launch-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; background: var(--navy); color: var(--gold-2); font-size: 17px; font-weight: 850; }
+    .core-launch strong { display: block; margin-top: 14px; color: var(--navy); font-size: 15px; }
+    .core-launch small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .core-tabs { display: grid; grid-template-columns: repeat(4, minmax(86px,1fr)); gap: 7px; margin: 0 0 16px; overflow-x: auto; scrollbar-width: none; }
+    .core-tabs::-webkit-scrollbar { display: none; }
+    .core-tabs button { appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 12px; min-height: 42px; padding: 8px 10px; font-size: 11px; font-weight: 750; white-space: nowrap; cursor: pointer; }
+    .core-tabs button.active { background: var(--navy); border-color: var(--navy); color: #fff; box-shadow: inset 0 -2px 0 var(--gold); }
+    .module-head { margin-bottom: 14px; }
+    .module-head button { appearance: none; border: 0; background: transparent; color: var(--gold); padding: 0; margin-bottom: 8px; font-size: 12px; font-weight: 800; cursor: pointer; }
+    .module-head h1 { color: var(--navy); font-size: clamp(27px,7vw,36px); }
+    .module-head p { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .system-card, .order-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px; box-shadow: 0 5px 18px rgba(13,31,58,.035); }
+    .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .card-head h3 { margin: 0; color: var(--navy); font-size: 16px; }
+    .card-head p { margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .node-list, .order-items { display: grid; gap: 7px; margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .node-line, .order-line { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .node-line strong, .order-line strong { color: var(--text); font-weight: 700; }
+    .mini-track { height: 5px; margin-top: 9px; overflow: hidden; border-radius: 999px; background: #e9edf2; }
+    .mini-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--gold),var(--gold-2)); }
+    .status.good { color: var(--good); background: #eaf6ef; border-color: #c6e7d3; }
+    .status.warn { color: var(--warn); background: #fff5dd; border-color: #ecdba9; }
+    .status.muted { color: var(--muted); background: #f4f6f8; border-color: var(--line); }
+    .order-total { color: var(--navy); font-size: 17px; white-space: nowrap; }
+    .permission-note { margin-bottom: 12px; }
+    @media (min-width: 640px) { .grid { grid-template-columns: repeat(4, 1fr); } .gallery { grid-template-columns: repeat(3, 1fr); } .hero { padding: 28px; } .core-launch-grid { grid-template-columns: repeat(4,1fr); } }
+    @media (max-width: 380px) { .brand small { display: none; } .refresh { width: 40px; padding: 0; font-size: 0; } .refresh::before { content: "↻"; font-size: 18px; } }
   </style>
 </head>
 <body>
@@ -97,13 +129,17 @@
     <div class="loader" id="loader">Загружаю данные объекта…</div>
     <div id="content" hidden>
       <header class="top">
-        <div class="brand"><div class="logo">T</div><div><strong>TIMCHENKO.PRO</strong><small>Личный кабинет клиента</small></div></div>
-        <button class="refresh" id="refresh" type="button">Обновить</button>
+        <div class="brand"><div class="logo">T</div><div><strong>TIMCHENKO <span>PLATFORM</span></strong><small>Личный кабинет · управление объектом</small></div></div>
+        <button class="refresh" id="refresh" type="button">↻&nbsp; Обновить</button>
       </header>
 
       <section class="view active" data-view="project">
         <div id="projectView"></div>
       </section>
+      <section class="view" data-view="systems"><div id="systemsView"></div></section>
+      <section class="view" data-view="works"><div id="worksView"></div></section>
+      <section class="view" data-view="materials"><div id="materialsView"></div></section>
+      <section class="view" data-view="purchases"><div id="purchasesView"></div></section>
       <section class="view" data-view="estimates"><div id="estimatesView"></div></section>
       <section class="view" data-view="documents"><div id="documentsView"></div></section>
       <section class="view" data-view="photos"><div id="photosView"></div></section>
@@ -112,11 +148,11 @@
   </main>
 
   <nav class="nav" id="nav" hidden>
-    <button class="active" data-target="project" type="button"><b>🏗</b><span>Объект</span></button>
-    <button data-target="estimates" type="button"><b>₽</b><span>Сметы</span></button>
-    <button data-target="documents" type="button"><b>📄</b><span>Документы</span></button>
-    <button data-target="photos" type="button"><b>📷</b><span>Фото</span></button>
-    <button data-target="profile" type="button"><b>👤</b><span>Профиль</span></button>
+    <button class="active" data-target="project" type="button"><b>⌂</b><span>Обзор</span></button>
+    <button data-target="estimates" type="button"><b>₽</b><span>Финансы</span></button>
+    <button data-target="documents" type="button"><b>▤</b><span>Документы</span></button>
+    <button data-target="photos" type="button"><b>▧</b><span>Фото</span></button>
+    <button data-target="profile" type="button"><b>○</b><span>Профиль</span></button>
   </nav>
 
   <script>
@@ -131,11 +167,28 @@
     const money = (v) => Number(v || 0).toLocaleString('ru-RU') + ' ₽';
     const date = (v) => v ? new Date(v).toLocaleDateString('ru-RU') : '—';
     const esc = (v) => String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    const statusText = (s) => ({lead:'Заявка',survey:'Замер / исходные данные',design:'Проектирование',estimate:'Смета',approved:'Согласовано',procurement:'Комплектация',installation:'Монтаж',commissioning:'Пусконаладка',completed:'Завершён',paused:'Пауза',cancelled:'Отменён',new:'Новый',draft:'Черновик',approved_estimate:'Согласовано'}[s] || s || '—');
+    const statusText = (s) => ({lead:'Заявка',survey:'Замер / исходные данные',design:'Проектирование',estimate:'Смета',approved:'Согласовано',procurement:'Комплектация',installation:'Монтаж',commissioning:'Пусконаладка',completed:'Завершён',paused:'Пауза',cancelled:'Отменён',new:'Новый',draft:'Черновик',planned:'Запланировано',requested:'Запрошено',paid:'Оплачено',approved_estimate:'Согласовано',ready:'Готово к старту',in_progress:'В работе',blocked:'Приостановлено',review:'Проверка',done:'Выполнено',ordered:'Заказано',installed:'Смонтировано',commissioned:'Запущено',active:'Работает',fault:'Неисправность',service:'Обслуживание',retired:'Выведено',partially_delivered:'Частично доставлено',delivered:'Доставлено',submitted:'Отправлено',confirmed:'Подтверждено',disabled:'Отключено'}[s] || s || '—');
+    const systemTypeText = (s) => ({heating:'Отопление',water:'Водоснабжение',sewer:'Канализация',electric:'Электрика',ventilation:'Вентиляция',air_conditioning:'Кондиционирование',automation:'Автоматизация',security:'Безопасность',other:'Другая система'}[s] || s || 'Инженерная система');
     const quizName = (s) => ({engineering_nodes:'Инженерные узлы',home_engineering:'Инженерные системы',electrical:'Электрика'}[s] || s);
+    const qty = (v) => Number(v || 0).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+    const ratio = (value, total) => total > 0 ? Math.max(0, Math.min(100, Math.round(Number(value || 0) / Number(total) * 100))) : 0;
+    const statusClass = (s) => ['done','delivered','installed','commissioned','active','completed','paid'].includes(s) ? 'good' : ['blocked','fault','partially_delivered','requested'].includes(s) ? 'warn' : 'muted';
 
     function currentProject() { return state.data?.projects?.[state.projectIndex] || null; }
     function totalEstimate(e) { return Number(e.labor_total||0)+Number(e.mat_total||0)+Number(e.equipment_total||0)-Number(e.discount_total||0); }
+    function byId(items) { return new Map((items || []).map(x => [x.id, x])); }
+    function coreTabs(active) {
+      return `<div class="core-tabs">
+        <button class="${active==='systems'?'active':''}" data-open-view="systems" type="button">Системы</button>
+        <button class="${active==='works'?'active':''}" data-open-view="works" type="button">Работы</button>
+        <button class="${active==='materials'?'active':''}" data-open-view="materials" type="button">Материалы</button>
+        <button class="${active==='purchases'?'active':''}" data-open-view="purchases" type="button">Закупки</button>
+      </div>`;
+    }
+    function moduleHead(title, text) {
+      const p = currentProject();
+      return `<div class="module-head"><button data-open-view="project" type="button">← Обзор объекта</button><h1>${esc(title)}</h1><p>${esc(p?.title || '')}${text ? ' · '+esc(text) : ''}</p></div>`;
+    }
 
     function projectSelector() {
       const items = state.data.projects || [];
@@ -147,7 +200,7 @@
       const el = $('#projectView');
       const p = currentProject();
       if (!p) {
-        el.innerHTML = `<div class="hero"><div class="eyebrow">Мой объект</div><h1>Объект пока не создан</h1><p style="color:var(--muted);margin-bottom:0">Пройдите квиз в Telegram-боте и создайте объект из результата, либо закажите проектирование.</p></div>${renderQuizSection()}`;
+        el.innerHTML = `<div class="hero"><div class="eyebrow">TIMCHENKO PLATFORM · Мой объект</div><h1>Объект пока не создан</h1><p style="color:var(--muted);margin-bottom:0">Пройдите квиз в Telegram-боте и создайте объект из результата, либо закажите проектирование.</p></div>${renderQuizSection()}`;
         return;
       }
       const budget = Number(p.budget_estimate || 0);
@@ -155,7 +208,7 @@
       const stages = p.stages || [];
       el.innerHTML = `
         <div class="hero">
-          <div class="eyebrow">Мой объект</div>
+          <div class="eyebrow">TIMCHENKO PLATFORM · Мой объект</div>
           <h1>${esc(p.title)}</h1>
           <div class="meta">
             ${p.area_m2 ? `<span class="chip">${esc(p.area_m2)} м²</span>` : ''}
@@ -174,6 +227,7 @@
           <div class="metric"><small>Бюджет</small><strong>${budget ? money(budget) : '—'}</strong></div>
           <div class="metric"><small>Оплачено</small><strong>${paid ? money(paid) : '—'}</strong></div>
         </div>
+        ${renderCoreLaunch(p)}
         <div class="section">
           <div class="section-title"><h2>Этапы работ</h2><span>${stages.length}</span></div>
           <div class="list">${stages.length ? stages.map(s => `<div class="row"><div class="row-main"><strong>${esc(s.name)}</strong><small>${s.planned_finish ? 'до '+date(s.planned_finish) : esc(s.system || '')}</small></div><span class="status">${Number(s.progress_percent||0)}%</span></div>`).join('') : '<div class="empty">Этапы появятся после планирования работ.</div>'}</div>
@@ -183,10 +237,116 @@
       $('#projectSwitch')?.addEventListener('change', (e) => { state.projectIndex = Number(e.target.value); renderAll(); });
     }
 
+    function renderCoreLaunch(p) {
+      const systems = p.systems || [], nodes = p.nodes || [], works = p.works || [];
+      const materials = p.project_materials || [], purchases = p.purchase_orders || [];
+      const doneWorks = works.filter(x => x.status === 'done').length;
+      const delivered = materials.filter(x => ['delivered','installed'].includes(x.status)).length;
+      return `<div class="section"><div class="section-title"><h2>Платформа объекта</h2><span>Core v2</span></div>
+        <div class="core-launch-grid">
+          <button class="core-launch" data-open-view="systems" type="button"><span class="core-launch-icon">⌘</span><strong>Системы</strong><small>${systems.length} систем · ${nodes.length} узлов</small></button>
+          <button class="core-launch" data-open-view="works" type="button"><span class="core-launch-icon">✓</span><strong>Работы</strong><small>${doneWorks} из ${works.length} выполнено</small></button>
+          <button class="core-launch" data-open-view="materials" type="button"><span class="core-launch-icon">▦</span><strong>Материалы</strong><small>${delivered} из ${materials.length} доставлено</small></button>
+          <button class="core-launch" data-open-view="purchases" type="button"><span class="core-launch-icon">₽</span><strong>Закупки</strong><small>${purchases.length} заказов</small></button>
+        </div>
+      </div>`;
+    }
+
     function renderQuizSection() {
       const qs = state.data.quizzes || [];
       if (!qs.length) return '';
       return `<div class="section"><div class="section-title"><h2>Мои расчёты</h2><span>${qs.length}</span></div><div class="list">${qs.slice(0,6).map(q=>`<div class="row"><div class="row-main"><strong>${esc(quizName(q.quiz_type))}</strong><small>${date(q.created_at)}</small></div><span class="status">${q.project_id ? 'В объекте' : 'Сохранён'}</span></div>`).join('')}</div></div>`;
+    }
+
+    function renderSystems() {
+      const el = $('#systemsView'), p = currentProject();
+      if (!p) { el.innerHTML = '<div class="empty">Системы появятся после создания объекта.</div>'; return; }
+      const systems = p.systems || [], nodes = p.nodes || [], zones = byId(p.zones);
+      if (p.permissions?.can_view_progress === false) { el.innerHTML = `${moduleHead('Системы','доступ ограничен')}${coreTabs('systems')}<div class="empty permission-note">Данные инженерных систем недоступны для вашей роли.</div>`; return; }
+      const activeSystems = systems.filter(x => ['active','service'].includes(x.status)).length;
+      const installedNodes = nodes.filter(x => ['installed','commissioned','active'].includes(x.status)).length;
+      el.innerHTML = `${moduleHead('Инженерные системы','структура систем и узлов')}${coreTabs('systems')}
+        <div class="grid">
+          <div class="metric"><small>Системы</small><strong>${systems.length}</strong></div>
+          <div class="metric"><small>Узлы</small><strong>${nodes.length}</strong></div>
+          <div class="metric"><small>В эксплуатации</small><strong>${activeSystems}</strong></div>
+          <div class="metric"><small>Узлы смонтированы</small><strong>${installedNodes}</strong></div>
+        </div>
+        <div class="list">${systems.length ? systems.map(system => {
+          const systemNodes = nodes.filter(node => node.system_id === system.id);
+          const zone = zones.get(system.zone_id);
+          return `<article class="system-card"><div class="card-head"><div><h3>${esc(system.name)}</h3><p>${esc(systemTypeText(system.system_type))}${zone ? ' · '+esc(zone.name) : ''}</p></div><span class="status ${statusClass(system.status)}">${esc(statusText(system.status))}</span></div>
+            ${systemNodes.length ? `<div class="node-list">${systemNodes.map(node => `<div class="node-line"><span><strong>${esc(node.name)}</strong>${node.manufacturer||node.model ? '<br>'+esc([node.manufacturer,node.model].filter(Boolean).join(' ')) : ''}</span><span>${esc(statusText(node.status))}</span></div>`).join('')}</div>` : '<div class="node-list"><div class="node-line"><span>Узлы ещё не добавлены</span></div></div>'}
+          </article>`;
+        }).join('') : '<div class="empty">Инженерные системы ещё не добавлены в объект.</div>'}</div>`;
+    }
+
+    function renderWorks() {
+      const el = $('#worksView'), p = currentProject();
+      if (!p) { el.innerHTML = '<div class="empty">Работы появятся после создания объекта.</div>'; return; }
+      const works = p.works || [], zones = byId(p.zones), systems = byId(p.systems);
+      if (p.permissions?.can_view_progress === false) { el.innerHTML = `${moduleHead('Работы','доступ ограничен')}${coreTabs('works')}<div class="empty permission-note">План работ недоступен для вашей роли.</div>`; return; }
+      const done = works.filter(x => x.status === 'done').length, active = works.filter(x => x.status === 'in_progress').length, blocked = works.filter(x => x.status === 'blocked').length;
+      el.innerHTML = `${moduleHead('Работы','план и фактическое выполнение')}${coreTabs('works')}
+        <div class="grid">
+          <div class="metric"><small>Всего</small><strong>${works.length}</strong></div>
+          <div class="metric"><small>Выполнено</small><strong>${done}</strong></div>
+          <div class="metric"><small>В работе</small><strong>${active}</strong></div>
+          <div class="metric"><small>Приостановлено</small><strong>${blocked}</strong></div>
+        </div>
+        <div class="list">${works.length ? works.map(work => {
+          const progress = work.status === 'done' ? 100 : ratio(work.completed_quantity, work.planned_quantity);
+          const scope = [systems.get(work.system_id)?.name, zones.get(work.zone_id)?.name].filter(Boolean).join(' · ');
+          const quantity = work.planned_quantity != null ? `${qty(work.completed_quantity)} / ${qty(work.planned_quantity)} ${esc(work.unit || '')}` : '';
+          return `<div class="row"><div class="row-main"><strong>${esc(work.title)}</strong><small>${esc(scope || work.description || 'Работа по объекту')}${quantity ? ' · '+quantity : ''}</small><div class="mini-track"><span style="width:${progress}%"></span></div></div><span class="status ${statusClass(work.status)}">${esc(statusText(work.status))}</span></div>`;
+        }).join('') : '<div class="empty">Работы ещё не запланированы.</div>'}</div>`;
+    }
+
+    function renderMaterials() {
+      const el = $('#materialsView'), p = currentProject();
+      if (!p) { el.innerHTML = '<div class="empty">Материалы появятся после создания объекта.</div>'; return; }
+      const materials = p.project_materials || [], systems = byId(p.systems);
+      if (p.permissions?.can_view_progress === false) { el.innerHTML = `${moduleHead('Материалы','доступ ограничен')}${coreTabs('materials')}<div class="empty permission-note">План материалов недоступен для вашей роли.</div>`; return; }
+      const requested = materials.reduce((sum,x)=>sum+Number(x.required_quantity||0),0);
+      const ordered = materials.reduce((sum,x)=>sum+Number(x.ordered_quantity||0),0);
+      const delivered = materials.reduce((sum,x)=>sum+Number(x.delivered_quantity||0),0);
+      const installed = materials.reduce((sum,x)=>sum+Number(x.installed_quantity||0),0);
+      el.innerHTML = `${moduleHead('Материалы','потребность, поставка и монтаж')}${coreTabs('materials')}
+        <div class="grid">
+          <div class="metric"><small>Позиций</small><strong>${materials.length}</strong></div>
+          <div class="metric"><small>Требуется</small><strong>${qty(requested)}</strong></div>
+          <div class="metric"><small>Доставлено</small><strong>${qty(delivered)}</strong></div>
+          <div class="metric"><small>Смонтировано</small><strong>${qty(installed)}</strong></div>
+        </div>
+        <div class="list">${materials.length ? materials.map(item => {
+          const progress = ratio(item.delivered_quantity, item.required_quantity);
+          const system = systems.get(item.system_id);
+          return `<div class="row"><div class="row-main"><strong>${esc(item.name_snap)}</strong><small>${system ? esc(system.name)+' · ' : ''}нужно ${qty(item.required_quantity)} ${esc(item.unit)} · заказано ${qty(item.ordered_quantity)} · доставлено ${qty(item.delivered_quantity)}</small><div class="mini-track"><span style="width:${progress}%"></span></div></div><span class="status ${statusClass(item.status)}">${esc(statusText(item.status))}</span></div>`;
+        }).join('') : '<div class="empty">Потребность в материалах ещё не сформирована.</div>'}</div>
+        ${materials.length && ordered < requested ? '<div class="empty" style="margin-top:10px">Часть потребности ещё ожидает заказа.</div>' : ''}`;
+    }
+
+    function renderPurchases() {
+      const el = $('#purchasesView'), p = currentProject();
+      if (!p) { el.innerHTML = '<div class="empty">Закупки появятся после создания объекта.</div>'; return; }
+      const orders = p.purchase_orders || [], items = p.purchase_items || [];
+      if (p.permissions?.can_view_payments === false) { el.innerHTML = `${moduleHead('Закупки','доступ ограничен')}${coreTabs('purchases')}<div class="empty permission-note">Финансовые данные закупок недоступны для вашей роли.</div>`; return; }
+      const total = orders.reduce((sum,x)=>sum+Number(x.total_amount||0),0);
+      const delivered = orders.filter(x => x.status === 'delivered').length;
+      const expected = orders.filter(x => !['delivered','cancelled'].includes(x.status)).length;
+      el.innerHTML = `${moduleHead('Закупки','заказы поставщикам и поставки')}${coreTabs('purchases')}
+        <div class="grid">
+          <div class="metric"><small>Заказы</small><strong>${orders.length}</strong></div>
+          <div class="metric"><small>Сумма</small><strong>${money(total)}</strong></div>
+          <div class="metric"><small>Доставлено</small><strong>${delivered}</strong></div>
+          <div class="metric"><small>Ожидается</small><strong>${expected}</strong></div>
+        </div>
+        <div class="list">${orders.length ? orders.map(order => {
+          const orderItems = items.filter(item => item.purchase_order_id === order.id);
+          return `<article class="order-card"><div class="card-head"><div><h3>${esc(order.order_number || 'Заказ')}</h3><p>${esc(order.supplier_name || 'Поставщик не указан')}${order.expected_at ? ' · ожидается '+date(order.expected_at) : ''}</p></div><div style="text-align:right"><strong class="order-total">${money(order.total_amount)}</strong><br><span class="status ${statusClass(order.status)}">${esc(statusText(order.status))}</span></div></div>
+            ${orderItems.length ? `<div class="order-items">${orderItems.map(item => `<div class="order-line"><span><strong>${esc(item.name_snap)}</strong><br>${qty(item.delivered_quantity)} из ${qty(item.quantity)} ${esc(item.unit)}</span><span>${money(item.total)}</span></div>`).join('')}</div>` : ''}
+          </article>`;
+        }).join('') : '<div class="empty">Заказы поставщикам ещё не созданы.</div>'}</div>`;
     }
 
     function renderEstimates() {
@@ -218,7 +378,16 @@
       <div class="section"><div class="section-title"><h2>История расчётов</h2><span>${quizzes.length}</span></div><div class="list">${quizzes.length ? quizzes.map(q=>`<div class="row"><div class="row-main"><strong>${esc(quizName(q.quiz_type))}</strong><small>${date(q.created_at)}</small><div class="quiz-answer">${esc(Object.entries(q.answers||{}).slice(0,4).map(([k,v])=>`${k}: ${Array.isArray(v)?v.join(', '):v}`).join(' · '))}</div></div></div>`).join('') : '<div class="empty">Вы ещё не проходили расчёты.</div>'}</div></div>`;
     }
 
-    function renderAll() { renderProject(); renderEstimates(); renderDocuments(); renderPhotos(); renderProfile(); }
+    function renderAll() { renderProject(); renderSystems(); renderWorks(); renderMaterials(); renderPurchases(); renderEstimates(); renderDocuments(); renderPhotos(); renderProfile(); }
+
+    function activateView(target) {
+      const coreViews = ['systems','works','materials','purchases'];
+      const navTarget = coreViews.includes(target) ? 'project' : target;
+      document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.target===navTarget));
+      document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.dataset.view===target));
+      scrollTo({top:0,behavior:'smooth'});
+      tg?.HapticFeedback?.selectionChanged();
+    }
 
     async function load() {
       $('#loader').innerHTML = 'Загружаю данные объекта…';
@@ -239,14 +408,16 @@
     function showError(title, text) { $('#content').hidden = true; $('#nav').hidden = true; $('#loader').hidden = false; $('#loader').innerHTML = `<div class="error"><strong>${esc(title)}</strong><span>${esc(text)}</span></div>`; }
 
     $('#refresh').addEventListener('click', load);
+    $('#content').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-open-view]'); if (!b) return;
+      activateView(b.dataset.openView);
+    });
     $('#nav').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-target]'); if (!b) return;
-      document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));
-      document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.dataset.view===b.dataset.target));
-      scrollTo({top:0,behavior:'smooth'});
-      tg?.HapticFeedback?.selectionChanged();
+      activateView(b.dataset.target);
     });
     load();
   </script>
 </body>
 </html>
+
