@@ -42,9 +42,11 @@ const ADMIN_API='https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/admin-crm
 const CLIENT_API='https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/client-portal';
 const tg=window.Telegram?.WebApp||null;try{tg?.ready();tg?.expand();tg?.setHeaderColor?.('#101214')}catch(e){}
 const queryToken=new URLSearchParams(location.search).get('token')||'';
-if(queryToken.length>=32){try{localStorage.setItem('timchenko_portal_token',queryToken)}catch(e){}}
-const token=queryToken||(()=>{try{return localStorage.getItem('timchenko_portal_token')||''}catch(e){return''}})();
-if(queryToken&&history.replaceState)history.replaceState({},document.title,location.pathname+location.hash);
+const hashToken=new URLSearchParams(location.hash.replace(/^#/, '')).get('token')||'';
+const incomingToken=hashToken||queryToken;
+if(incomingToken.length>=32){try{localStorage.setItem('timchenko_portal_token',incomingToken)}catch(e){}}
+const token=incomingToken||(()=>{try{return localStorage.getItem('timchenko_portal_token')||''}catch(e){return''}})();
+if(incomingToken&&history.replaceState){const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete('token');cleanUrl.hash='';history.replaceState({},document.title,cleanUrl.pathname+cleanUrl.search)}
 const S={mode:'',data:null,view:'v1',leadStage:'new',lead:null,project:null,stageId:'',asset:'photos',clientProject:0};
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),money=v=>Number(v||0).toLocaleString('ru-RU',{maximumFractionDigits:0})+' ₽',dt=v=>v?new Date(v).toLocaleDateString('ru-RU'):'—';
 const qname=s=>({water_node:'Узел ввода воды',engineering_nodes:'Узел ввода воды',engineering:'Инженерные системы дома',home_engineering:'Инженерные системы дома',electric:'Электрика',electrical:'Электрика',other:'Обращение клиента'}[s]||'Заявка');
@@ -80,7 +82,7 @@ function corePlatform(d,owner=false){
 function notice(t,type=''){ $('#notice').innerHTML=t?`<div class="notice ${type}">${esc(t)}</div>`:'' }
 async function timedFetch(url,options={},ms=12000){const c=new AbortController(),timer=setTimeout(()=>c.abort(),ms);try{return await fetch(url,{...options,signal:c.signal})}catch(e){if(e.name==='AbortError')throw Error('Сервер не ответил вовремя. Проверьте интернет и нажмите «Повторить».');throw e}finally{clearTimeout(timer)}}
 async function adminCall(action,p={},timeout=12000){const r=await timedFetch(ADMIN_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,initData:tg?.initData||'',portalToken:token,...p})},timeout);const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
-async function clientCall(){const q=new URLSearchParams();if(token)q.set('token',token);else if(tg?.initData)q.set('initData',tg.initData);const r=await timedFetch(CLIENT_API+'?'+q.toString(),{cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||('HTTP '+r.status));e.code=d.error||'';e.payload=d;throw e}return d}
+async function clientCall(){const auth=token?{token}:{initData:tg?.initData||''};const r=await timedFetch(CLIENT_API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(auth),cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||('HTTP '+r.status));e.code=d.error||'';e.payload=d;throw e}return d}
 async function upload(action,file,p={}){const f=new FormData();f.append('action',action);f.append('initData',tg?.initData||'');f.append('portalToken',token);f.append('file',file);Object.entries(p).forEach(([k,v])=>f.append(k,String(v??'')));const r=await timedFetch(ADMIN_API,{method:'POST',body:f},45000);const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
 function showShell(){ $('#startup').hidden=true;$('#shell').hidden=false;$('#tabs').hidden=false }
 function tabs(items){$('#tabs').style.gridTemplateColumns=`repeat(${items.length},1fr)`;$('#tabs').innerHTML=items.map((x,i)=>`<button class="tab ${S.view==='v'+(i+1)?'on':''}" data-view="v${i+1}"><b>${x[0]}</b>${x[1]}</button>`).join('');document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{S.view=b.dataset.view;render()})}
@@ -139,3 +141,4 @@ boot();
 })();
 </script>
 </body></html>
+
