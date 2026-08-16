@@ -290,4 +290,3 @@ end;
 $$;
 
 -- Preserve the intentionally public preliminary calculator RPC unchanged.
-
