@@ -717,7 +717,9 @@ async def make_portal_url(user: dict) -> Optional[str]:
             "phone_verified": bool(user.get("phone_verified")),
         },
     }, return_rows=False)
-    sep = "&" if "?" in base_url else "?"
+    # Keep the short-lived credential in the URL fragment: browsers never send it
+    # to GitHub Pages, and the cabinet removes it immediately after saving it.
+    sep = "&" if "#" in base_url else "#"
     return f"{base_url}{sep}{urlencode({'token': raw_token})}"
 
 
@@ -749,7 +751,7 @@ async def open_client_portal(m: Message, user: dict) -> None:
         f"Объектов найдено: <b>{count}</b>"
     )
     await m.answer(text, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🏗 Открыть личный кабинет", web_app=WebAppInfo(url=url))],
+        [InlineKeyboardButton(text="🏗 Открыть платформу", url=url)],
         [InlineKeyboardButton(text=BACK, callback_data="nav:back"), InlineKeyboardButton(text=HOME, callback_data="nav:home")],
     ]))
 
@@ -1007,6 +1009,9 @@ async def on_start(m: Message) -> None:
     }
     if payload in quiz_payloads:
         await start_quiz_for_tg(m, user, quiz_payloads[payload], m.from_user.id)
+        return
+    if payload in {"cabinet", "profile", "project"}:
+        await open_client_portal(m, user)
         return
     await show_home(m, user)
 
@@ -1497,3 +1502,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
