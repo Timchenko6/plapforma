@@ -194,4 +194,3 @@ Deno.serve(async(req:Request)=>{
   return json({ok:true,generated_at:now,token_expires_at:accessToken.expires_at,identity:{project_lookup:user.phone_verified&&user.phone_normalized?"verified_phone":"user_id",phone_verified:!!user.phone_verified},profile:user,projects,quizzes,quiz_catalog,profile_documents});
  }catch(error){const code=error instanceof Error?error.message:"internal_error";console.error(error);const status=code.startsWith("telegram_")?401:500;return json({error:code},status)}
 });
-
