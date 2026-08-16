@@ -17,12 +17,12 @@ const required = [
   "system-cabinet-preview",
   "https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/public-lead-api",
   "https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/public-chat-api",
-  "https://timchenko-cabinet.irongrip-pro.chatgpt.site",
+  "https://timchenko6.github.io/plapforma/client/",
   "https://t.me/uzelpro_bot",
 ];
 for (const value of required) if (!html.includes(value)) throw new Error(`Missing release marker: ${value}`);
 
-const forbidden = ["show('object')", "/api/lead.php", "/api/chat.php", "https://t.me/Timchenko_pro", "data:image/"];
+const forbidden = ["show('object')", "/api/lead.php", "/api/chat.php", "https://t.me/Timchenko_pro", "https://timchenko-cabinet.irongrip-pro.chatgpt.site", "data:image/"];
 for (const value of forbidden) if (html.includes(value)) throw new Error(`Forbidden legacy marker: ${value}`);
 
 const assetNames = [...new Set([...html.matchAll(/assets\/[A-Za-z0-9_./-]+/g)].map((match) => match[0]))];
