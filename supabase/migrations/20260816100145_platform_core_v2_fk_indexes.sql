@@ -43,4 +43,3 @@ create index project_media_node_id_idx on public.project_media (node_id) where n
 create index documents_zone_id_idx on public.documents (zone_id) where zone_id is not null;
 create index documents_system_id_idx on public.documents (system_id) where system_id is not null;
 create index documents_node_id_idx on public.documents (node_id) where node_id is not null;
-
