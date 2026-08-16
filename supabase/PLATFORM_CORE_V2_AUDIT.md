@@ -45,4 +45,3 @@ This first migration intentionally does not revoke those privileges because Edge
 - `preliminary_benchmark_quote_v1` remains intentionally available to `anon` for the public calculator.
 - All Core v2 foreign keys reported by the performance advisor now have covering indexes.
 - Existing historical advisor findings on legacy tables remain a separate hardening backlog.
-
