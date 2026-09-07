@@ -269,7 +269,7 @@ Deno.serve(async (req) => {
     };
     const fileLine = uploaded.length ? `\nФайлы: ${uploaded.length}` : "";
     const notified = await notifyAdmins(
-      `🔧 Новая заявка Timchenko.pro\n${labels[quizType] || quizType}\n${name}\n${phone}${city ? `\n${city}` : ""}\nКанал: ${preferredChannel}${fileLine}`,
+      `🔧 Новая заявка TIMCHENKO GROUP\n${labels[quizType] || quizType}\n${name}\n${phone}${city ? `\n${city}` : ""}\nКанал: ${preferredChannel}${fileLine}`,
     );
     if (notified) {
       await db.from("lead_notifications").update({ status: "sent", notified_at: queuedAt, updated_at: queuedAt }).eq("lead_id", lead.id);
@@ -289,3 +289,4 @@ Deno.serve(async (req) => {
     return json({ error: error instanceof Error ? error.message : String(error) }, 500);
   }
 });
+
