@@ -147,7 +147,7 @@ async function handlePost(req: Request) {
   if (queueError) throw queueError;
 
   const notified = await notifyAdmins(
-    `💬 Чат сайта Timchenko.pro\n${name}\n${phone}\n\n${message}\n\n#sitechat:${sessionId}\nОтветьте на это сообщение — ответ появится у клиента на сайте.`,
+    `💬 Чат сайта TIMCHENKO GROUP\n${name}\n${phone}\n\n${message}\n\n#sitechat:${sessionId}\nОтветьте на это сообщение — ответ появится у клиента на сайте.`,
   );
   if (notified) {
     await db.from("lead_notifications").update({ status: "sent", notified_at: queuedAt, updated_at: queuedAt }).eq("lead_id", leadId);
@@ -206,3 +206,4 @@ Deno.serve(async (req) => {
     return json({ error: error instanceof Error ? error.message : String(error) }, 500);
   }
 });
+
