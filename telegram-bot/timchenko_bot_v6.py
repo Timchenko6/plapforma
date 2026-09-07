@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""TimchenkoBot v6.1 — client Telegram gateway for Timchenko.pro.
+"""TimchenkoBot v6.1 — client Telegram gateway for TIMCHENKO GROUP.
 
 Client rules:
 - mandatory registration with verified Telegram contact;
@@ -237,7 +237,7 @@ def queued_lead_text(lead: dict[str, Any]) -> str:
         session_id = str(payload.get("chat_session_id") or "")
         marker = f"#sitechat:{session_id}" if session_id else ""
         return (
-            "💬 <b>Чат сайта Timchenko.pro</b>\n"
+            "💬 <b>Чат сайта TIMCHENKO GROUP</b>\n"
             f"{esc(lead.get('name') or 'Клиент')}\n"
             f"{esc(lead.get('phone') or '—')}\n\n"
             f"{esc(lead.get('comment') or 'Новое сообщение')}\n\n"
@@ -255,7 +255,7 @@ def queued_lead_text(lead: dict[str, Any]) -> str:
     city = f"\n{esc(lead.get('city'))}" if lead.get("city") else ""
     file_line = f"\nФайлы: {len(files)}" if files else ""
     return (
-        "🔧 <b>Новая заявка Timchenko.pro</b>\n"
+        "🔧 <b>Новая заявка TIMCHENKO GROUP</b>\n"
         f"{esc(labels.get(lead.get('quiz_type'), lead.get('quiz_type') or 'Заявка с сайта'))}\n"
         f"{esc(lead.get('name') or 'Клиент')}\n"
         f"{esc(lead.get('phone') or '—')}{city}{file_line}\n"
@@ -467,7 +467,7 @@ async def show_home(m: Message, user: Optional[dict] = None) -> None:
         await start_registration(m, shell)
         return
     await clear_session(m.from_user.id, user_id=user["id"])
-    greeting = BOT_SETTINGS.get("welcome_message") or "🏠 <b>TIMCHENKO.PRO</b>\nИнженерные системы частных домов\n\nВыберите действие:"
+    greeting = BOT_SETTINGS.get("welcome_message") or "🏠 <b>TIMCHENKO GROUP</b>\nИнженерные системы частных домов\n\nВыберите действие:"
     await m.answer(greeting, parse_mode="HTML", reply_markup=await home_markup())
 
 
@@ -482,7 +482,7 @@ async def show_home_callback(c: CallbackQuery) -> None:
         return
     await clear_session(c.from_user.id, user_id=user["id"])
     await load_runtime_config()
-    greeting = BOT_SETTINGS.get("welcome_message") or "🏠 <b>TIMCHENKO.PRO</b>"
+    greeting = BOT_SETTINGS.get("welcome_message") or "🏠 <b>TIMCHENKO GROUP</b>"
     await c.message.answer(greeting, parse_mode="HTML", reply_markup=await home_markup())
     await c.answer()
 
@@ -781,7 +781,7 @@ async def create_project_from_submission(c: CallbackQuery, submission_id: str) -
     answers = sub.get("answers") or {}
     area = answers.get("area")
     city = user.get("city") or sub.get("city")
-    title = f"Дом {nice_value(area)} м²" if area else "Объект Timchenko.pro"
+    title = f"Дом {nice_value(area)} м²" if area else "Объект TIMCHENKO GROUP"
     if city:
         title += f" · {city}"
     created = await db_insert("projects", {
