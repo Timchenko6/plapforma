@@ -111,6 +111,20 @@ async function submitCabinetQuiz(body:any,accessToken:any,user:any,now:string){
  await notifyOwnerLead(user,lead,quizType,answers,now);
  return json({ok:true,quiz,lead_id:lead?.id||null,access_unlocked:true});
 }
+async function decideClientApproval(body:any,accessToken:any,user:any,now:string){
+ const approvalId=String(body.approval_id||"").trim(),decision=String(body.decision||"").trim();
+ if(!approvalId||!["approved","rejected"].includes(decision))return json({error:"approval_decision_invalid"},400);
+ const approvals=await rest("client_approvals",{select:"id,project_id,status",id:`eq.${approvalId}`,organization_id:`eq.${accessToken.organization_id}`,limit:"1"});
+ if(!approvals.length)return json({error:"approval_not_found"},404);
+ const approval=approvals[0];if(approval.status!=="pending")return json({error:"approval_already_decided"},409);
+ const projects=await rest("projects",{select:"id,client_user_id,client_phone_normalized",id:`eq.${approval.project_id}`,organization_id:`eq.${accessToken.organization_id}`,limit:"1"});
+ if(!projects.length)return json({error:"project_not_found"},404);
+ const project=projects[0];let allowed=project.client_user_id===user.id||Boolean(user.phone_verified&&user.phone_normalized&&project.client_phone_normalized===user.phone_normalized);
+ if(!allowed){const grants=await rest("client_project_access",{select:"can_approve",project_id:`eq.${project.id}`,organization_id:`eq.${accessToken.organization_id}`,user_id:`eq.${user.id}`,revoked_at:"is.null",limit:"1"});allowed=Boolean(grants[0]?.can_approve)}
+ if(!allowed)return json({error:"approval_access_denied"},403);
+ await patch("client_approvals",{id:`eq.${approvalId}`,status:"eq.pending"},{status:decision,decision_by:user.id,decision_comment:String(body.comment||"").trim().slice(0,2000)||null,decided_at:now});
+ return json({ok:true,approval_id:approvalId,status:decision});
+}
 Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS")return new Response("ok",{headers:cors});
  if(req.method!=="GET"&&req.method!=="POST")return json({error:"method_not_allowed"},405);
@@ -153,7 +167,7 @@ Deno.serve(async(req:Request)=>{
       return json({error:code,access:{status:approval.status,requested_at:approval.requested_at,reviewed_at:approval.reviewed_at}},403);
     }
   }
-  if(req.method==="POST"&&requestAction){if(requestAction==="quiz.submit")return await submitCabinetQuiz(body,accessToken,user,now);return json({error:"unknown_action"},400)}
+  if(req.method==="POST"&&requestAction){if(requestAction==="quiz.submit")return await submitCabinetQuiz(body,accessToken,user,now);if(requestAction==="approval.decide")return await decideClientApproval(body,accessToken,user,now);return json({error:"unknown_action"},400)}
 
   const projectSelect="id,title,address,city,area_m2,floors,bathrooms,status,current_stage,progress_percent,planned_start,planned_finish,budget_estimate,paid_amount,updated_at,client_user_id,client_phone_normalized";
   const projectParams:Record<string,string>={select:projectSelect,organization_id:`eq.${accessToken.organization_id}`,order:"updated_at.desc"};
@@ -170,7 +184,7 @@ Deno.serve(async(req:Request)=>{
     const procurementData=permissions.can_view_payments;
     const [stages,estimates,zones,systems,nodes,works,project_materials,purchase_orders]=await Promise.all([
       progressData?rest("project_stages",{select:"id,name,system,description,sort_order,status,progress_percent,planned_start,planned_finish,actual_start,actual_finish,budget_amount,visibility",project_id:`eq.${p.id}`,visibility:"in.(client,all)",order:"sort_order.asc"}):Promise.resolve([]),
-      rest("estimates",{select:"id,title,status,labor_total,mat_total,equipment_total,discount_total,version,pdf_document_id,stage_id,visibility,updated_at",project_id:`eq.${p.id}`,visibility:"in.(client,all)",order:"updated_at.desc",limit:"20"}),
+      rest("estimates",{select:"id,title,status,labor_total,mat_total,equipment_total,discount_total,version,pdf_document_id,stage_id,visibility,updated_at",project_id:`eq.${p.id}`,visibility:"in.(client,all)",status:"eq.issued",order:"updated_at.desc",limit:"20"}),
       progressData?rest("zones",{select:"id,parent_zone_id,name,zone_type,code,sort_order",project_id:`eq.${p.id}`,order:"sort_order.asc",limit:"500"}):Promise.resolve([]),
       progressData?rest("systems",{select:"id,zone_id,parent_system_id,name,system_type,status,code,updated_at",project_id:`eq.${p.id}`,order:"created_at.asc",limit:"300"}):Promise.resolve([]),
       progressData?rest("nodes",{select:"id,system_id,zone_id,parent_node_id,name,node_type,status,code,manufacturer,model,installed_at,commissioned_at,updated_at",project_id:`eq.${p.id}`,order:"created_at.asc",limit:"1000"}):Promise.resolve([]),
@@ -184,9 +198,10 @@ Deno.serve(async(req:Request)=>{
       purchase_items=await rest("purchase_items",{select:"id,purchase_order_id,project_material_id,catalog_item_id,name_snap,unit,quantity,delivered_quantity,unit_price,total,created_at",purchase_order_id:`in.(${orderIds.join(",")})`,order:"created_at.asc",limit:"2000"});
     }
     let payments:any[]=[];if(permissions.can_view_payments)payments=await rest("payments",{select:"id,stage_id,amount,payment_type,status,due_date,paid_at,note,created_at",project_id:`eq.${p.id}`,order:"created_at.desc",limit:"50"});
+    let approvals:any[]=[];if(permissions.can_approve)approvals=await rest("client_approvals",{select:"id,approval_type,title,description,amount,status,document_id,entity_type,entity_id,decision_comment,decided_at,created_at",project_id:`eq.${p.id}`,order:"created_at.desc",limit:"100"});
     let documents:any[]=[];if(permissions.can_view_documents){const docs=await rest("documents",{select:"id,stage_id,document_type,title,storage_path,external_url,status,version,visibility,created_at,updated_at",project_id:`eq.${p.id}`,visibility:"in.(client,all)",order:"updated_at.desc",limit:"100"});documents=await Promise.all(docs.map(async(d:any)=>({...d,url:d.external_url||await signedUrl("project-documents",d.storage_path),storage_path:undefined})))}
     let media:any[]=[];if(permissions.can_view_media){const rows=await rest("project_media",{select:"id,stage_id,media_type,storage_path,file_name,mime_type,stage,caption,visibility,created_at",project_id:`eq.${p.id}`,visibility:"in.(client,all)",order:"created_at.desc",limit:"120"});media=await Promise.all(rows.map(async(x:any)=>({...x,url:await signedUrl("project-media",x.storage_path),storage_path:undefined})))}
-    const clean={...p};delete clean.client_user_id;delete clean.client_phone_normalized;return{...clean,permissions,stages,estimates,payments,documents,media,zones,systems,nodes,works,project_materials,purchase_orders,purchase_items};
+    const clean={...p};delete clean.client_user_id;delete clean.client_phone_normalized;return{...clean,permissions,stages,estimates,payments,documents,media,approvals,zones,systems,nodes,works,project_materials,purchase_orders,purchase_items};
   }));
   const [quizzes,quiz_catalog]=await Promise.all([rest("quiz_submissions",{select:"id,quiz_type,answers,status,project_id,created_at",organization_id:`eq.${accessToken.organization_id}`,user_id:`eq.${user.id}`,order:"created_at.desc",limit:"20"}),loadQuizCatalog(accessToken.organization_id)]);
   const profileRows=await rest("documents",{select:"id,document_type,title,storage_path,external_url,status,version,visibility,created_at,updated_at,metadata",organization_id:`eq.${accessToken.organization_id}`,owner_user_id:`eq.${user.id}`,project_id:"is.null",visibility:"in.(client,all)",order:"updated_at.desc",limit:"50"});
