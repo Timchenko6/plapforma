@@ -251,7 +251,7 @@ async function linkPhone(ctx: Awaited<ReturnType<typeof orgContext>>, maxUser: M
 }
 
 async function mainMenu(ctx: Awaited<ReturnType<typeof orgContext>>, maxUser: MaxUser, user: any) {
-  const greeting = ctx.settings.welcome_message || "🏠 <b>TIMCHENKO.PRO</b>\nИнженерные системы частных домов";
+  const greeting = ctx.settings.welcome_message || "🏠 <b>TIMCHENKO GROUP</b>\nИнженерные системы частных домов";
   const prefix = user.phone_verified ? "" : "\n\nДля личного кабинета и сохранения расчётов подтвердите номер телефона.";
   await send(maxUser.user_id, `${greeting}${prefix}`, [
     [callback("💧 Узел ввода воды", "quiz:engineering_nodes")],
