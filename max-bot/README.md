@@ -1,4 +1,4 @@
-# TIMCHENKO.PRO bot for MAX
+# TIMCHENKO GROUP bot for MAX
 
 The MAX bot is implemented as the Supabase Edge Function `max-bot-webhook` and uses the same CRM, users, quiz catalog, projects and portal tokens as the Telegram bot.
 
@@ -16,7 +16,7 @@ The MAX bot is implemented as the Supabase Edge Function `max-bot-webhook` and u
 
 ## Production configuration
 
-The production bot is `Timchenko.pro` (`id421815399150_bot`). Its webhook and commands are active.
+The production bot uses the `TIMCHENKO GROUP` brand (`id421815399150_bot`). Its webhook and commands are active.
 
 For redeployment or token rotation:
 
