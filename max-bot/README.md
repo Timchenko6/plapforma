@@ -14,22 +14,25 @@ The MAX bot is implemented as the Supabase Edge Function `max-bot-webhook` and u
 - short-lived client/admin portal links;
 - webhook secret validation, contact HMAC validation and event deduplication.
 
-## Required MAX configuration
+## Production configuration
 
-1. Create and moderate the bot in the verified MAX partner profile.
-2. Add these secrets to the Supabase project:
+The production bot is `Timchenko.pro` (`id421815399150_bot`). Its webhook and commands are active.
+
+For redeployment or token rotation:
+
+1. Keep these secrets in the Supabase project:
    - `MAX_BOT_TOKEN` — token issued by MAX;
    - `MAX_WEBHOOK_SECRET` — random value containing 5–256 letters, digits, `_` or `-`;
    - `ORGANIZATION_SLUG=timchenko-pro` — optional because this is the default.
-3. Subscribe the bot to the production webhook:
+2. Subscribe the bot to the production webhook:
 
    `https://zzeeqwrndhpqdxyzpsqo.supabase.co/functions/v1/max-bot-webhook`
 
    Update types: `bot_started`, `message_created`, `message_callback`.
 
-4. Add bot commands with `PATCH /me/commands`: `/start`, `/menu`, `/cabinet`.
+3. Add bot commands with `PATCH /me/commands`: `/start`, `/menu`, `/cabinet`.
 
-The API base is `https://platform-api2.max.ru`. The token must be sent only in the `Authorization` header. The Edge Function has JWT verification disabled because MAX authenticates webhook calls with `X-Max-Bot-Api-Secret`; the handler validates this header itself.
+The API base is `https://platform-api2.max.ru`. The token must be sent only in the `Authorization` header. The Edge Function bundles the official Russian root and subordinate CA certificates required by the current MAX API endpoint. JWT verification is disabled because MAX authenticates webhook calls with `X-Max-Bot-Api-Secret`; the handler validates this header itself.
 
 ## Native MAX Mini App
 
